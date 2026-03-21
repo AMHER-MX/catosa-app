@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catosa GP - Official Race</title>
+    <title>Catosa GP - Professional Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
             --red: #d21034;
-            --bg: #32373c;       /* GRIS RATA */
+            --bg: #32373c;       
             --card: #1a1d20;     
             --green: #2ecc71;
             --blue: #3498db;
@@ -22,7 +22,7 @@
         .logo { max-height: 30px; }
         h1 { font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; color: #fff; margin: 0; text-align: center; flex: 1; }
 
-        #status-bar { text-align: center; font-size: 0.6rem; color: #aaa; margin-bottom: 15px; }
+        #status-bar { text-align: center; font-size: 0.65rem; color: #ffab00; margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 5px; }
 
         /* PISTA DE CARRERAS */
         .race-track { 
@@ -46,8 +46,7 @@
         }
 
         .race-lane { height: 65px; position: relative; border-bottom: 1px dashed rgba(255,255,255,0.1); display: flex; align-items: center; }
-
-        .vendor-name { position: absolute; left: 15px; top: 8px; font-size: 11px; font-weight: bold; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+        .vendor-name { position: absolute; left: 15px; top: 8px; font-size: 11px; font-weight: bold; color: rgba(255,255,255,0.3); }
 
         .international-truck { 
             position: absolute; bottom: 10px; left: 0; 
@@ -55,27 +54,26 @@
             background-image: url('camion-intl.png'); 
             background-size: contain; background-repeat: no-repeat;
             transition: all 2s cubic-bezier(0.12, 0.76, 0.44, 0.99);
-            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.6));
             z-index: 10;
         }
-
-        .international-truck.leader { filter: drop-shadow(0 0 15px var(--red)); }
+        .international-truck.leader { filter: drop-shadow(0 0 12px var(--red)); }
 
         /* GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1100px; margin: 0 auto; }
-        .card { background: var(--card); border-radius: 10px; padding: 20px; border: 1px solid #333; }
+        .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #333; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
         h2 { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; }
 
         input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 6px; color: #fff; margin: 8px 0; box-sizing: border-box; }
         
         .comm-circle { width: 130px; height: 130px; border-radius: 50%; border: 6px solid #111; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; border-top: 6px solid var(--blue); }
-        .big-val { font-size: 2rem; color: var(--green); font-weight: bold; }
+        .big-val { font-size: 2.1rem; color: var(--green); font-weight: bold; }
 
-        /* SEMÁFORO REALISTA */
-        .client-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
-        .traffic-light { display: flex; flex-direction: column; gap: 4px; background: #000; padding: 5px; border-radius: 20px; width: 22px; border: 1px solid #333; }
-        .light { width: 14px; height: 14px; border-radius: 50%; opacity: 0.1; margin: 0 auto; }
-        .light.on { opacity: 1; box-shadow: 0 0 12px currentColor; }
+        /* SEMÁFORO CORREGIDO */
+        #lista-clientes { min-height: 50px; }
+        .client-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
+        .traffic-light { display: flex; flex-direction: column; gap: 4px; background: #000; padding: 6px; border-radius: 15px; width: 20px; border: 1px solid #333; margin-right: 15px; }
+        .light { width: 12px; height: 12px; border-radius: 50%; opacity: 0.1; }
+        .light.on { opacity: 1; box-shadow: 0 0 10px currentColor; }
 
         .btn-ws { width: 100%; padding: 15px; border-radius: 8px; border: none; background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
     </style>
@@ -117,8 +115,9 @@
         </div>
 
         <div class="card">
-            <h2>👥 Cartera</h2>
-            <div id="lista-clientes"></div>
+            <h2>👥 Cartera Semáforo</h2>
+            <div id="lista-clientes">
+                </div>
         </div>
     </div>
 
@@ -128,22 +127,34 @@
 
         let dbV = [], dbP = [], itemSel = null;
 
-        const val = (obj, index) => {
+        // BUSCADOR INTELIGENTE DE COLUMNAS
+        const getVal = (obj, keyword) => {
             const keys = Object.keys(obj);
-            return obj[keys[index]];
+            const foundKey = keys.find(k => k.trim().toLowerCase().includes(keyword.toLowerCase()));
+            return foundKey ? obj[foundKey] : null;
         };
 
         async function init() {
-            Papa.parse(URL_V, { download: true, header: true, complete: (r) => { dbV = r.data; renderV(); check(); } });
-            Papa.parse(URL_P, { download: true, header: true, complete: (r) => { dbP = r.data; check(); } });
-        }
-
-        function check() {
-            if(dbV.length > 0 && dbP.length > 0) {
-                const s = document.getElementById('status-bar');
-                s.innerText = "● DATA SYNC OK";
-                s.style.color = "var(--green)";
-            }
+            Papa.parse(URL_V, { 
+                download: true, 
+                header: true, 
+                skipEmptyLines: true,
+                complete: (r) => { 
+                    dbV = r.data; 
+                    renderV(); 
+                    console.log("Datos de vendedores cargados:", dbV);
+                } 
+            });
+            Papa.parse(URL_P, { 
+                download: true, 
+                header: true, 
+                skipEmptyLines: true,
+                complete: (r) => { 
+                    dbP = r.data; 
+                    document.getElementById('status-bar').innerText = "● SISTEMA SINCRONIZADO";
+                    document.getElementById('status-bar').style.color = "var(--green)";
+                } 
+            });
         }
 
         function renderV() {
@@ -154,14 +165,21 @@
             let maxPct = 0;
             let leaderIndex = -1;
 
+            // 1. Determinar líder
             dbV.forEach((f, i) => {
-                const ven = parseFloat(val(f, 1)) || 0, met = parseFloat(val(f, 2)) || 1;
-                const pct = (ven/met);
+                const ven = parseFloat(getVal(f, 'Ventas')) || 0;
+                const met = parseFloat(getVal(f, 'Meta')) || 1;
+                const pct = ven / met;
                 if(pct > maxPct) { maxPct = pct; leaderIndex = i; }
             });
 
+            // 2. Renderizar Pista y Cartera
             dbV.forEach((f, i) => {
-                const nom = val(f, 0), ven = parseFloat(val(f, 1)) || 0, met = parseFloat(val(f, 2)) || 1;
+                // Lógica de la Pista
+                const nom = getVal(f, 'Nombre');
+                const ven = parseFloat(getVal(f, 'Ventas')) || 0;
+                const met = parseFloat(getVal(f, 'Meta')) || 1;
+                
                 if(nom) {
                     const pct = Math.min(100, (ven/met)*100);
                     p.innerHTML += `
@@ -171,8 +189,12 @@
                         </div>`;
                 }
 
-                // RENDER CARTERA CON SEMÁFORO
-                const cli = val(f, 3), d = parseInt(val(f, 4)) || 0;
+                // Lógica del Semáforo (Cartera)
+                // Busca columna que contenga "Cliente" o "Cartera"
+                const cli = getVal(f, 'Cliente');
+                // Busca columna que contenga "Dias" o "Comprar"
+                const d = parseInt(getVal(f, 'Dias')) || 0;
+
                 if(cli) {
                     l.innerHTML += `
                         <div class="client-row">
@@ -181,9 +203,9 @@
                                 <div class="light ${d > 14 && d <= 60 ? 'on' : ''}" style="color: #ff0; background: #ff0;"></div>
                                 <div class="light ${d > 60 ? 'on' : ''}" style="color: #f00; background: #f00;"></div>
                             </div>
-                            <div style="flex:1; margin-left:15px;">
-                                <div style="font-size:12px; font-weight:bold;">${cli}</div>
-                                <div style="font-size:10px; color:#555;">Última compra: ${d} días</div>
+                            <div style="flex:1;">
+                                <div style="font-size:13px; font-weight:bold;">${cli}</div>
+                                <div style="font-size:10px; color:#555;">Última actividad: ${d} días</div>
                             </div>
                         </div>`;
                 }
@@ -194,13 +216,13 @@
             const pIn = document.getElementById('cParte').value.trim().toUpperCase();
             const cIn = document.getElementById('cCliente').value.trim().toUpperCase();
             itemSel = dbP.find(x => {
-                const pEx = (val(x, 0) || "").toString().toUpperCase();
-                const cEx = (val(x, 3) || "").toString().toUpperCase();
+                const pEx = (getVal(x, 'Parte') || "").toString().toUpperCase();
+                const cEx = (getVal(x, 'Especial') || "").toString().toUpperCase();
                 return pEx === pIn && (cEx === cIn || cEx === "");
             });
             if(itemSel) {
-                const pre = parseFloat(val(itemSel, 1)) || 0;
-                document.getElementById('qDesc').innerText = val(itemSel, 2) || val(itemSel, 0);
+                const pre = parseFloat(getVal(itemSel, 'Precio')) || 0;
+                document.getElementById('qDesc').innerText = getVal(itemSel, 'Descripcion') || getVal(itemSel, 'Parte');
                 document.getElementById('qTotal').innerText = "$" + pre.toLocaleString();
             }
         }
