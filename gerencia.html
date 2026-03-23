@@ -17,7 +17,7 @@
         /* LOGIN CON LOGO */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 40px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 85%; max-width: 380px; box-shadow: 0 0 30px rgba(210,16,52,0.2); }
-        .login-logo { max-height: 50px; margin-bottom: 25px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+        .login-logo { max-height: 50px; margin-bottom: 25px; }
         
         #main-app { display: none; }
 
@@ -26,29 +26,42 @@
 
         /* FILTRO */
         .filter-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; display: flex; align-items: center; gap: 15px; }
-        select { background: #000; color: #fff; border: 1px solid var(--blue); padding: 10px; border-radius: 8px; flex: 1; outline: none; cursor: pointer; }
+        select { background: #000; color: #fff; border: 1px solid var(--blue); padding: 10px; border-radius: 8px; flex: 1; outline: none; }
 
-        /* KPI DASHBOARD */
+        /* KPIs */
         .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .kpi-card { background: var(--card); padding: 20px; border-radius: 12px; border-top: 3px solid var(--blue); text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .kpi-card { background: var(--card); padding: 20px; border-radius: 12px; border-top: 3px solid var(--blue); text-align: center; }
         .kpi-val { font-size: 1.5rem; font-weight: bold; color: var(--green); margin: 5px 0; }
         .kpi-sub { font-size: 0.6rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* PISTA CON CAMIONES */
-        .race-track { background: var(--asfalto); border-radius: 15px; padding: 25px 0; border: 2px solid #333; position: relative; overflow: hidden; margin-bottom: 25px; box-shadow: inset 0 0 40px #000; }
+        /* PISTA GIGANTE */
+        .race-track { background: var(--asfalto); border-radius: 15px; padding: 25px 0; border: 2px solid #333; position: relative; overflow: hidden; margin-bottom: 25px; box-shadow: inset 0 0 40px #000; min-height: 100px; }
         .finish-line { position: absolute; right: 0; top: 0; bottom: 0; width: 30px; background-image: linear-gradient(45deg, #fff 25%, transparent 25%), linear-gradient(-45deg, #fff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #fff 75%), linear-gradient(-45deg, transparent 75%, #fff 75%); background-size: 15px 15px; background-color: #000; opacity: 0.2; }
-        .lane { height: 55px; position: relative; display: flex; align-items: center; border-bottom: 1px dashed rgba(255,255,255,0.05); }
-        .v-tag { position: absolute; left: 10px; top: 3px; font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.2); text-transform: uppercase; }
-        .truck { position: absolute; bottom: 8px; left: 0; width: 85px; height: 38px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s cubic-bezier(0.1, 0.5, 0.1, 1); filter: drop-shadow(0 0 8px var(--green)); }
+        .lane { height: 60px; position: relative; display: flex; align-items: center; border-bottom: 1px dashed rgba(255,255,255,0.05); }
+        .v-tag { position: absolute; left: 10px; top: 5px; font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.3); text-transform: uppercase; z-index: 1; }
+        
+        .truck { 
+            position: absolute; 
+            bottom: 10px; 
+            left: 0; 
+            width: 90px; 
+            height: 45px; 
+            background-image: url('camion-intl.png'); /* Asegúrate que el nombre sea exacto en GitHub */
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            transition: 3s cubic-bezier(0.25, 0.1, 0.25, 1); 
+            filter: drop-shadow(0 0 8px var(--green)); 
+            z-index: 2;
+        }
 
         /* GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
         .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #333; }
         h2 { font-size: 0.75rem; color: var(--blue); text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 10px; }
 
-        /* SEMÁFOROS CARTERA */
-        .cli-row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #222; background: rgba(0,0,0,0.1); margin-bottom: 5px; border-radius: 5px; }
-        .t-light { display: flex; flex-direction: column; gap: 3px; background: #000; padding: 5px; border-radius: 15px; width: 16px; border: 1px solid #333; margin-right: 15px; }
+        /* CARTERA IDÉNTICA A VENDEDORES */
+        .client-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
+        .t-light { display: flex; flex-direction: column; gap: 3px; background: #000; padding: 6px; border-radius: 15px; width: 16px; border: 1px solid #333; margin-right: 15px; }
         .light { width: 10px; height: 10px; border-radius: 50%; opacity: 0.1; }
         .light.on { opacity: 1; box-shadow: 0 0 10px currentColor; }
 
@@ -77,7 +90,7 @@
         </div>
 
         <div class="filter-card">
-            <span style="font-size: 0.8rem; font-weight: bold; color: var(--blue);">FILTRAR POR SEDE:</span>
+            <span style="font-size: 0.8rem; font-weight: bold; color: var(--blue);">SUCURSAL:</span>
             <select id="select-sucursal" onchange="renderAdmin()">
                 <option value="TODAS">--- TODAS LAS SUCURSALES ---</option>
             </select>
@@ -89,7 +102,7 @@
                 <div class="kpi-val" id="total-v">$0</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-sub">Utilidad Sucursal</div>
+                <div class="kpi-sub">Utilidad Estimada</div>
                 <div class="kpi-val" id="total-u">$0</div>
             </div>
             <div class="kpi-card">
@@ -110,8 +123,8 @@
             </div>
 
             <div class="card">
-                <h2>⚠️ Auditoría de Clientes</h2>
-                <input type="text" id="search-cli" placeholder="Buscar cliente en sucursal..." oninput="renderAdmin()">
+                <h2>👥 Cartera de Clientes</h2>
+                <input type="text" id="search-cli" placeholder="🔍 Buscar cliente..." oninput="renderAdmin()">
                 <div id="cartera-global" style="max-height: 450px; overflow-y: auto;"></div>
             </div>
 
@@ -174,50 +187,50 @@
                 const suc = getVal(data, 5);
 
                 if(fSuc === 'TODAS' || suc === fSuc) {
-                    const v = parseFloat(getVal(data, 1)) || 0;
-                    const m = parseFloat(getVal(data, 2)) || 1;
+                    const v = parseFloat(getVal(data, 1).replace(/[^0-9.]/g, '')) || 0;
+                    const m = parseFloat(getVal(data, 2).replace(/[^0-9.]/g, '')) || 1;
                     const p = (v / m) * 100;
 
                     sV += v; sM += m;
                     labels.push(nom); vReal.push(v); vMeta.push(m);
 
-                    // Pista con trailers
                     pista.innerHTML += `
                         <div class="lane">
                             <div class="v-tag">${nom}</div>
-                            <div class="truck" style="left:calc(${Math.min(100, p)}% - 85px)"></div>
+                            <div class="truck" style="left:calc(${Math.min(100, p)}% - 95px)"></div>
                         </div>`;
                     
-                    // Ranking
-                    ranking.innerHTML += `<div style="padding:8px; border-bottom:1px solid #333; display:flex; justify-content:space-between;"><span>${nom}</span><b style="color:${p>=100?'var(--green)':'#ff4d4d'}">${p.toFixed(1)}%</b></div>`;
+                    ranking.innerHTML += `<div style="padding:10px; border-bottom:1px solid #333; display:flex; justify-content:space-between;"><span>${nom}</span><b style="color:${p>=100?'var(--green)':'#ff4d4d'}">${p.toFixed(1)}%</b></div>`;
                 }
             });
 
-            // KPIs
             document.getElementById('total-v').innerText = "$" + Math.floor(sV).toLocaleString();
             document.getElementById('total-u').innerText = "$" + Math.floor(sV * 0.25).toLocaleString();
             document.getElementById('total-p').innerText = ((sV/sM)*100).toFixed(1) + "%";
 
-            // Gráfico
             updateChart(labels, vReal, vMeta);
 
-            // Cartera con Semáforos
+            // Cartera Detallada
             dbTotal.forEach(f => {
                 const cli = getVal(f, 3);
                 const d = parseInt(getVal(f, 4)) || 0;
+                const fch = getVal(f, 6) || "N/A"; // Asumimos columna 6 es fecha
                 const su = getVal(f, 5);
+                const as = getVal(f, 0);
+
                 if(cli && (fSuc === 'TODAS' || su === fSuc) && cli.toLowerCase().includes(fCli)) {
                     cartera.innerHTML += `
-                        <div class="cli-row">
+                        <div class="client-row">
                             <div class="t-light">
                                 <div class="light ${d<=14?'on':''}" style="color:#0f0; background:#0f0;"></div>
                                 <div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0; background:#ff0;"></div>
                                 <div class="light ${d>60?'on':''}" style="color:#f00; background:#f00;"></div>
                             </div>
                             <div style="flex:1">
-                                <b style="font-size:12px;">${cli}</b><br>
-                                <small style="color:#777">${getVal(f,0)} | ${d} días</small>
+                                <b style="font-size:13px; color:#fff;">${cli}</b><br>
+                                <small style="color:#777;">Vendedor: ${as} | Última: ${fch}</small>
                             </div>
+                            <div style="font-size:11px; font-weight:bold; color:var(--red); padding-right:10px;">${d}d</div>
                         </div>`;
                 }
             });
@@ -237,8 +250,11 @@
                 },
                 options: { 
                     responsive: true, maintainAspectRatio: false,
-                    scales: { y: { ticks: { color: '#888' }, grid: { color: '#333' } }, x: { ticks: { color: '#888' }, grid: { display: false } } },
-                    plugins: { legend: { labels: { color: '#fff' } } }
+                    scales: { 
+                        y: { ticks: { color: '#888', font: { size: 10 } }, grid: { color: '#333' } }, 
+                        x: { ticks: { color: '#888', font: { size: 9 } }, grid: { display: false } } 
+                    },
+                    plugins: { legend: { labels: { color: '#fff', font: { size: 10 } } } }
                 }
             });
         }
