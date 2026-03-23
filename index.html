@@ -3,88 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catosa GP - Vendedores</title>
+    <title>Catosa GP - Asesores</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        :root { --red: #d21034; --bg: #32373c; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --asfalto: #181a1c; }
+        :root { --red: #d21034; --bg: #111315; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
         
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: var(--card); padding: 30px; border-radius: 15px; border: 1px solid var(--red); width: 85%; max-width: 350px; text-align: center; }
+        /* LOGIN CON LOGO */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: var(--card); padding: 40px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 85%; max-width: 350px; }
+        .login-logo { max-height: 50px; margin-bottom: 25px; display: block; margin-left: auto; margin-right: auto; }
         
         #main-app { display: none; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 2px solid #444; margin-bottom: 15px; }
         .logo { max-height: 25px; }
 
-        .kpi-card { background: var(--card); padding: 15px; border-radius: 12px; border-top: 3px solid var(--blue); text-align: center; margin-bottom: 15px; }
-        .kpi-val { font-size: 1.4rem; font-weight: bold; color: var(--green); }
+        .kpi-card { background: var(--card); padding: 20px; border-radius: 12px; border-top: 3px solid var(--blue); text-align: center; margin-bottom: 15px; }
+        .kpi-val { font-size: 1.6rem; font-weight: bold; color: var(--green); margin: 5px 0; }
 
-        /* CALENDARIO */
+        /* CALCULADORA */
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 15px; }
-        .day-box { background: #000; border: 1px solid #333; border-radius: 6px; padding: 6px 2px; text-align: center; }
-        .day-num { font-size: 0.6rem; color: #666; display: block; }
+        .day-box { background: #000; border: 1px solid #333; border-radius: 6px; padding: 8px 2px; text-align: center; }
+        .day-num { font-size: 0.6rem; color: #555; display: block; }
         .day-in { width: 100%; background: transparent; border: none; color: var(--green); font-size: 0.8rem; font-weight: bold; text-align: center; outline: none; }
 
         /* CARTERA */
-        .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; margin-bottom: 15px; }
-        .client-row { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
-        .t-light { display: flex; flex-direction: column; gap: 3px; background: #000; padding: 5px; border-radius: 15px; width: 16px; border: 1px solid #333; margin-right: 12px; }
+        .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
+        .client-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
+        .t-light { display: flex; flex-direction: column; gap: 3px; background: #000; padding: 6px; border-radius: 15px; width: 16px; border: 1px solid #333; margin-right: 15px; }
         .light { width: 10px; height: 10px; border-radius: 50%; opacity: 0.1; }
         .light.on { opacity: 1; box-shadow: 0 0 10px currentColor; }
 
-        input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin: 5px 0; box-sizing: border-box; }
-        .btn { padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; width: 100%; background: var(--red); }
+        input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-sizing: border-box; }
+        .btn { padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; width: 100%; background: var(--red); text-transform: uppercase; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="font-size: 0.9rem; color: #fff;">ASESOR CATOSA</h2>
-            <input type="text" id="user-name" placeholder="NOMBRE">
-            <input type="password" id="user-pass" placeholder="CONTRASEÑA (Apellido123)">
+            <img src="logo-catosa.png" class="login-logo" alt="Catosa" onerror="this.style.display='none'">
+            <h2 style="font-size: 0.9rem; color: #fff; margin-bottom: 25px; letter-spacing: 2px;">ACCESO ASESORES</h2>
+            <input type="text" id="user-name" placeholder="NOMBRE" style="text-align: center;">
+            <input type="password" id="user-pass" placeholder="CONTRASEÑA (Apellido123)" style="text-align: center;">
             <button class="btn" onclick="login()">INGRESAR</button>
-            <p id="error" style="color:var(--red); font-size:0.6rem; margin-top:10px; display:none;">Datos incorrectos</p>
+            <p id="error" style="color:var(--red); font-size:0.6rem; margin-top:15px; display:none;">Usuario o clave incorrecta</p>
         </div>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <img src="logo-catosa.png" class="logo" onerror="this.style.display='none'">
+            <img src="logo-catosa.png" class="logo">
             <h1 style="font-size: 0.6rem;"><span id="u-display">--</span> | <span id="s-display">--</span></h1>
-            <button onclick="location.reload()" style="background:none; border:none; color:var(--red); cursor:pointer; font-size:0.6rem;">SALIR</button>
+            <button onclick="location.reload()" style="background:none; border:none; color:var(--red); cursor:pointer; font-weight:bold;">SALIR</button>
         </div>
 
         <div class="kpi-card">
-            <div style="font-size:0.6rem; color:#888;">MI VENTA REAL (SISTEMA)</div>
+            <div style="font-size:0.6rem; color:#888; text-transform: uppercase;">Mi Venta en Sistema</div>
             <div class="kpi-val" id="k-v">$0</div>
-            <div id="k-p" style="font-size:0.7rem; color:var(--blue)">0% Alcance</div>
+            <div id="k-p" style="font-size:0.75rem; color:var(--blue); font-weight:bold;">0% Alcance Meta</div>
         </div>
 
         <div class="card">
-            <h2 style="font-size:0.7rem; color:var(--blue); border-bottom:1px solid #333; padding-bottom:5px;">CALCULADORA DIARIA</h2>
+            <h2 style="font-size:0.7rem; color:var(--blue); border-bottom:1px solid #333; padding-bottom:10px; text-transform: uppercase;">Calculadora de Ventas</h2>
             <div class="cal-grid" id="cal-grid"></div>
-            <div style="text-align:center;">
-                <small style="font-size:0.5rem; color:#555;">SUMA CALENDARIO</small>
-                <div id="c-sum" style="font-size:1.1rem; font-weight:bold; color:var(--green)">$0</div>
+            <div style="text-align:center; padding-top:10px;">
+                <small style="font-size:0.5rem; color:#555;">SUMA TOTAL PROYECTADA</small>
+                <div id="c-sum" style="font-size:1.2rem; font-weight:bold; color:var(--green)">$0</div>
             </div>
         </div>
 
         <div class="card">
-            <h2 style="font-size:0.7rem; color:var(--blue); border-bottom:1px solid #333; padding-bottom:5px;">MI CARTERA</h2>
-            <input type="text" id="f-cli" placeholder="Buscar cliente..." oninput="renderApp()">
+            <h2 style="font-size:0.7rem; color:var(--blue); border-bottom:1px solid #333; padding-bottom:10px; text-transform: uppercase;">Mi Cartera</h2>
+            <input type="text" id="f-cli" placeholder="🔍 Buscar cliente..." oninput="renderApp()">
             <div id="lista-cli"></div>
         </div>
     </div>
 
     <script>
-        // EL MISMO LINK QUE GERENCIA (TODO EL DOCUMENTO)
         const URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?output=csv&t=${new Date().getTime()}`;
         
         let vends = [], clis = [], user = null;
 
         window.onload = () => {
-            // Generar cuadritos del calendario
             const cg = document.getElementById('cal-grid');
             for(let i=1; i<=31; i++) cg.innerHTML += `<div class="day-box"><span class="day-num">${i}</span><input type="number" class="day-in" placeholder="0" oninput="sumCal()"></div>`;
             
@@ -97,10 +98,13 @@
         function login() {
             const ni = document.getElementById('user-name').value.trim().toUpperCase();
             const pi = document.getElementById('user-pass').value.trim().toUpperCase();
+            
             const found = vends.find(v => {
-                const ape = v.Nombre.split(" ").pop().toUpperCase();
-                return v.Nombre.toUpperCase().includes(ni) && (ape + "123") === pi;
+                const nombreCompleto = v.Nombre.toUpperCase();
+                const apellido = nombreCompleto.split(" ").filter(s => s).pop();
+                return nombreCompleto.includes(ni) && (apellido + "123") === pi;
             });
+
             if(found) {
                 user = found;
                 document.getElementById('login-screen').style.display = 'none';
@@ -112,17 +116,29 @@
         }
 
         function renderApp() {
-            const vr = parseFloat(user.Ventas) || 0;
-            const vm = parseFloat(user.Meta) || 1;
+            const vr = parseFloat(user.Ventas.replace(/[^0-9.]/g, '')) || 0;
+            const vm = parseFloat(user.Meta.replace(/[^0-9.]/g, '')) || 1;
             document.getElementById('k-v').innerText = "$" + vr.toLocaleString();
-            document.getElementById('k-p').innerText = ((vr/vm)*100).toFixed(1) + "% Alcance";
+            document.getElementById('k-p').innerText = ((vr/vm)*100).toFixed(1) + "% Alcance Meta";
 
             const lc = document.getElementById('lista-cli'), fc = document.getElementById('f-cli').value.toLowerCase();
             lc.innerHTML = '';
             
-            clis.filter(c => c.Vendedor === user.Nombre && c.Cliente.toLowerCase().includes(fc)).forEach(c => {
+            clis.filter(c => c.Vendedor.toUpperCase() === user.Nombre.toUpperCase() && c.Cliente.toLowerCase().includes(fc)).forEach(c => {
                 const d = parseInt(c.Dias) || 0;
-                lc.innerHTML += `<div class="client-row"><div class="t-light"><div class="light ${d<=14?'on':''}" style="color:#0f0; background:#0f0;"></div><div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0; background:#ff0;"></div><div class="light ${d>60?'on':''}" style="color:#f00; background:#f00;"></div></div><div style="flex:1;"><b style="font-size:12px;">${c.Cliente}</b><br><small style="color:#777;">Última compra: ${c.Fecha}</small></div><b style="color:var(--red)">${d}d</b></div>`;
+                lc.innerHTML += `
+                    <div class="client-row">
+                        <div class="t-light">
+                            <div class="light ${d<=14?'on':''}" style="color:#0f0; background:#0f0;"></div>
+                            <div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0; background:#ff0;"></div>
+                            <div class="light ${d>60?'on':''}" style="color:#f00; background:#f00;"></div>
+                        </div>
+                        <div style="flex:1;">
+                            <b style="font-size:13px;">${c.Cliente}</b><br>
+                            <small style="color:#777;">Última: ${c.Fecha}</small>
+                        </div>
+                        <b style="color:var(--red); padding-right:10px;">${d}d</b>
+                    </div>`;
             });
         }
 
