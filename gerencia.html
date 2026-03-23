@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catosa GP - Gerencia VIP</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        :root { 
+            --red: #d21034; --bg: #1e2124; --card: #2f3136; 
+            --green: #00ff88; --blue: #00d4ff; --text: #ffffff; --asfalto: #111; 
+        }
+        
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+        
+        /* LOGIN */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: var(--card); padding: 40px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 90%; max-width: 400px; }
+        
+        #main-app { display: none; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--card); border-radius: 10px; margin-bottom: 20px; }
+        .logo { max-height: 30px; }
+
+        /* KPI DASHBOARD */
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--card); padding: 20px; border-radius: 12px; border-left: 4px solid var(--blue); box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; }
+        .kpi-card h3 { font-size: 0.65rem; color: #888; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+        .kpi-val { font-size: 1.6rem; font-weight: bold; margin: 10px 0; }
+        .kpi-sub { font-size: 0.7rem; color: #555; }
+
+        /* PISTA GIGANTE */
+        .race-track { background: var(--asfalto); border-radius: 15px; padding: 30px 0; border: 2px solid #333; position: relative; overflow: hidden; margin-bottom: 25px; }
+        .finish-line { position: absolute; right: 0; top: 0; bottom: 0; width: 40px; background-image: linear-gradient(45deg, #fff 25%, transparent 25%), linear-gradient(-45deg, #fff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #fff 75%), linear-gradient(-45deg, transparent 75%, #fff 75%); background-size: 20px 20px; background-color: #000; opacity: 0.2; }
+        .lane { height: 60px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+        .v-info { position: absolute; left: 15px; top: 5px; font-size: 10px; font-weight: bold; color: #666; text-transform: uppercase; }
+        .truck { position: absolute; bottom: 10px; left: 0; width: 100px; height: 45px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s; filter: drop-shadow(0 0 10px var(--green)); }
+
+        /* TABLAS Y GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border-radius: 12px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { font-size: 0.8rem; color: var(--blue); margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { text-align: left; color: #888; padding: 10px; border-bottom: 2px solid #444; }
+        td { padding: 12px 10px; border-bottom: 1px solid #3e4147; }
+        
+        .prog-bar { width: 100px; height: 8px; background: #000; border-radius: 10px; overflow: hidden; display: inline-block; margin-right: 10px; }
+        .prog-fill { height: 100%; background: var(--green); transition: 1s; }
+
+        input { width: 100%; background: #111; border: 1px solid #444; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 15px; }
+
+        .cli-row { display: flex; align-items: center; padding: 12px; border-radius: 8px; margin-bottom: 6px; background: rgba(0,0,0,0.3); border-left: 3px solid transparent; }
+        .light { width: 12px; height: 12px; border-radius: 50%; margin-right: 15px; box-shadow: 0 0 10px currentColor; }
+
+        .btn { padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; color: #fff; width: 100%; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <img src="logo-catosa.png" style="max-height: 40px; margin-bottom: 20px;">
+            <h1 style="font-size: 1rem; color: #fff; margin-bottom: 30px;">CENTRO DE MANDO GERENCIAL</h1>
+            <input type="text" id="admin-user" placeholder="USUARIO GERENTE">
+            <input type="password" id="admin-pass" placeholder="CONTRASEÑA">
+            <button class="btn" style="background:var(--red)" onclick="checkLogin()">IDENTIFICARSE</button>
+            <p id="error" style="color:var(--red); font-size:0.7rem; margin-top:15px; display:none;">Error de acceso.</p>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <div class="header">
+            <img src="logo-catosa.png" class="logo">
+            <h1 style="font-size: 0.8rem; letter-spacing: 4px;">PANEL DE CONTROL DE SUCURSAL</h1>
+            <button onclick="location.reload()" style="background:none; border:none; color:#ff4d4d; font-weight:bold; cursor:pointer;">CERRAR SESIÓN</button>
+        </div>
+
+        <div class="kpi-row">
+            <div class="kpi-card" style="border-left-color: var(--green);">
+                <h3>Venta Sucursal</h3>
+                <div class="kpi-val" id="total-v">$0</div>
+                <div class="kpi-sub" id="total-pct">0% de la meta grupal</div>
+            </div>
+            <div class="kpi-card" style="border-left-color: var(--red);">
+                <h3>Brecha Meta</h3>
+                <div class="kpi-val" id="total-gap">$0</div>
+                <div class="kpi-sub">Faltante para el 100%</div>
+            </div>
+            <div class="kpi-card" style="border-left-color: var(--blue);">
+                <h3>Meta Grupal</h3>
+                <div class="kpi-val" id="total-meta">$0</div>
+                <div class="kpi-sub">Objetivo combinado</div>
+            </div>
+        </div>
+
+        <div class="race-track">
+            <div class="finish-line"></div>
+            <div id="pista-gerencia"></div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>📊 Ranking de Asesores</h2>
+                <table id="tabla-ranking">
+                    <thead>
+                        <tr>
+                            <th>Asesor</th>
+                            <th>Avance</th>
+                            <th>Venta Real</th>
+                            <th>Alcance</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>⚠️ Auditoría de Cartera</h2>
+                <input type="text" id="search-cli" placeholder="Buscar cliente en toda la sucursal..." oninput="renderCartera()">
+                <div id="cartera-global" style="max-height: 500px; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const URL_CSV = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=0&single=true&output=csv&t=${new Date().getTime()}`;
+        
+        let dbTotal = [];
+
+        const getVal = (obj, key) => {
+            const k = Object.keys(obj).find(x => x.trim().toLowerCase().includes(key.toLowerCase()));
+            return k ? obj[k] : null;
+        };
+
+        window.onload = () => {
+            Papa.parse(URL_CSV, { download: true, header: true, complete: (r) => { dbTotal = r.data; } });
+        };
+
+        function checkLogin() {
+            const u = document.getElementById('admin-user').value.toUpperCase();
+            const p = document.getElementById('admin-pass').value;
+            if(u === 'GERENTE' && p === 'CATOSA2026') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                renderAdmin();
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        function renderAdmin() {
+            const pista = document.getElementById('pista-gerencia');
+            const ranking = document.querySelector('#tabla-ranking tbody');
+            pista.innerHTML = ''; ranking.innerHTML = '';
+
+            const vendedores = [...new Set(dbTotal.map(f => getVal(f, 'Nombre')))].filter(n => n);
+            
+            let sumaVentaTotal = 0;
+            let sumaMetaTotal = 0;
+
+            vendedores.forEach(nom => {
+                const f = dbTotal.find(x => getVal(x, 'Nombre') === nom);
+                const ven = parseFloat(getVal(f, 'Ventas')) || 0;
+                const met = parseFloat(getVal(f, 'Meta')) || 1;
+                const pct = (ven / met) * 100;
+
+                sumaVentaTotal += ven;
+                sumaMetaTotal += met;
+
+                pista.innerHTML += `
+                    <div class="lane">
+                        <div class="v-info">${nom} - ${pct.toFixed(1)}%</div>
+                        <div class="truck" style="left:calc(${Math.min(100, pct)}% - 100px)"></div>
+                    </div>`;
+
+                ranking.innerHTML += `
+                    <tr>
+                        <td><b>${nom}</b></td>
+                        <td>
+                            <div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100, pct)}%; background:${pct>=100?'var(--green)':'var(--red)'}"></div></div>
+                        </td>
+                        <td>$${ven.toLocaleString()}</td>
+                        <td style="color:${pct>=100? 'var(--green)' : '#ff4d4d'}">${pct.toFixed(1)}%</td>
+                    </tr>`;
+            });
+
+            // ACTUALIZAR KPIs GLOBALES
+            const pctGlobal = (sumaVentaTotal / sumaMetaTotal) * 100;
+            const gap = sumaMetaTotal - sumaVentaTotal;
+
+            document.getElementById('total-v').innerText = "$" + Math.floor(sumaVentaTotal).toLocaleString();
+            document.getElementById('total-meta').innerText = "$" + Math.floor(sumaMetaTotal).toLocaleString();
+            document.getElementById('total-gap').innerText = "$" + Math.floor(Math.max(0, gap)).toLocaleString();
+            document.getElementById('total-pct').innerText = pctGlobal.toFixed(1) + "% de la meta grupal";
+
+            renderCartera();
+        }
+
+        function renderCartera() {
+            const container = document.getElementById('cartera-global');
+            const search = document.getElementById('search-cli').value.toLowerCase();
+            container.innerHTML = '';
+
+            dbTotal.forEach(f => {
+                const cli = getVal(f, 'Cliente');
+                const d = parseInt(getVal(f, 'Dias')) || 0;
+                const ases = getVal(f, 'Nombre');
+
+                if(cli && cli.toLowerCase().includes(search)) {
+                    let color = d <= 14 ? '#00ff88' : (d <= 60 ? '#ffff00' : '#ff4d4d');
+                    container.innerHTML += `
+                        <div class="cli-row" style="border-left-color:${color}">
+                            <div class="light" style="color:${color}; background:${color}"></div>
+                            <div style="flex:1">
+                                <div style="font-size:13px; font-weight:bold">${cli}</div>
+                                <div style="font-size:10px; color:#888">${ases} | Sin comprar: ${d} días</div>
+                            </div>
+                        </div>`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
