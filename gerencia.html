@@ -7,207 +7,159 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { 
-            --red: #d21034; --bg: #111315; --card: #1a1d20; 
-            --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --asfalto: #0c0e10; 
-        }
-        
+        :root { --red: #d21034; --bg: #111315; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --asfalto: #0c0e10; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
         
         /* LOGIN CON LOGO */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: var(--card); padding: 40px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 85%; max-width: 380px; box-shadow: 0 0 30px rgba(210,16,52,0.2); }
+        .login-box { background: var(--card); padding: 40px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 85%; max-width: 380px; }
         .login-logo { max-height: 50px; margin-bottom: 25px; display: block; margin-left: auto; margin-right: auto; }
         
         #main-app { display: none; }
-
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--card); border-radius: 10px; margin-bottom: 20px; border-bottom: 2px solid #444; }
-        .logo { max-height: 25px; }
-
-        /* MULTI-FILTROS */
+        
         .filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; }
-        .filter-item { display: flex; flex-direction: column; gap: 5px; }
-        .filter-item label { font-size: 0.6rem; color: var(--blue); font-weight: bold; text-transform: uppercase; }
-        select, input { background: #000; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; outline: none; font-size: 0.8rem; }
-
-        /* KPIs */
         .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .kpi-card { background: var(--card); padding: 20px; border-radius: 12px; border-top: 3px solid var(--blue); text-align: center; }
         .kpi-val { font-size: 1.5rem; font-weight: bold; color: var(--green); margin: 5px 0; }
-        .kpi-sub { font-size: 0.6rem; color: #888; text-transform: uppercase; }
 
-        /* PISTA */
+        /* PISTA CON CAMIONES RESTAURADA */
         .race-track { background: var(--asfalto); border-radius: 15px; padding: 25px 0; border: 2px solid #333; position: relative; overflow: hidden; margin-bottom: 25px; box-shadow: inset 0 0 40px #000; min-height: 120px; }
-        .finish-line { position: absolute; right: 0; top: 0; bottom: 0; width: 30px; background-image: linear-gradient(45deg, #fff 25%, transparent 25%), linear-gradient(-45deg, #fff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #fff 75%), linear-gradient(-45deg, transparent 75%, #fff 75%); background-size: 15px 15px; background-color: #000; opacity: 0.2; }
         .lane { height: 60px; position: relative; display: flex; align-items: center; border-bottom: 1px dashed rgba(255,255,255,0.05); }
         .v-tag { position: absolute; left: 10px; top: 5px; font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.4); text-transform: uppercase; z-index: 1; }
-        .truck { position: absolute; bottom: 10px; left: 0; width: 90px; height: 45px; background-size: contain; background-repeat: no-repeat; transition: 3s cubic-bezier(0.2, 0, 0.2, 1); filter: drop-shadow(0 0 8px var(--green)); z-index: 2; }
+        .truck { 
+            position: absolute; bottom: 10px; left: 0; width: 90px; height: 45px; 
+            background-image: url('camion-intl.png'); 
+            background-size: contain; background-repeat: no-repeat; 
+            transition: 3s cubic-bezier(0.2, 0, 0.2, 1); 
+            filter: drop-shadow(0 0 8px var(--green)); z-index: 2; 
+        }
 
-        /* GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
         .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #333; }
-        h2 { font-size: 0.75rem; color: var(--blue); text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 10px; }
-
-        /* CARTERA SEMÁFORO */
+        
         .client-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
         .t-light { display: flex; flex-direction: column; gap: 3px; background: #000; padding: 6px; border-radius: 15px; width: 16px; border: 1px solid #333; margin-right: 15px; }
         .light { width: 10px; height: 10px; border-radius: 50%; opacity: 0.1; }
         .light.on { opacity: 1; box-shadow: 0 0 10px currentColor; }
-
-        .btn { padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; color: #fff; width: 100%; font-size: 0.8rem; background: var(--red); }
+        
+        input, select { background: #000; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; width: 100%; box-sizing: border-box; }
+        .btn { padding: 15px; border-radius: 8px; border: none; font-weight: bold; color: #fff; width: 100%; background: var(--red); cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="logo-catosa.png" class="login-logo" alt="Logo Catosa" onerror="this.style.display='none'">
-            <h2 style="font-size: 0.9rem; color: #fff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px;">Gerencia de Ventas</h2>
-            <input type="text" id="admin-user" placeholder="USUARIO" style="width:100%; margin-bottom:10px; background:#000; border:1px solid #333; padding:12px; color:#fff; border-radius:8px;">
-            <input type="password" id="admin-pass" placeholder="CONTRASEÑA" style="width:100%; margin-bottom:20px; background:#000; border:1px solid #333; padding:12px; color:#fff; border-radius:8px;">
+            <img src="logo-catosa.png" class="login-logo" onerror="this.style.display='none'">
+            <h2 style="color: #fff; font-size: 0.9rem; letter-spacing: 2px;">DASHBOARD GERENCIAL</h2>
+            <input type="text" id="admin-user" placeholder="USUARIO" style="margin-bottom:10px;">
+            <input type="password" id="admin-pass" placeholder="CONTRASEÑA" style="margin-bottom:20px;">
             <button class="btn" onclick="checkLogin()">IDENTIFICARSE</button>
-            <p id="error" style="color:var(--red); font-size:0.6rem; margin-top:15px; display:none;">Credenciales Incorrectas</p>
         </div>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <img src="logo-catosa.png" class="logo">
+            <img src="logo-catosa.png" style="max-height: 25px;">
             <h1 style="font-size: 0.7rem; letter-spacing: 4px; margin:0;">GP PERFORMANCE GERENCIA</h1>
-            <button onclick="location.reload()" style="background:none; border:none; color:var(--red); font-weight:bold; cursor:pointer; font-size:0.6rem;">CERRAR SESIÓN</button>
+            <button onclick="location.reload()" style="background:none; border:none; color:var(--red); cursor:pointer;">SALIR</button>
         </div>
 
         <div class="filter-grid">
-            <div class="filter-item">
-                <label>Sucursal</label>
-                <select id="f-suc" onchange="syncVendedores(); renderAdmin();"><option value="TODAS">TODAS</option></select>
-            </div>
-            <div class="filter-item">
-                <label>Asesor</label>
-                <select id="f-vend" onchange="renderAdmin()"><option value="TODOS">TODOS</option></select>
-            </div>
-            <div class="filter-item">
-                <label>Buscar Cliente</label>
-                <input type="text" id="f-cli" placeholder="Nombre del cliente..." oninput="renderAdmin()">
-            </div>
+            <div><label style="font-size:0.6rem; color:var(--blue)">SUCURSAL</label><select id="f-suc" onchange="renderAdmin()"><option value="TODAS">TODAS</option></select></div>
+            <div><label style="font-size:0.6rem; color:var(--blue)">VENDEDOR</label><select id="f-vend" onchange="renderAdmin()"><option value="TODOS">TODOS</option></select></div>
+            <div><label style="font-size:0.6rem; color:var(--blue)">BUSCAR CLIENTE</label><input type="text" id="f-cli" oninput="renderAdmin()"></div>
         </div>
 
         <div class="kpi-row">
-            <div class="kpi-card">
-                <div class="kpi-sub">Venta Consolidada</div>
-                <div class="kpi-val" id="k-v">$0</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-sub">Utilidad Real</div>
-                <div class="kpi-val" id="k-u">$0</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-sub">Alcance Global</div>
-                <div class="kpi-val" id="k-p">0%</div>
-            </div>
+            <div class="kpi-card"><h3>VENTA REAL</h3><div class="kpi-val" id="k-v">$0</div></div>
+            <div class="kpi-card"><h3>UTILIDAD REAL</h3><div class="kpi-val" id="k-u">$0</div></div>
+            <div class="kpi-card"><h3>ALCANCE</h3><div class="kpi-val" id="k-p">0%</div></div>
         </div>
 
-        <div class="race-track">
-            <div class="finish-line"></div>
-            <div id="pista"></div>
-        </div>
+        <div class="race-track"><div id="pista"></div></div>
 
         <div class="grid">
-            <div class="card" style="grid-column: span 2; height: 350px;">
-                <h2>📊 Rendimiento Comercial</h2>
-                <canvas id="salesChart" style="max-height: 280px;"></canvas>
-            </div>
-
-            <div class="card">
-                <h2>👥 Cartera de Clientes Detallada</h2>
-                <div id="lista-cli" style="max-height: 450px; overflow-y: auto;"></div>
-            </div>
-
-            <div class="card">
-                <h2>🏆 Top Eficiencia (Clientes en Verde)</h2>
-                <div id="top-ef"></div>
-            </div>
+            <div class="card" style="grid-column: span 2; height: 350px;"><h2>📈 COMPARATIVA</h2><canvas id="salesChart"></canvas></div>
+            <div class="card"><h2>👥 CARTERA DETALLADA</h2><div id="lista-cli" style="max-height: 450px; overflow-y: auto;"></div></div>
+            <div class="card"><h2>🏆 TOP EFICIENCIA (VERDES)</h2><div id="top-ef"></div></div>
         </div>
     </div>
 
     <script>
         const URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?output=csv&t=${new Date().getTime()}`;
         
-        let rawData = [], vends = [], clis = [], myChart = null;
+        let dbV = [], dbC = [], myChart = null;
+
+        const cleanK = (k) => k.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
         window.onload = () => {
-            Papa.parse(URL, { 
-                download: true, header: true, skipEmptyLines: true,
-                complete: (r) => { 
-                    rawData = r.data;
-                    vends = rawData.filter(row => row.Meta || row.Ventas);
-                    clis = rawData.filter(row => row.Cliente || row.Dias);
-                    
-                    const sSuc = document.getElementById('f-suc');
-                    const sucs = [...new Set(vends.map(v => v.Sucursal))].filter(x=>x && isNaN(x));
-                    sucs.forEach(s => sSuc.innerHTML += `<option value="${s}">${s}</option>`);
-                    syncVendedores();
-                }
-            });
+            Papa.parse(URL, { download: true, header: true, complete: (r) => { 
+                const data = r.data;
+                // Separación: Si tiene "Meta" o "Ventas" es Vendedor, si tiene "Cliente" o "Dias" es Cliente.
+                dbV = data.filter(row => row.Meta || row.Ventas);
+                dbC = data.filter(row => row.Cliente || row.Dias);
+
+                const sSuc = document.getElementById('f-suc');
+                const sVen = document.getElementById('f-vend');
+                const sucs = [...new Set(dbV.map(v => v.Sucursal))].filter(x => x && isNaN(x));
+                const vens = [...new Set(dbV.map(v => v.Nombre))].filter(x => x);
+                
+                sucs.forEach(s => sSuc.innerHTML += `<option value="${s}">${s}</option>`);
+                vens.forEach(v => sVen.innerHTML += `<option value="${v}">${v}</option>`);
+            }});
         };
 
-        function syncVendedores() {
-            const fs = document.getElementById('f-suc').value;
-            const sv = document.getElementById('f-vend');
-            sv.innerHTML = '<option value="TODOS">TODOS</option>';
-            vends.filter(v => fs === 'TODAS' || v.Sucursal === fs).forEach(v => {
-                sv.innerHTML += `<option value="${v.Nombre}">${v.Nombre}</option>`;
-            });
-        }
-
         function checkLogin() {
-            const u = document.getElementById('admin-user').value.toUpperCase();
-            const p = document.getElementById('admin-pass').value;
-            if(u === 'GERENTE' && p === 'CATOSA2026') {
+            if(document.getElementById('admin-user').value.toUpperCase() === 'GERENTE' && document.getElementById('admin-pass').value === 'CATOSA2026') {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
                 renderAdmin();
-            } else { document.getElementById('error').style.display = 'block'; }
+            }
         }
 
         function renderAdmin() {
             const fs = document.getElementById('f-suc').value;
             const fv = document.getElementById('f-vend').value;
             const fc = document.getElementById('f-cli').value.toLowerCase();
-            
-            const pista = document.getElementById('pista'), lc = document.getElementById('lista-cli'), te = document.getElementById('top-ef');
-            pista.innerHTML = ''; lc.innerHTML = ''; te.innerHTML = '';
-            
+            const pBox = document.getElementById('pista'), lc = document.getElementById('lista-cli'), te = document.getElementById('top-ef');
+            pBox.innerHTML = ''; lc.innerHTML = ''; te.innerHTML = '';
+
             let tv = 0, tu = 0, tm = 0, labels = [], vData = [], mData = [], efArr = [];
 
-            vends.filter(v => (fs === 'TODAS' || v.Sucursal === fs) && (fv === 'TODOS' || v.Nombre === fv)).forEach(v => {
-                const vr = parseFloat(v.Ventas.replace(/[^0-9.]/g, '')) || 0;
-                const vm = parseFloat(v.Meta.replace(/[^0-9.]/g, '')) || 1;
-                const ut = parseFloat(v.Utilidad.replace(/[^0-9.]/g, '')) || (vr * 0.25);
-                tv += vr; tm += vm; tu += ut;
-                
-                labels.push(v.Nombre); vData.push(vr); mData.push(vm);
-                
-                const pct = (vr / vm) * 100;
-                pista.innerHTML += `
+            // VENDEDORES
+            dbV.filter(v => (fs === 'TODAS' || v.Sucursal === fs) && (fv === 'TODOS' || v.Nombre === fv)).forEach(v => {
+                const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g, '')) || 0;
+                const met = parseFloat(v.Meta.replace(/[^0-9.]/g, '')) || 1;
+                const uti = parseFloat(v.Utilidad.replace(/[^0-9.]/g, '')) || (ven * 0.25);
+                tv += ven; tm += met; tu += uti;
+                labels.push(v.Nombre); vData.push(ven); mData.push(met);
+
+                const pct = Math.min(100, (ven/met)*100);
+                pBox.innerHTML += `
                     <div class="lane">
                         <div class="v-tag">${v.Nombre}</div>
-                        <div class="truck" style="left:calc(${Math.min(100, pct)}% - 90px); background-image:url('camion-intl.png');"></div>
+                        <div class="truck" style="left:calc(${pct}% - 90px);"></div>
                     </div>`;
                 
-                const numVerdes = clis.filter(c => c.Vendedor === v.Nombre && parseInt(c.Dias) <= 14).length;
-                efArr.push({n: v.Nombre, v: numVerdes});
+                const verdes = dbC.filter(c => c.Vendedor === v.Nombre && parseInt(c.Dias) <= 14).length;
+                efArr.push({n: v.Nombre, v: verdes});
             });
 
             document.getElementById('k-v').innerText = "$" + Math.floor(tv).toLocaleString();
             document.getElementById('k-u').innerText = "$" + Math.floor(tu).toLocaleString();
             document.getElementById('k-p').innerText = ((tv/tm)*100 || 0).toFixed(1) + "%";
 
-            efArr.sort((a,b)=>b.v - a.v).forEach(x => {
-                te.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333;"><span>${x.n}</span><b style="color:var(--green)">${x.v} Clientes OK</b></div>`;
-            });
+            efArr.sort((a,b)=>b.v - a.v).forEach(x => te.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #333;"><span>${x.n}</span><b style="color:var(--green)">${x.v} Verdes</b></div>`);
 
-            clis.filter(c => (fs === 'TODAS' || c.Sucursal === fs) && (fv === 'TODOS' || c.Vendedor === fv) && c.Cliente.toLowerCase().includes(fc)).forEach(c => {
+            // CLIENTES
+            dbC.filter(c => {
+                const matchC = c.Cliente.toLowerCase().includes(fc);
+                const matchS = (fs === 'TODAS' || c.Sucursal === fs);
+                const matchV = (fv === 'TODOS' || c.Vendedor === fv);
+                return matchC && matchS && matchV;
+            }).forEach(c => {
                 const d = parseInt(c.Dias) || 0;
                 lc.innerHTML += `
                     <div class="client-row">
@@ -216,38 +168,18 @@
                             <div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0; background:#ff0;"></div>
                             <div class="light ${d>60?'on':''}" style="color:#f00; background:#f00;"></div>
                         </div>
-                        <div style="flex:1;">
-                            <b style="font-size:13px;">${c.Cliente}</b><br>
-                            <small style="color:#777;">${c.Vendedor} | Última: ${c.Fecha}</small>
-                        </div>
-                        <b style="color:var(--red); padding-right:10px;">${d}d</b>
+                        <div style="flex:1;"><b style="font-size:13px;">${c.Cliente}</b><br><small style="color:#777;">${c.Vendedor} | ${c.Fecha}</small></div>
+                        <b style="color:var(--red)">${d}d</b>
                     </div>`;
             });
 
-            if(window.Chart) updateChart(labels, vData, mData);
+            updateChart(labels, vData, mData);
         }
 
         function updateChart(l, v, m) {
             const ctx = document.getElementById('salesChart').getContext('2d');
             if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { 
-                type: 'bar', 
-                data: { 
-                    labels: l, 
-                    datasets: [
-                        { label: 'Venta', data: v, backgroundColor: '#00d4ff', borderRadius: 5}, 
-                        { label: 'Meta', data: m, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 5}
-                    ] 
-                }, 
-                options: { 
-                    responsive: true, maintainAspectRatio: false, 
-                    scales: { 
-                        y: { ticks: { color: '#888' }, grid: { color: '#333' } }, 
-                        x: { ticks: { color: '#888' }, grid: { display: false } } 
-                    }, 
-                    plugins: { legend: { labels: { color: '#fff' } } } 
-                } 
-            });
+            myChart = new Chart(ctx, { type: 'bar', data: { labels: l, datasets: [{ label: 'Venta', data: v, backgroundColor: '#00d4ff', borderRadius: 5}, { label: 'Meta', data: m, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 5}] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { color: '#888' }, grid: { color: '#333' } }, x: { ticks: { color: '#888' }, grid: { display: false } } }, plugins: { legend: { labels: { color: '#fff' } } } } });
         }
     </script>
 </body>
