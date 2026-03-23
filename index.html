@@ -9,6 +9,7 @@
         :root { --red: #d21034; --bg: #111315; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --asfalto: #0c0e10; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
         
+        /* LOGIN CON LOGO */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 40px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 85%; max-width: 350px; }
         .login-logo { max-height: 50px; margin-bottom: 25px; display: block; margin-left: auto; margin-right: auto; }
@@ -38,7 +39,7 @@
         .light { width: 10px; height: 10px; border-radius: 50%; opacity: 0.1; }
         .light.on { opacity: 1; box-shadow: 0 0 10px currentColor; }
 
-        /* CALENDARIO */
+        /* CALCULADORA */
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 10px; }
         .day-box { background: #000; border: 1px solid #333; border-radius: 6px; padding: 8px 2px; text-align: center; }
         .day-num { font-size: 0.6rem; color: #555; display: block; }
@@ -53,10 +54,11 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="logo-catosa.png" class="login-logo" onerror="this.style.display='none'">
-            <h2 style="font-size: 0.9rem; color: #fff; margin-bottom: 25px; letter-spacing: 2px;">ACCESO ASESORES</h2>
+            <h2 style="font-size: 0.9rem; color: #fff; margin-bottom: 25px; letter-spacing: 2px;">ASESORES CATOSA</h2>
             <input type="text" id="user-name" placeholder="NOMBRE" style="text-align: center;">
             <input type="password" id="user-pass" placeholder="CONTRASEÑA (Apellido123)" style="text-align: center;">
             <button class="btn" onclick="login()">INGRESAR</button>
+            <p id="error" style="color:var(--red); font-size:0.6rem; margin-top:15px; display:none;">Datos incorrectos</p>
         </div>
     </div>
 
@@ -70,9 +72,9 @@
         <div class="race-track"><div id="mi-camion" class="truck"></div></div>
 
         <div class="kpi-card">
-            <div style="font-size:0.6rem; color:#888;">MI VENTA REAL</div>
+            <div style="font-size:0.6rem; color:#888; text-transform: uppercase;">Mi Venta Real</div>
             <div class="kpi-val" id="k-v">$0</div>
-            <div id="k-p" style="font-size:0.75rem; color:var(--blue)">0% Alcance</div>
+            <div id="k-p" style="font-size:0.75rem; color:var(--blue); font-weight:bold;">0% Alcance</div>
         </div>
 
         <div class="card">
@@ -82,7 +84,7 @@
                 <input type="text" id="cot-parte" placeholder="N° de Parte">
                 <input type="number" id="cot-piezas" placeholder="Pzs">
             </div>
-            <textarea id="cot-obs" placeholder="Observaciones adicionales (Opcional)"></textarea>
+            <textarea id="cot-obs" placeholder="Observaciones (Opcional)"></textarea>
             <div class="btn-action">
                 <button class="btn btn-wa" onclick="sendWA()">WhatsApp</button>
                 <button class="btn btn-mail" onclick="sendMail()">Correo</button>
@@ -98,76 +100,109 @@
         </div>
 
         <div class="card">
-            <h2>👥 MI CARTERA</h2>
+            <h2>👥 MI CARTERA DE CLIENTES</h2>
             <input type="text" id="f-cli" placeholder="🔍 Buscar cliente..." oninput="renderApp()">
             <div id="lista-cli"></div>
         </div>
     </div>
 
     <script>
+        // LINK MAESTRO
         const URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?output=csv&t=${new Date().getTime()}`;
-        let vends = [], clis = [], user = null;
+        
+        let dbTotal = [], user = null;
+
+        // Función para buscar valores sin importar el nombre exacto de la columna
+        function getV(obj, keyName) {
+            if (!obj) return "";
+            const keys = Object.keys(obj);
+            const foundKey = keys.find(k => k.trim().toLowerCase().includes(keyName.toLowerCase()));
+            return foundKey ? obj[foundKey] : "";
+        }
 
         window.onload = () => {
             const cg = document.getElementById('cal-grid');
             for(let i=1; i<=31; i++) cg.innerHTML += `<div class="day-box"><span class="day-num">${i}</span><input type="number" class="day-in" oninput="sumCal()"></div>`;
+            
             Papa.parse(URL, { download: true, header: true, complete: (r) => { 
-                vends = r.data.filter(x => x.Meta || x.Ventas);
-                clis = r.data.filter(x => x.Cliente || x.Dias);
+                dbTotal = r.data; 
             }});
         };
 
         function login() {
             const ni = document.getElementById('user-name').value.trim().toUpperCase();
             const pi = document.getElementById('user-pass').value.trim().toUpperCase();
-            const found = vends.find(v => {
-                const ape = v.Nombre.toUpperCase().split(" ").filter(s => s).pop();
-                return v.Nombre.toUpperCase().includes(ni) && (ape + "123") === pi;
+            
+            // Buscar al vendedor en los datos
+            const found = dbTotal.find(v => {
+                const nom = getV(v, 'Nombre').toUpperCase();
+                const ape = nom.split(" ").filter(x => x).pop();
+                return nom.includes(ni) && (ape + "123") === pi;
             });
+
             if(found) {
                 user = found;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
-                document.getElementById('u-display').innerText = user.Nombre;
-                document.getElementById('s-display').innerText = user.Sucursal;
+                document.getElementById('u-display').innerText = getV(user, 'Nombre');
+                document.getElementById('s-display').innerText = getV(user, 'Sucursal');
                 renderApp();
-            }
+            } else { document.getElementById('error').style.display = 'block'; }
         }
 
         function renderApp() {
-            const vr = parseFloat(user.Ventas.replace(/[^0-9.]/g, '')) || 0;
-            const vm = parseFloat(user.Meta.replace(/[^0-9.]/g, '')) || 1;
+            // Datos del vendedor
+            const vr = parseFloat(getV(user, 'Ventas').toString().replace(/[^0-9.]/g, '')) || 0;
+            const vm = parseFloat(getV(user, 'Meta').toString().replace(/[^0-9.]/g, '')) || 1;
             const pct = Math.min(100, (vr/vm)*100);
+
             document.getElementById('k-v').innerText = "$" + vr.toLocaleString();
-            document.getElementById('k-p').innerText = pct.toFixed(1) + "% Alcance Meta";
+            document.getElementById('k-p').innerText = pct.toFixed(1) + "% Alcance";
             document.getElementById('mi-camion').style.left = `calc(${pct}% - 90px)`;
 
+            // Cartera filtrada
             const lc = document.getElementById('lista-cli'), fc = document.getElementById('f-cli').value.toLowerCase();
             lc.innerHTML = '';
-            clis.filter(c => c.Vendedor === user.Nombre && c.Cliente.toLowerCase().includes(fc)).forEach(c => {
-                const d = parseInt(c.Dias) || 0;
-                lc.innerHTML += `<div class="client-row"><div class="t-light"><div class="light ${d<=14?'on':''}" style="color:#0f0; background:#0f0;"></div><div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0; background:#ff0;"></div><div class="light ${d>60?'on':''}" style="color:#f00; background:#f00;"></div></div><div style="flex:1;"><b>${c.Cliente}</b><br><small style="color:#777;">Última: ${c.Fecha}</small></div><b>${d}d</b></div>`;
+            
+            dbTotal.forEach(c => {
+                const clivend = getV(c, 'Vendedor');
+                const cliente = getV(c, 'Cliente');
+                
+                // Si el vendedor de la fila coincide con el usuario logueado
+                if(clivend === getV(user, 'Nombre') && cliente.toLowerCase().includes(fc)) {
+                    const d = parseInt(getV(c, 'Dias')) || 0;
+                    lc.innerHTML += `
+                        <div class="client-row">
+                            <div class="t-light">
+                                <div class="light ${d<=14?'on':''}" style="color:#0f0; background:#0f0;"></div>
+                                <div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0; background:#ff0;"></div>
+                                <div class="light ${d>60?'on':''}" style="color:#f00; background:#f00;"></div>
+                            </div>
+                            <div style="flex:1;">
+                                <b style="font-size:13px;">${cliente}</b><br>
+                                <small style="color:#777;">Última: ${getV(c, 'Fecha')}</small>
+                            </div>
+                            <b style="color:var(--red); padding-right:10px;">${d}d</b>
+                        </div>`;
+                }
             });
         }
 
         function sumCal() {
-            let s = 0; document.querySelectorAll('.day-in').forEach(i => s += parseFloat(i.value) || 0);
+            let s = 0;
+            document.querySelectorAll('.day-in').forEach(i => s += parseFloat(i.value) || 0);
             document.getElementById('c-sum').innerText = "$" + s.toLocaleString();
         }
 
-        // FUNCIONES DE ENVÍO
         function getCotText() {
             const cli = document.getElementById('cot-cliente').value;
             const par = document.getElementById('cot-parte').value;
             const pzs = document.getElementById('cot-piezas').value;
             const obs = document.getElementById('cot-obs').value;
-            return `*CATOSA - COTIZACIÓN EXPRESS*%0A%0A*Cliente:* ${cli}%0A*Parte:* ${par}%0A*Cantidad:* ${pzs} pzs%0A*Atiende:* ${user.Nombre}%0A${obs ? '*Obs:* ' + obs : ''}`;
+            return `*CATOSA - COTIZACIÓN EXPRESS*%0A%0A*Cliente:* ${cli}%0A*Parte:* ${par}%0A*Cantidad:* ${pzs} pzs%0A*Atiende:* ${getV(user, 'Nombre')}%0A${obs ? '*Obs:* ' + obs : ''}`;
         }
 
-        function sendWA() {
-            window.open(`https://api.whatsapp.com/send?text=${getCotText()}`);
-        }
-
+        function sendWA() { window.open(`https://api.whatsapp.com/send?text=${getCotText()}`); }
         function sendMail() {
             const body = getCotText().replace(/\*/g, '').replace(/%0A/g, '%0D%0A');
             window.location.href = `mailto:?subject=Cotizacion Catosa - ${document.getElementById('cot-cliente').value}&body=${body}`;
