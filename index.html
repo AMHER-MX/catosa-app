@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catosa GP - Ultimate Edition</title>
+    <title>Catosa GP - Performance Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root { 
@@ -16,7 +16,6 @@
         /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 30px; border-radius: 15px; border: 1px solid var(--red); width: 85%; max-width: 350px; text-align: center; }
-        
         #main-app { display: none; }
 
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 2px solid #444; margin-bottom: 15px; }
@@ -33,16 +32,33 @@
 
         /* GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 15px; max-width: 1400px; margin: 0 auto; }
-        .card { background: var(--card); border-radius: 12px; padding: 18px; border: 1px solid #333; }
+        .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; }
         h2 { font-size: 0.7rem; color: #888; text-transform: uppercase; margin: 0 0 12px 0; border-left: 3px solid var(--red); padding-left: 10px; }
 
-        /* CALENDARIO */
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-        .day-box { background: #000; border: 1px solid #333; border-radius: 6px; padding: 8px 4px; text-align: center; }
-        .day-num { font-size: 0.6rem; color: #666; display: block; margin-bottom: 4px; }
-        .day-in { width: 100%; background: transparent; border: none; color: var(--green); font-size: 0.85rem; font-weight: bold; text-align: center; outline: none; }
+        /* CALENDARIO REFORMADO (MÁS ESPACIO) */
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .day-box { background: #222; border: 1px solid #444; border-radius: 4px; padding: 4px 2px; text-align: center; }
+        .day-num { font-size: 0.6rem; color: #aaa; font-weight: bold; display: block; margin-bottom: 2px; }
+        
+        /* Input optimizado para que quepan miles */
+        .day-in { 
+            width: 100%; 
+            background: #fff; 
+            border: none; 
+            color: #000; 
+            font-size: 0.65rem; /* Letra un poco más pequeña para que quepa el número */
+            font-weight: bold; 
+            text-align: center; 
+            outline: none; 
+            border-radius: 2px; 
+            padding: 4px 0;
+            -moz-appearance: textfield; /* Quita flechas en Firefox */
+        }
+        .day-in::-webkit-outer-spin-button, .day-in::-webkit-inner-spin-button {
+            -webkit-appearance: none; margin: 0; /* Quita flechas en Chrome/Safari */
+        }
 
-        /* COTIZADOR MULTI-PRODUCTO */
+        /* COTIZADOR */
         input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin: 5px 0; box-sizing: border-box; }
         .qty-row { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin: 10px 0; }
         .btn-add { background: var(--blue); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; height: 45px; }
@@ -51,9 +67,9 @@
         
         /* BOTONES ACCIÓN */
         .action-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn { padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; color: #fff; width: 100%; font-size: 0.65rem; }
+        .btn { padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; color: #fff !important; width: 100%; font-size: 0.7rem; }
         .btn-ws { background: linear-gradient(135deg, #25d366, #128c7e); }
-        .btn-mail { background: #444; border: 1px solid #555; }
+        .btn-mail { background: #555; }
         
         /* CARTERA */
         .client-row { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
@@ -67,10 +83,10 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="logo-catosa.png" style="max-height: 40px; margin-bottom: 20px;">
-            <input type="text" id="user-name" placeholder="USUARIO (Nombre)" style="text-align: center; text-transform: uppercase;">
-            <input type="password" id="user-pass" placeholder="CONTRASEÑA (Apellido123)" style="text-align: center;">
+            <input type="text" id="user-name" placeholder="USUARIO" style="text-align: center; text-transform: uppercase;">
+            <input type="password" id="user-pass" placeholder="CONTRASEÑA" style="text-align: center;">
             <button class="btn" style="background:var(--red)" onclick="login()">INGRESAR AL GP</button>
-            <p id="login-error" style="color:var(--red); font-size:0.6rem; margin-top:10px; display:none;">Error en credenciales.</p>
+            <p id="login-error" style="color:var(--red); font-size:0.6rem; margin-top:10px; display:none;">Error: Revisa tus datos.</p>
         </div>
     </div>
 
@@ -78,7 +94,7 @@
         <div class="header">
             <img src="logo-catosa.png" class="logo">
             <h1>PERFORMANCE: <span id="user-display" style="color:var(--red)">--</span></h1>
-            <button onclick="location.reload()" style="background:none; border:none; color:#555; font-size:0.6rem; cursor:pointer;">CERRAR SESIÓN</button>
+            <button onclick="location.reload()" style="background:none; border:none; color:#555; font-size:0.6rem;">SALIR</button>
         </div>
 
         <div class="race-track">
@@ -93,22 +109,24 @@
                     <span>ALCANCE: <b id="pct-alcance" style="color:var(--green)">0%</b></span>
                     <span>BONO: <b id="rango-bono">--</b></span>
                 </div>
-                <div style="background:#000; height:10px; border-radius:10px; overflow:hidden; margin-bottom:15px;">
+                <div style="background:#000; height:8px; border-radius:10px; overflow:hidden; margin-bottom:15px;">
                     <div id="bar-fill" style="height:100%; background:var(--green); width:0%; transition:1s;"></div>
                 </div>
+                
                 <div class="cal-grid" id="cal-grid"></div>
-                <div style="text-align:center; margin-top:15px; background:#000; padding:10px; border-radius:8px;">
-                    <small style="font-size:0.5rem; color:#555;">SUMA CALENDARIO</small>
-                    <div id="disp-real" style="font-size:1.2rem; font-weight:bold; color:var(--blue)">$0</div>
+
+                <div style="text-align:center; margin-top:15px; background:#000; padding:10px; border-radius:8px; border: 1px solid #222;">
+                    <small style="font-size:0.6rem; color:#888;">SUMA CALENDARIO</small>
+                    <div id="disp-real" style="font-size:1.5rem; font-weight:bold; color:var(--green)">$0</div>
                 </div>
-                <input type="number" id="obj-val" value="1000000" oninput="updatePerf()" style="text-align:center;">
+                <input type="number" id="obj-val" value="1000000" oninput="updatePerf()" style="text-align:center; font-weight:bold; color:var(--blue);">
             </div>
 
             <div class="card">
-                <h2>📋 Cotizador Catosa</h2>
+                <h2>📋 Cotizador</h2>
                 <input type="text" id="cCliente" placeholder="Nombre del Cliente...">
                 <input type="text" id="cParte" placeholder="Número de Parte..." oninput="buscarPieza()">
-                <div style="font-size: 0.65rem; color: #555; margin: 5px 0;">Ref: <span id="qDesc">--</span> | Precio: <span id="qUnit">$0</span></div>
+                <div style="font-size: 0.65rem; color: #888; margin: 5px 0;">Ref: <span id="qDesc">--</span> | Precio: <span id="qUnit">$0</span></div>
                 
                 <div class="qty-row">
                     <input type="number" id="cCant" value="1" min="1">
@@ -116,7 +134,7 @@
                 </div>
 
                 <div class="cart-box" id="carrito-items">Lista vacía</div>
-                <div style="text-align:right; font-size:1.3rem; font-weight:bold; margin:10px 0; color:var(--green);" id="total-cart">$0.00</div>
+                <div style="text-align:right; font-size:1.5rem; font-weight:bold; margin:10px 0; color:var(--green);" id="total-cart">$0.00</div>
                 
                 <div class="action-group">
                     <button class="btn btn-ws" onclick="enviar('ws')">📲 WhatsApp</button>
@@ -146,7 +164,13 @@
 
         window.onload = () => {
             const cal = document.getElementById('cal-grid');
-            for(let i=1; i<=31; i++) cal.innerHTML += `<div class="day-box"><span class="day-num">${i}</span><input type="number" class="day-in" placeholder="0" oninput="updatePerf()"></div>`;
+            for(let i=1; i<=31; i++) {
+                cal.innerHTML += `
+                    <div class="day-box">
+                        <span class="day-num">${i}</span>
+                        <input type="number" class="day-in" placeholder="0" oninput="updatePerf()">
+                    </div>`;
+            }
             Papa.parse(URL_V, { download: true, header: true, complete: (r) => { dbV = r.data; } });
             Papa.parse(URL_P, { download: true, header: true, complete: (r) => { dbP = r.data; } });
         };
@@ -238,7 +262,7 @@
             miCartera.forEach(f => {
                 const cli = getVal(f, 'Cliente'), d = parseInt(getVal(f, 'Dias')) || 0, fch = getVal(f, 'Fecha') || "N/A";
                 if (cli && cli.toLowerCase().includes(search)) {
-                    list.innerHTML += `<div class="client-row"><div class="t-light"><div class="light ${d<=14?'on':''}" style="color:#0f0;background:#0f0;"></div><div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0;background:#ff0;"></div><div class="light ${d>60?'on':''}" style="color:#f00;background:#f00;"></div></div><div style="flex:1;"><span style="font-size:12px; font-weight:bold;">${cli}</span><br><small style="font-size:9px; color:#555;">Última: ${fch}</small></div><b style="font-size:10px; color:var(--red)">${d}d</b></div>`;
+                    list.innerHTML += `<div class="client-row"><div class="t-light"><div class="light ${d<=14?'on':''}" style="color:#0f0;background:#0f0;"></div><div class="light ${d>14&&d<=60?'on':''}" style="color:#ff0;background:#ff0;"></div><div class="light ${d>60?'on':''}" style="color:#f00;background:#f00;"></div></div><div style="flex:1;"><span style="font-size:12px; font-weight:bold;">${cli}</span><br><small style="font-size:9px; color:#aaa;">Última: ${fch}</small></div><b style="font-size:10px; color:var(--red)">${d}d</b></div>`;
                 }
             });
         }
