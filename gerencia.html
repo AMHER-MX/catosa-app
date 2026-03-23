@@ -3,133 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catosa GP - Gerencia Master</title>
+    <title>Catosa GP - Control Directivo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --red: #d21034; --bg: #0c0e10; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
+        
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: var(--card); padding: 40px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 85%; max-width: 350px; }
+        
+        #main-app { display: none; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--card); border-radius: 10px; margin-bottom: 20px; border-bottom: 2px solid #333; }
-        .time-panel { padding: 15px; margin-bottom: 20px; border: 1px solid var(--blue); border-radius: 12px; background: rgba(0, 212, 255, 0.05); display: flex; justify-content: space-between; align-items: center; }
-        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .kpi-card { background: var(--card); padding: 20px; border-radius: 12px; border-top: 3px solid var(--blue); text-align: center; }
-        .kpi-val { font-size: 1.4rem; font-weight: bold; color: var(--green); margin: 5px 0; }
-        .race-track { background: #050505; border-radius: 15px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 25px; }
-        .lane { height: 55px; position: relative; display: flex; align-items: center; border-bottom: 1px dashed #222; }
-        .v-tag { position: absolute; left: 10px; top: 2px; font-size: 9px; color: #777; z-index: 1; text-transform: uppercase; }
-        .meta-line { position: absolute; right: 0; top: 0; bottom: 0; width: 20px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); opacity: 0.1; border-left: 2px solid #333; }
-        .truck { position: absolute; bottom: 8px; left: 0; width: 80px; height: 40px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s; filter: grayscale(1) opacity(0.3); }
+        .kpi-val { font-size: 1.4rem; font-weight: bold; color: var(--green); }
+        .kpi-label { font-size: 0.6rem; color: #888; text-transform: uppercase; }
+
+        .race-track { background: #050505; border-radius: 15px; padding: 20px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 25px; }
+        .lane { height: 50px; position: relative; border-bottom: 1px dashed #222; display: flex; align-items: center; }
+        .line-100 { position: absolute; left: 86.9%; top: 0; bottom: 0; width: 2px; background: var(--silver); opacity: 0.3; }
+        .line-115 { position: absolute; right: 0; top: 0; bottom: 0; width: 15px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); opacity: 0.2; }
+        .v-name { width: 120px; font-size: 0.55rem; color: #aaa; padding-left: 10px; z-index: 2; white-space: nowrap; overflow: hidden; }
+        
+        .truck { position: absolute; width: 60px; height: 32px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 2s; z-index: 3; filter: grayscale(1) opacity(0.5); }
         .truck.bronce { filter: drop-shadow(0 0 5px var(--bronze)); opacity: 1; }
         .truck.plata { filter: drop-shadow(0 0 8px var(--silver)); opacity: 1; }
-        .truck.oro { filter: drop-shadow(0 0 15px var(--gold)); opacity: 1; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .truck.oro { filter: drop-shadow(0 0 15px var(--gold)); opacity: 1; }
+
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
         .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #333; }
-        .btn { padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); font-size: 0.7rem; }
-        .btn-export { background: var(--green); color: #000; padding: 5px 15px; }
+        h2 { font-size: 0.75rem; color: var(--blue); border-bottom: 1px solid #444; padding-bottom: 10px; text-transform: uppercase; margin-top:0; }
+
+        .filter-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        select, input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-size: 0.8rem; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; font-size: 0.7rem; }
+        
+        .seg-item { border-left: 3px solid var(--blue); background: rgba(255,255,255,0.02); padding: 10px; margin-bottom: 10px; border-radius: 0 8px 8px 0; font-size: 0.75rem; }
     </style>
 </head>
 <body>
-    <div id="login-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:1000; display:flex; align-items:center; justify-content:center;">
-        <div style="background:var(--card); padding:40px; border-radius:15px; text-align:center;">
-            <img src="logo-catosa.png" style="max-height: 40px; margin-bottom:20px;">
-            <input type="password" id="admin-pass" placeholder="Password Gerencia" style="width:100%; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid #333;">
-            <button class="btn" onclick="checkLogin()">ENTRAR</button>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <img src="logo-catosa.png" style="max-height: 40px; margin-bottom: 20px;">
+            <input type="text" id="u-role" placeholder="USUARIO">
+            <input type="password" id="u-pass" placeholder="PASSWORD">
+            <button class="btn" style="width:100%" onclick="login()">ENTRAR</button>
         </div>
     </div>
 
-    <div id="main-app" style="display:none;">
-        <div class="header"><img src="logo-catosa.png" style="max-height: 25px;"><h1>GERENCIA MASTER</h1><button onclick="location.reload()" class="btn">SALIR</button></div>
-
-        <div class="time-panel">
-            <div><span id="txt-fecha" style="font-size:0.7rem; color:#888;">--</span><br><b id="txt-dias-restantes" style="color:var(--red);">QUEDAN -- DÍAS</b></div>
-            <div style="text-align:right;"><span style="font-size:0.6rem; color:#888;">FALTANTE GLOBAL:</span><br><b id="txt-faltante-meta" style="color:var(--gold); font-size:1.2rem;">$0</b></div>
+    <div id="main-app">
+        <div class="header">
+            <img src="logo-catosa.png" style="max-height: 20px;">
+            <span id="role-tag" style="font-size: 0.6rem; color: var(--gold); border: 1px solid; padding: 2px 8px; border-radius: 4px;">--</span>
+            <button class="btn" style="background:none; border:1px solid var(--red); color:var(--red);" onclick="location.reload()">SALIR</button>
         </div>
 
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <select id="f-suc" onchange="renderAdmin()" style="background:#1a1d20; color:#fff; padding:10px; border-radius:8px; border:1px solid #333;"><option value="TODAS">TODAS LAS SUCURSALES</option></select>
-            <button class="btn btn-export" onclick="exportToCSV()">📥 DESCARGAR CARTERA</button>
+        <div class="filter-row">
+            <select id="f-suc" onchange="render()"><option value="TODAS">TODAS LAS SUCURSALES</option></select>
+            <button class="btn" style="background:var(--green); color:#000;" onclick="exportCSV()">📥 EXPORTAR CARTERA</button>
         </div>
 
         <div class="kpi-row">
-            <div class="kpi-card"><span style="font-size:0.6rem;">VENTA GLOBAL</span><div class="kpi-val" id="k-v">$0</div></div>
-            <div class="kpi-card"><span style="font-size:0.6rem;">UTILIDAD GLOBAL</span><div class="kpi-val" id="k-u">$0</div></div>
-            <div class="kpi-card"><span style="font-size:0.6rem;">ALCANCE GLOBAL</span><div class="kpi-val" id="k-p">0%</div></div>
+            <div class="kpi-card"><span class="kpi-label">Venta Global</span><div class="kpi-val" id="g-v">$0</div></div>
+            <div id="uti-card" class="kpi-card" style="display:none;"><span class="kpi-label">Utilidad Real</span><div class="kpi-val" id="g-u">$0</div></div>
+            <div class="kpi-card"><span class="kpi-label">Alcance Meta Oro</span><div class="kpi-val" id="g-p">0%</div></div>
         </div>
 
-        <div class="race-track"><div class="meta-line"></div><div id="pista"></div></div>
+        <div class="race-track">
+            <div class="line-100"></div>
+            <div class="line-115"></div>
+            <div id="pista"></div>
+        </div>
 
         <div class="grid">
-            <div class="card" style="grid-column: span 2; height: 350px;"><h2>📈 Rendimiento Comercial</h2><canvas id="salesChart"></canvas></div>
-            <div class="card"><h2>👥 Cartera Detallada</h2><div id="lista-cli" style="max-height:400px; overflow-y:auto;"></div></div>
-            <div class="card"><h2>🏆 Eficiencia Clientes</h2><div id="top-ef"></div></div>
+            <div class="card">
+                <h2>📈 Rendimiento Comercial</h2>
+                <canvas id="salesChart" style="max-height: 250px;"></canvas>
+            </div>
+            <div class="card">
+                <h2>📅 Bitácora de Seguimiento</h2>
+                <div id="seguimiento-list" style="max-height: 300px; overflow-y: auto;"></div>
+            </div>
+            <div class="card">
+                <h2>👥 Cartera Inactiva</h2>
+                <div id="lista-cli" style="max-height: 300px; overflow-y: auto;"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        const L_VEND = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=0&single=true&output=csv";
-        const L_CLIE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1068966462&single=true&output=csv";
-        let dbV=[], dbC=[], myChart=null;
+        const LV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=0&single=true&output=csv";
+        const LC = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1068966462&single=true&output=csv";
+        const LS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=480185164&single=true&output=csv";
+        
+        let dbV=[], dbC=[], dbS=[], role='', myChart=null;
 
-        window.onload = () => {
-            Papa.parse(L_VEND, { download:true, header:true, complete: r => { dbV=r.data; fillSuc(); renderAdmin(); } });
-            Papa.parse(L_CLIE, { download:true, header:true, complete: r => { dbC=r.data; } });
-        };
+        function login() {
+            const u = document.getElementById('u-role').value.toUpperCase();
+            const p = document.getElementById('u-pass').value;
+            if(u==='GERENTE' && p==='CATOSA2026') role='GERENCIA';
+            else if(u==='DIRECTOR' && p==='MASTER2026') role='DIRECCIÓN';
+            else return alert("Acceso denegado");
 
-        function checkLogin() { if(document.getElementById('admin-pass').value === 'CATOSA2026') { document.getElementById('login-screen').style.display='none'; document.getElementById('main-app').style.display='block'; } }
+            document.getElementById('login-screen').style.display='none';
+            document.getElementById('main-app').style.display='block';
+            document.getElementById('role-tag').innerText = role;
+            if(role==='DIRECCIÓN') document.getElementById('uti-card').style.display='block';
+
+            loadData();
+        }
+
+        function loadData() {
+            Papa.parse(LV, { download:true, header:true, complete: r => { dbV=r.data; fillSuc(); render(); } });
+            Papa.parse(LC, { download:true, header:true, complete: r => { dbC=r.data; renderClie(); } });
+            Papa.parse(LS, { download:true, header:true, complete: r => { dbS=r.data; renderSeg(); } });
+        }
 
         function fillSuc() {
             const s = document.getElementById('f-suc');
             [...new Set(dbV.map(v => v.Sucursal))].filter(x=>x).forEach(x => s.innerHTML += `<option value="${x}">${x}</option>`);
         }
 
-        function renderAdmin() {
+        function render() {
             const fs = document.getElementById('f-suc').value;
-            const p = document.getElementById('pista'), lc = document.getElementById('lista-cli'), te = document.getElementById('top-ef');
-            p.innerHTML = ''; lc.innerHTML = ''; te.innerHTML = '';
-            
-            let tv=0, tu=0, tm=0, labels=[], vData=[], mData=[], efArr=[];
+            const p = document.getElementById('pista'); p.innerHTML = '';
+            let tv=0, tu=0, tm=0, labs=[], vdat=[], mdat=[];
 
-            const hoy = new Date();
-            const diasRest = (new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate() - hoy.getDate()) + 1;
-            document.getElementById('txt-fecha').innerText = hoy.toLocaleDateString('es-MX', {day:'numeric', month:'long'}).toUpperCase();
-            document.getElementById('txt-dias-restantes').innerText = `QUEDAN ${diasRest} DÍAS`;
-
-            dbV.filter(v => fs === 'TODAS' || v.Sucursal === fs).forEach(v => {
-                const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g, '')) || 0, met = parseFloat(v.Meta.replace(/[^0-9.]/g, '')) || 1;
-                tv += ven; tm += met; tu += parseFloat(v.Utilidad.replace(/[^0-9.]/g, '')) || (ven * 0.22);
-                labels.push(v.Nombre); vData.push(ven); mData.push(met);
+            dbV.filter(v => (fs === 'TODAS' || v.Sucursal === fs) && v.Nombre).forEach(v => {
+                const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g,''))||0, met = parseFloat(v.Meta.replace(/[^0-9.]/g,''))||1;
+                tv += ven; tm += met; tu += parseFloat(v.Utilidad.replace(/[^0-9.]/g,''))||(ven*0.22);
+                
                 const pct = (ven/met)*100;
-                let rc = ""; if(pct>=100) rc="oro"; else if(pct>=95) rc="plata"; else if(pct>=85) rc="bronce";
-                p.innerHTML += `<div class="lane"><div class="v-tag">${v.Nombre} (${Math.floor(pct)}%)</div><div class="truck ${rc}" style="left:calc(${Math.min(100, pct)}% - 80px)"></div></div>`;
-                efArr.push({n: v.Nombre, v: dbC.filter(c => c.Vendedor === v.Nombre && parseInt(c.Dias) <= 14).length});
+                const pctPista = Math.min(100, (pct/115)*100);
+                let rc = ''; if(pct>=115) rc='oro'; else if(pct>=100) rc='plata'; else if(pct>=85) rc='bronce';
+                
+                p.innerHTML += `<div class="lane"><div class="v-name">${v.Nombre} (${Math.floor(pct)}%)</div><div class="truck ${rc}" style="left:calc(${pctPista}% - 55px);"></div></div>`;
+                labs.push(v.Nombre); vdat.push(ven); mdat.push(met);
             });
 
-            document.getElementById('k-v').innerText = "$" + Math.floor(tv).toLocaleString();
-            document.getElementById('k-u').innerText = "$" + Math.floor(tu).toLocaleString();
-            document.getElementById('k-p').innerText = ((tv/tm)*100 || 0).toFixed(1) + "%";
-            document.getElementById('txt-faltante-meta').innerText = "$" + Math.max(0, Math.floor(tm - tv)).toLocaleString();
-
-            efArr.sort((a,b)=>b.v-a.v).forEach(x => te.innerHTML += `<div style="padding:5px; border-bottom:1px solid #333; font-size:0.7rem;">${x.n}: <b>${x.v} Verdes</b></div>`);
-            dbC.filter(c => fs === 'TODAS' || c.Sucursal === fs).forEach(c => {
-                const d = parseInt(c.Dias) || 0;
-                lc.innerHTML += `<div style="display:flex; align-items:center; padding:8px; border-bottom:1px solid #222;"><div style="width:10px; height:10px; border-radius:50%; background:${d<=14?'#0f0':(d<=60?'#ff0':'#f00')}; margin-right:10px;"></div><div style="flex:1; font-size:0.7rem;"><b>${c.Cliente}</b><br><small>${c.Vendedor}</small></div><b style="font-size:0.7rem;">${d}d</b></div>`;
-            });
+            document.getElementById('g-v').innerText = "$" + Math.floor(tv).toLocaleString();
+            document.getElementById('g-p').innerText = ((tv/(tm*1.15))*100).toFixed(1) + "%";
+            if(role==='DIRECCIÓN') document.getElementById('g-u').innerText = "$" + Math.floor(tu).toLocaleString();
 
             const ctx = document.getElementById('salesChart').getContext('2d');
             if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'Venta', data: vData, backgroundColor: '#00d4ff'}, { label: 'Meta', data: mData, backgroundColor: '#222'}] }, options: { responsive:true, maintainAspectRatio:false } });
+            myChart = new Chart(ctx, { type:'bar', data: { labels:labs, datasets:[{label:'Venta', data:vdat, backgroundColor:'#00d4ff'},{label:'Meta Oro', data:mdat.map(m=>m*1.15), backgroundColor:'#333'}] }, options: { responsive:true, maintainAspectRatio:false } });
         }
 
-        function exportToCSV() {
+        function renderSeg() {
+            const list = document.getElementById('seguimiento-list'); list.innerHTML = '';
+            dbS.reverse().slice(0,20).forEach(s => {
+                list.innerHTML += `<div class="seg-item"><b>${s.Cliente}</b> - ${s.Vendedor}<br><small>${s["Fecha Efectuada"]} | ${s.Resultado}</small><br><i>"${s.Notas}"</i></div>`;
+            });
+        }
+
+        function renderClie() {
+            const list = document.getElementById('lista-cli'); list.innerHTML = '';
+            dbC.filter(c => parseInt(c.Dias) > 30).slice(0,30).forEach(c => {
+                const d = parseInt(c.Dias);
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #222; font-size:0.7rem;"><span>${c.Cliente}</span><b style="color:${d>60?'#f00':'#ff0'}">${d}d</b></div>`;
+            });
+        }
+
+        function exportCSV() {
             let csv = "Cliente,Vendedor,Sucursal,Dias,Ultima\n";
-            dbC.forEach(c => { csv += `"${c.Cliente}","${c.Vendedor}","${c.Sucursal}","${c.Dias}","${c.Fecha}"\n`; });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "Cartera_Catosa.csv";
-            link.click();
+            dbC.forEach(c => csv += `"${c.Cliente}","${c.Vendedor}","${c.Sucursal}","${c.Dias}","${c.Fecha}"\n`);
+            const blob = new Blob([csv], { type:'text/csv' });
+            const link = document.createElement("a"); link.href=URL.createObjectURL(blob); link.download="Cartera_Catosa.csv"; link.click();
         }
     </script>
 </body>
+</html>
 </html>
