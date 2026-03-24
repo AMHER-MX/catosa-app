@@ -47,16 +47,28 @@
 
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; }
+        
+        /* BITÁCORA */
         .seg-item { border-left: 4px solid var(--blue); background: #000; padding: 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; font-size: 0.7rem; line-height: 1.5; }
         
-        .prod-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; align-items: center; }
-        .prod-rank { background: var(--gold); color: #000; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.6rem; margin-right: 8px; }
-        .stock-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.7rem;}
-        .badge-stock { padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; }
+        /* CARTERA CON MONTOS AL FINAL */
+        .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.75rem; justify-content: space-between; }
+        .client-info { display: flex; align-items: center; flex: 1; }
+        .semaforo-mini { display: flex; flex-direction: column; gap: 2px; margin-right: 12px; width: 10px; }
+        .dot-light { width: 8px; height: 8px; border-radius: 50%; background: #222; }
+        .dot-light.active.verde { background: #0f0; box-shadow: 0 0 5px #0f0; }
+        .dot-light.active.ambar { background: #ff0; box-shadow: 0 0 5px #ff0; }
+        .dot-light.active.rojo { background: #f00; box-shadow: 0 0 5px #f00; }
+        .client-text b { display: block; font-size: 0.8rem; }
+        .client-text small { color: #888; }
+        .client-amount { text-align: right; min-width: 80px; }
+        .client-amount b { color: var(--green); font-size: 0.85rem; display: block; }
+        .client-amount small { font-size: 0.55rem; color: #666; text-transform: uppercase; }
 
-        .semaforo-mini { display: flex; flex-direction: column; gap: 2px; margin-right: 10px; }
-        .dot-light { width: 8px; height: 8px; border-radius: 50%; opacity: 0.1; }
-        .dot-light.active { opacity: 1; box-shadow: 0 0 5px currentColor; }
+        /* ALMACÉN */
+        .stock-list { max-height: 200px; overflow-y: auto; font-size: 0.7rem; margin-top: 10px; }
+        .stock-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; }
+        .badge-stock { padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; }
 
         input, select { background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; box-sizing: border-box; }
         .btn { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; font-size: 0.7rem; }
@@ -83,7 +95,7 @@
         <div class="time-panel">
             <div class="time-item"><span class="time-label">Hoy</span><span class="time-value" id="g-hoy">--</span></div>
             <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Días Cierre</span><span class="time-value" id="g-dias" style="color:var(--red);">--</span></div>
-            <div class="time-item"><span class="time-label">Falta Oro Global</span><span class="time-value" id="g-falta" style="color:var(--gold);">$0</span></div>
+            <div class="time-item"><span class="time-label">Falta para Oro</span><span class="time-value" id="g-falta" style="color:var(--gold);">$0</span></div>
         </div>
 
         <div class="kpi-row">
@@ -140,15 +152,15 @@
             </div>
 
             <div class="card">
-                <h2>🏆 Ranking Verdes</h2>
+                <h2>🏆 Ranking Efectividad</h2>
                 <div id="ranking-list" style="max-height: 250px; overflow-y: auto;"></div>
             </div>
 
             <div class="card">
                 <h2>👥 Cartera Semáforo</h2>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
-                    <select id="f-color-cart" onchange="render()"><option value="TODOS">TODOS</option><option value="VERDE">VERDE</option><option value="AMBAR">AMBAR</option><option value="ROJO">ROJO</option></select>
-                    <input type="text" id="f-cli-cart" placeholder="Filtrar cliente..." oninput="render()">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-bottom:10px;">
+                    <select id="f-color-cart" onchange="render()" style="padding:5px; font-size:0.7rem;"><option value="TODOS">TODOS</option><option value="VERDE">VERDE</option><option value="AMBAR">AMBAR</option><option value="ROJO">ROJO</option></select>
+                    <input type="text" id="f-cli-cart" placeholder="Filtrar cliente..." oninput="render()" style="padding:5px; font-size:0.7rem;">
                 </div>
                 <div id="cli-list" style="max-height: 250px; overflow-y: auto;"></div>
             </div>
@@ -242,14 +254,33 @@
                 if((fs==='TODAS'||c.Sucursal===fs) && (fv==='TODOS'||c.Vendedor===fv)){
                     if((c.Cliente||'').toLowerCase().includes(fc)){
                         let colM = (fCol==='VERDE'?d<=14:(fCol==='AMBAR'?d>14&&d<=60:(fCol==='ROJO'?d>60:true)));
-                        if(colM) cl.innerHTML += `<div class="client-item"><div style="display:flex; align-items:center;"><div class="semaforo-mini"><div class="dot-light active" style="color:${d<=14?'#0f0':'#222'}; background:currentColor"></div><div class="dot-light active" style="color:${d>14&&d<=60?'#ff0':'#222'}; background:currentColor"></div><div class="dot-light active" style="color:${d>60?'#f00':'#222'}; background:currentColor"></div></div><div><b>${c.Cliente}</b><br><small>${c.Vendedor}</small></div></div><b style="color:var(--green)">$${Math.floor(parseFloat(c.Venta_Mes)||0).toLocaleString()}</b></div>`;
+                        if(colM) {
+                            cl.innerHTML += `
+                            <div class="client-item">
+                                <div class="client-info">
+                                    <div class="semaforo-mini">
+                                        <div class="dot-light verde ${d<=14?'active':''}"></div>
+                                        <div class="dot-light ambar ${d>14&&d<=60?'active':''}"></div>
+                                        <div class="dot-light rojo ${d>60?'active':''}"></div>
+                                    </div>
+                                    <div class="client-text">
+                                        <b>${c.Cliente}</b>
+                                        <small>${c.Vendedor} (${d}d inactivo)</small>
+                                    </div>
+                                </div>
+                                <div class="client-amount">
+                                    <b>$${Math.floor(parseFloat(c.Venta_Mes)||0).toLocaleString()}</b>
+                                    <small>Venta Mes</small>
+                                </div>
+                            </div>`;
+                        }
                     }
                 }
             });
 
             const rl = document.getElementById('ranking-list'); rl.innerHTML = '';
             Object.entries(ranking).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(([n,c], i) => {
-                rl.innerHTML += `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;"><span>${i+1}. ${n}</span><b style="color:var(--green)">${c} Verdes</b></div>`;
+                rl.innerHTML += `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;"><span>${i+1}. ${n}</span><b style="color:var(--green)">${c} Activos</b></div>`;
             });
         }
 
