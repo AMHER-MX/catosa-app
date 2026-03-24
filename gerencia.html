@@ -3,58 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catosa GP - Control Directivo</title>
+    <title>Catosa GP - Control Maestro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --red: #d21034; --bg: #0c0e10; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
+        
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 30px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 300px; }
         #main-app { display: none; }
+        
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--card); border-radius: 10px; border-bottom: 2px solid #333; margin-bottom: 15px; }
         .role-badge { font-size: 1.2rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; border: 2px solid var(--gold); padding: 5px 20px; border-radius: 5px; }
-        
+
         .time-panel { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
         .time-item { text-align: center; flex: 1; }
         .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; }
         .time-value { font-size: 0.9rem; font-weight: bold; }
 
-        .medal-counts { display: flex; justify-content: space-around; background: #000; padding: 10px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #222; }
-        .medal-item { text-align: center; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.3s; padding: 5px; border-radius: 8px; flex: 1; }
-        .medal-item:hover { background: rgba(255,255,255,0.05); }
-        .medal-item.active { background: rgba(255,255,255,0.1); outline: 1px solid currentColor; }
-        .medal-item div { font-size: 1.1rem; margin-top: 2px; }
-
-        .filter-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 15px; }
-        select, input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-size: 0.8rem; width: 100%; box-sizing: border-box; }
-
         .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
         .kpi-card { background: var(--card); padding: 15px; border-radius: 10px; border-top: 3px solid var(--blue); text-align: center; }
         .kpi-val { font-size: 1.1rem; font-weight: bold; color: var(--green); }
-        .kpi-card span { font-size: 0.55rem; color: #888; text-transform: uppercase; display: block; }
 
+        /* PISTA Y METAS */
         .race-track { background: #050505; border-radius: 15px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 20px; }
-        .line-85 { position: absolute; left: 73.9%; top: 0; bottom: 0; width: 1px; border-left: 1px dashed var(--bronze); opacity: 0.4; z-index: 1; }
-        .line-100 { position: absolute; left: 86.9%; top: 0; bottom: 0; width: 2px; background: var(--silver); opacity: 0.5; border-left: 1px dashed white; z-index: 1; }
-        .line-115 { position: absolute; right: 0; top: 0; bottom: 0; width: 15px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); opacity: 0.3; border-left: 2px solid var(--gold); z-index: 1; }
-
-        .lane { height: 45px; position: relative; border-bottom: 1px dashed #222; display: flex; align-items: center; z-index: 2; transition: 0.5s; }
-        .v-name { width: 100px; font-size: 0.5rem; color: #888; padding-left: 10px; z-index: 3; overflow: hidden; white-space: nowrap; }
+        .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.4; z-index: 1; }
+        .line-85 { left: 73.9%; border-left: 1px dashed var(--bronze); }
+        .line-100 { left: 86.9%; border-left: 2px dashed white; }
+        .line-115 { right: 0; width: 15px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); opacity: 0.3; border-left: 2px solid var(--gold); }
+        
+        .lane { height: 45px; position: relative; border-bottom: 1px dashed #222; display: flex; align-items: center; z-index: 2; }
+        .v-name { width: 100px; font-size: 0.5rem; color: #888; padding-left: 10px; overflow: hidden; white-space: nowrap; }
         .truck { position: absolute; width: 50px; height: 28px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 2s; z-index: 10; }
         .truck.bronce { filter: drop-shadow(0 0 8px var(--bronze)); }
         .truck.plata { filter: drop-shadow(0 0 12px var(--silver)); }
         .truck.oro { filter: drop-shadow(0 0 18px var(--gold)); }
 
+        /* GRID DE RECUADROS */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid #333; }
+
+        /* RANKING Y ALMACÉN */
+        .top-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
+        .stock-box { background: #000; padding: 10px; border-radius: 8px; border: 1px solid var(--blue); text-align: center; margin-top: 10px; }
         
-        .seg-item { border-left: 4px solid var(--blue); background: #000; padding: 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; font-size: 0.75rem; line-height: 1.5; }
-        .seg-date { color: #888; font-size: 0.65rem; display: block; margin-bottom: 4px; border-bottom: 1px solid #222; padding-bottom: 4px; }
-        .client-item { display: flex; align-items: center; padding: 6px 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
+        /* BITÁCORA */
+        .seg-item { border-left: 4px solid var(--blue); background: #000; padding: 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; font-size: 0.7rem; line-height: 1.4; }
+        
+        input, select { background: #000; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 5px; width: 100%; margin-bottom: 10px; }
         .btn { padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; font-size: 0.7rem; }
-        .btn-resp { background: var(--gold); color: #000; padding: 4px 12px; font-size: 0.65rem; border-radius: 5px; text-decoration: none; display: inline-block; }
     </style>
 </head>
 <body>
@@ -76,14 +74,8 @@
 
         <div class="time-panel">
             <div class="time-item"><span class="time-label">Hoy</span><span class="time-value" id="g-hoy">--</span></div>
-            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Días para Cierre</span><span class="time-value" id="g-dias" style="color:var(--red);">--</span></div>
+            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Días Cierre</span><span class="time-value" id="g-dias" style="color:var(--red);">--</span></div>
             <div class="time-item"><span class="time-label">Falta Oro Global</span><span class="time-value" id="g-falta" style="color:var(--gold);">$0</span></div>
-        </div>
-
-        <div class="filter-row">
-            <select id="f-suc" onchange="updateVend(); filterMedal(null); render();"><option value="TODAS">TODAS LAS SUCURSALES</option></select>
-            <select id="f-vend" onchange="filterMedal(null); render()"><option value="TODOS">TODOS LOS ASESORES</option></select>
-            <button class="btn" style="background:var(--green); color:#000;" onclick="exportCSV()">EXPORTAR CARTERA</button>
         </div>
 
         <div class="kpi-row">
@@ -93,38 +85,43 @@
             <div class="kpi-card"><span>Alcance Oro</span><div class="kpi-val" id="g-p">0%</div></div>
         </div>
 
-        <div class="medal-counts">
-            <div id="btn-bronce" class="medal-item" style="color:var(--bronze)" onclick="filterMedal('bronce')">BRONCE (85%)<div id="c-bronce">0</div></div>
-            <div id="btn-plata" class="medal-item" style="color:var(--silver)" onclick="filterMedal('plata')">PLATA (100%)<div id="c-plata">0</div></div>
-            <div id="btn-oro" class="medal-item" style="color:var(--gold)" onclick="filterMedal('oro')">ORO (115%)<div id="c-oro">0</div></div>
-        </div>
-
         <div class="race-track">
-            <div class="line-85"></div><div class="line-100"></div><div class="line-115"></div>
+            <div class="line-meta line-85"></div><div class="line-meta line-100"></div><div class="line-meta line-115"></div>
             <div id="pista"></div>
         </div>
 
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
+            <select id="f-suc" onchange="render()"><option value="TODAS">TODAS LAS SUCURSALES</option></select>
+            <select id="f-vend" onchange="render()"><option value="TODOS">TODOS LOS ASESORES</option></select>
+        </div>
+
         <div class="grid">
-            <div class="card"><h2>📈 Avance</h2><canvas id="salesChart" style="max-height: 250px;"></canvas></div>
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h2 style="margin:0;">📅 Bitácora</h2>
-                    <a href="https://docs.google.com/spreadsheets/d/1vUYJz5r1kgMNDel9-6LqaiKAeb3g_n0JwS5_Hs59yeM/edit#gid=480185164" target="_blank" class="btn-resp">📊 EXCEL</a>
-                </div>
-                <div id="seg-list" style="max-height: 400px; overflow-y: auto;"></div>
+                <h2>🏆 Ranking Efectividad (Verde)</h2>
+                <div id="top-list" style="max-height: 300px; overflow-y: auto;"></div>
             </div>
+
             <div class="card">
-                <h2>👥 Cartera</h2>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-bottom:10px;">
-                    <select id="f-color" onchange="render()" style="padding:5px; font-size:0.7rem;">
-                        <option value="TODOS">TODOS LOS COLORES</option>
-                        <option value="VERDE">🟢 ACTIVO (<14d)</option>
-                        <option value="AMBAR">🟡 PREVENTIVO (15-60d)</option>
-                        <option value="ROJO">🔴 INACTIVO (>60d)</option>
-                    </select>
-                    <input type="text" id="f-cli-cartera" placeholder="🔍 Buscar cliente..." oninput="render()" style="padding:5px; font-size:0.7rem;">
+                <h2>📅 Bitácora de Gestión</h2>
+                <div id="seg-list" style="max-height: 300px; overflow-y: auto;"></div>
+            </div>
+
+            <div class="card">
+                <h2>📦 Stock Almacén</h2>
+                <input type="text" placeholder="SKU de Parte..." oninput="checkStock(this.value)">
+                <div id="stock-res" class="stock-box">
+                    <b id="val-stock" style="font-size:1.5rem; color:var(--green)">0</b><br>
+                    <small id="desc-stock">Ingresa una clave</small>
                 </div>
-                <div id="cli-list" style="max-height: 350px; overflow-y: auto;"></div>
+            </div>
+
+            <div class="card">
+                <h2>👥 Cartera Semáforo</h2>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+                    <select id="f-color" onchange="render()"><option value="TODOS">TODOS</option><option value="VERDE">VERDE</option><option value="AMBAR">AMBAR</option><option value="ROJO">ROJO</option></select>
+                    <input type="text" id="f-cli" placeholder="Buscar..." oninput="render()">
+                </div>
+                <div id="cli-list" style="max-height: 250px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
@@ -133,8 +130,9 @@
         const LV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=0&single=true&output=csv";
         const LC = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1068966462&single=true&output=csv";
         const LS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=480185164&single=true&output=csv";
-        
-        let dbV=[], dbC=[], dbS=[], role='', myChart=null, activeMedal=null;
+        const LP = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1610979668&single=true&output=csv";
+
+        let dbV=[], dbC=[], dbS=[], dbP=[], role='';
 
         function login() {
             const u = document.getElementById('u-role').value.toUpperCase(), p = document.getElementById('u-pass').value;
@@ -145,105 +143,83 @@
             document.getElementById('login-screen').style.display='none';
             document.getElementById('main-app').style.display='block';
             document.getElementById('role-display').innerText = role;
-            
-            // MOSTRAR U OCULTAR CARD DE UTILIDAD SEGÚN ROL
             if(role==='DIRECCIÓN') document.getElementById('uti-card').style.display='block';
-            else document.getElementById('uti-card').style.display='none';
-            
             loadData();
         }
 
         function loadData() {
-            Papa.parse(LV, { download:true, header:true, complete: r => { dbV=r.data; fillSuc(); updateVend(); render(); } });
+            Papa.parse(LV, { download:true, header:true, complete: r => { dbV=r.data; fillFilters(); render(); } });
             Papa.parse(LC, { download:true, header:true, complete: r => { dbC=r.data; render(); } });
             Papa.parse(LS, { download:true, header:true, complete: r => { dbS=r.data; render(); } });
+            Papa.parse(LP, { download:true, header:true, complete: r => { dbP=r.data; } });
         }
 
-        function fillSuc() { 
-            const s = document.getElementById('f-suc');
-            s.innerHTML = '<option value="TODAS">TODAS LAS SUCURSALES</option>';
-            [...new Set(dbV.map(v => v.Sucursal))].filter(x=>x).forEach(x => s.innerHTML += `<option value="${x}">${x}</option>`);
-        }
-
-        function updateVend() {
-            const fs = document.getElementById('f-suc').value, s = document.getElementById('f-vend');
-            s.innerHTML = '<option value="TODOS">TODOS LOS ASESORES</option>';
-            dbV.filter(v => fs === 'TODAS' || v.Sucursal === fs).forEach(v => { if(v.Nombre) s.innerHTML += `<option value="${v.Nombre}">${v.Nombre}</option>`; });
-        }
-
-        function filterMedal(medal) {
-            activeMedal = (activeMedal === medal) ? null : medal;
-            document.querySelectorAll('.medal-item').forEach(i => i.classList.remove('active'));
-            if (activeMedal) document.getElementById('btn-' + activeMedal).classList.add('active');
-            render();
+        function fillFilters() {
+            const s = document.getElementById('f-suc'), v = document.getElementById('f-vend');
+            [...new Set(dbV.map(x=>x.Sucursal))].filter(x=>x).forEach(x => s.innerHTML += `<option value="${x}">${x}</option>`);
+            dbV.filter(x=>x.Nombre).forEach(x => v.innerHTML += `<option value="${x.Nombre}">${x.Nombre}</option>`);
         }
 
         function render() {
             if(!dbV.length) return;
-            const fs = document.getElementById('f-suc').value, fv = document.getElementById('f-vend').value, fc = document.getElementById('f-cli-cartera').value.toLowerCase(), fColor = document.getElementById('f-color').value;
+            const fs = document.getElementById('f-suc').value, fv = document.getElementById('f-vend').value;
             const p = document.getElementById('pista'); p.innerHTML = '';
-            let tv=0, tu=0, tm=0, labs=[], vdat=[], mdat=[], countB=0, countP=0, countO=0;
+            let tv=0, tu=0, tm=0, statsRanking={};
 
+            // TIEMPOS
             const hoy = new Date(), uD = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(), dR = (uD - hoy.getDate()) + 1;
             document.getElementById('g-hoy').innerText = hoy.toLocaleDateString('es-MX', {day:'numeric', month:'short'}).toUpperCase();
-            document.getElementById('g-dias').innerText = dR + " Días";
+            document.getElementById('g-dias').innerText = dR + " DÍAS";
 
+            // PISTA Y KPIs
             dbV.filter(v => (fs==='TODAS'||v.Sucursal===fs) && (fv==='TODOS'||v.Nombre===fv) && v.Nombre).forEach(v => {
                 const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g,''))||0, met = parseFloat(v.Meta.replace(/[^0-9.]/g,''))||1;
-                const utiV = parseFloat(v.Utilidad.replace(/[^0-9.]/g,''))||(ven*0.22);
-                tv += ven; tm += met; tu += utiV;
+                tv += ven; tm += met; tu += parseFloat(v.Utilidad.replace(/[^0-9.]/g,''))||(ven*0.22);
                 const pct = (ven/met)*100, pctPista = Math.min(100, (pct/115)*100);
-                
                 let rc = pct>=115 ? 'oro' : (pct>=100 ? 'plata' : (pct>=85 ? 'bronce' : ''));
-                if(rc==='oro') countO++; else if(rc==='plata') countP++; else if(rc==='bronce') countB++;
-                if (!activeMedal || rc === activeMedal) p.innerHTML += `<div class="lane"><small class="v-name">${v.Nombre}</small><div class="truck ${rc}" style="left:calc(${pctPista}% - 55px); position:absolute;"></div></div>`;
-                labs.push(v.Nombre); vdat.push(ven); mdat.push(met);
+                p.innerHTML += `<div class="lane"><small class="v-name">${v.Nombre}</small><div class="truck ${rc}" style="left:calc(${pctPista}% - 50px); position:absolute;"></div></div>`;
             });
 
             document.getElementById('g-v').innerText="$"+Math.floor(tv).toLocaleString();
             document.getElementById('g-m').innerText=((tu/tv)*100||0).toFixed(1)+"%";
             document.getElementById('g-p').innerText=((tv/(tm*1.15))*100 || 0).toFixed(1)+"%";
             document.getElementById('g-falta').innerText = "$" + Math.max(0, Math.floor((tm * 1.15) - tv)).toLocaleString();
-            
-            // ACTUALIZAR KPI UTILIDAD
             if(role==='DIRECCIÓN') document.getElementById('g-u').innerText="$"+Math.floor(tu).toLocaleString();
-            
-            document.getElementById('c-bronce').innerText = countB; document.getElementById('c-plata').innerText = countP; document.getElementById('c-oro').innerText = countO;
 
-            if(myChart) myChart.destroy();
-            myChart = new Chart(document.getElementById('salesChart').getContext('2d'), { type:'bar', data: { labels:labs, datasets:[{label:'Venta', data:vdat, backgroundColor:'#00d4ff'},{label:'Meta', data:mdat, backgroundColor:'#333'}] }, options: { responsive:true, maintainAspectRatio:false } });
-
+            // BITÁCORA
             const bl = document.getElementById('seg-list'); bl.innerHTML = '';
-            dbS.filter(s => fv === 'TODOS' || s.Vendedor === fv).reverse().slice(0,30).forEach(s => {
-                bl.innerHTML += `
-                <div class="seg-item">
-                    <span class="seg-date">${s["Fecha Efectuada"]}</span>
-                    <b>VENDEDOR:</b> ${s.Vendedor}<br>
-                    <b>CLIENTE:</b> ${s.Cliente}<br>
-                    <small>👤 <b>Atendió:</b> ${s.Atendio || '---'}</small><br>
-                    <small>💡 <b>Motivo:</b> ${s.Motivo || '---'}</small><br>
-                    <small>🎯 <b>Resultado:</b> ${s.Resultado || '---'}</small><br>
-                    <small>📝 <b>Notas:</b> ${s.Notas || 'S/N'}</small>
-                </div>`;
+            dbS.filter(s => fv === 'TODOS' || s.Vendedor === fv).reverse().slice(0,25).forEach(s => {
+                bl.innerHTML += `<div class="seg-item"><b>VENDEDOR:</b> ${s.Vendedor}<br><b>CLIENTE:</b> ${s.Cliente}<br><small>👤 Atendió: ${s.Atendio}</small> | <small>💡 Motivo: ${s.Motivo}</small><br><small>🎯 Resultado: ${s.Resultado}</small><br><i>"${s.Notas}"</i></div>`;
             });
 
+            // CARTERA Y RANKING
             const cl = document.getElementById('cli-list'); cl.innerHTML = '';
-            dbC.filter(c => {
-                const isSuc = (fs==='TODAS'||c.Sucursal===fs), isVend = (fv==='TODOS'||c.Vendedor===fv), isCli = (c.Cliente || '').toLowerCase().includes(fc), d = parseInt(c.Dias)||0;
-                let colorMatch = (fColor === 'VERDE') ? (d <= 14) : (fColor === 'AMBAR') ? (d > 14 && d <= 60) : (fColor === 'ROJO') ? (d > 60) : true;
-                return isSuc && isVend && isCli && colorMatch;
-            }).forEach(c => {
-                const d = parseInt(c.Dias)||0; const color = d<=14?'#0f0':(d<=60?'#ff0':'#f00');
-                const vMesVal = parseFloat(c.Venta_Mes) || 0;
-                cl.innerHTML += `<div class="client-item" style="justify-content: space-between;"><div style="display:flex; align-items:center;"><div class="dot" style="background:${color}; box-shadow:0 0 5px ${color}"></div><div><b>${c.Cliente}</b><br><small>${c.Vendedor} (${d}d)</small></div></div><b style="color:var(--green)">$${Math.floor(vMesVal).toLocaleString()}</b></div>`;
+            const fColor = document.getElementById('f-color').value, fc = document.getElementById('f-cli').value.toLowerCase();
+            
+            dbC.forEach(c => {
+                const d = parseInt(c.Dias)||0;
+                if(!statsRanking[c.Vendedor]) statsRanking[c.Vendedor] = 0;
+                if(d <= 14) statsRanking[c.Vendedor]++;
+
+                if((fs==='TODAS'||c.Sucursal===fs) && (fv==='TODOS'||c.Vendedor===fv)){
+                    const color = d<=14?'#0f0':(d<=60?'#ff0':'#f00');
+                    let matchesColor = (fColor==='VERDE'?d<=14:(fColor==='AMBAR'?d>14&&d<=60:(fColor==='ROJO'?d>60:true)));
+                    if(matchesColor && (c.Cliente||'').toLowerCase().includes(fc)){
+                        cl.innerHTML += `<div class="client-item"><div class="dot" style="background:${color}"></div><div style="flex:1"><b>${c.Cliente}</b><br><small>${c.Vendedor}</small></div><b>${d}d</b></div>`;
+                    }
+                }
+            });
+
+            const tl = document.getElementById('top-list'); tl.innerHTML = '';
+            Object.entries(statsRanking).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(([n,c], i) => {
+                tl.innerHTML += `<div class="top-item"><span><b>${i+1}.</b> ${n}</span><b style="color:var(--green)">${c} Verdes</b></div>`;
             });
         }
 
-        function exportCSV() {
-            let csv = "Cliente,Vendedor,Sucursal,Dias\n";
-            dbC.forEach(c => csv += `"${c.Cliente}","${c.Vendedor}","${c.Sucursal}","${c.Dias}"\n`);
-            const blob = new Blob([csv], { type:'text/csv' });
-            const link = document.createElement("a"); link.href=URL.createObjectURL(blob); link.download="Cartera.csv"; link.click();
+        function checkStock(sku) {
+            const res = dbP.find(p => p.Parte.toUpperCase() === sku.toUpperCase());
+            document.getElementById('val-stock').innerText = res ? (res.Existencia || '0') : '0';
+            document.getElementById('desc-stock').innerText = res ? ("Parte: " + sku) : "No encontrada";
         }
     </script>
 </body>
