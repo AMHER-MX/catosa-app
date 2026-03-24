@@ -9,18 +9,18 @@
     <style>
         :root { --red: #d21034; --bg: #0c0e10; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
+        
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 30px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 300px; }
         #main-app { display: none; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--card); border-radius: 10px; border-bottom: 2px solid #333; margin-bottom: 15px; }
         
-        /* IDENTIFICADOR DE ROL */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--card); border-radius: 10px; border-bottom: 2px solid #333; margin-bottom: 15px; }
         .role-badge { font-size: 1.2rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; border: 2px solid var(--gold); padding: 5px 20px; border-radius: 5px; }
 
         .time-panel { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
         .time-item { text-align: center; flex: 1; }
-        .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 2px; }
-        .time-value { font-size: 0.9rem; font-weight: bold; display: block; }
+        .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; }
+        .time-value { font-size: 0.9rem; font-weight: bold; }
 
         .filter-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 15px; }
         select, input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-size: 0.8rem; width: 100%; box-sizing: border-box; }
@@ -32,13 +32,9 @@
 
         .medal-counts { display: flex; justify-content: space-around; background: #000; padding: 10px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #222; }
         .medal-item { text-align: center; font-size: 0.7rem; font-weight: bold; }
-        .medal-item div { font-size: 1.1rem; }
 
         .race-track { background: #050505; border-radius: 15px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 20px; }
         .lane { height: 45px; position: relative; border-bottom: 1px dashed #222; display: flex; align-items: center; }
-        .line-100 { position: absolute; left: 86.9%; top: 0; bottom: 0; width: 2px; background: var(--silver); opacity: 0.3; border-left: 1px dashed white; }
-        .line-115 { position: absolute; right: 0; top: 0; bottom: 0; width: 15px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); opacity: 0.2; }
-        .v-name { width: 110px; font-size: 0.55rem; color: #888; padding-left: 10px; z-index: 2; }
         .truck { position: absolute; width: 55px; height: 30px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 2s; z-index: 10; }
         .truck.bronce { filter: drop-shadow(0 0 8px var(--bronze)); }
         .truck.plata { filter: drop-shadow(0 0 10px var(--silver)); }
@@ -47,15 +43,16 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid #333; }
         
-        /* BITÁCORA ESTILO MEJORADO */
+        /* BITÁCORA */
         .seg-item { border-left: 4px solid var(--blue); background: #000; padding: 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; font-size: 0.75rem; line-height: 1.4; }
         .seg-meta { font-size: 0.65rem; color: var(--blue); text-transform: uppercase; font-weight: bold; margin-bottom: 4px; display: block; }
         .seg-notes { font-style: italic; color: #bbb; display: block; margin-top: 5px; border-top: 1px solid #222; padding-top: 5px; }
 
-        .client-item { display: flex; align-items: center; padding: 6px 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
+        .client-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
         .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
+        
         .btn { padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; font-size: 0.7rem; }
-        .btn-resp { background: var(--gold); color: #000; padding: 4px 10px; font-size: 0.6rem; margin-left: 10px; }
+        .btn-resp { background: var(--gold); color: #000; padding: 4px 12px; font-size: 0.65rem; border-radius: 5px; text-decoration: none; display: inline-block; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -64,7 +61,7 @@
             <img src="logo-catosa.png" style="max-height: 40px; margin-bottom: 20px;">
             <input type="text" id="u-role" placeholder="USUARIO">
             <input type="password" id="u-pass" placeholder="PASSWORD">
-            <button class="btn" style="width:100%" onclick="login()">ENTRAR</button>
+            <button class="btn" style="width:100%; margin-top:10px" onclick="login()">ENTRAR</button>
         </div>
     </div>
 
@@ -77,14 +74,14 @@
 
         <div class="time-panel">
             <div class="time-item"><span class="time-label">Hoy</span><span class="time-value" id="g-hoy">--</span></div>
-            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Días para Cierre</span><span class="time-value" id="g-dias" style="color:var(--red);">--</span></div>
-            <div class="time-item"><span class="time-label">Falta Global Oro</span><span class="time-value" id="g-falta" style="color:var(--gold);">$0</span></div>
+            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Días Cierre</span><span class="time-value" id="g-dias" style="color:var(--red);">--</span></div>
+            <div class="time-item"><span class="time-label">Falta Oro Global</span><span class="time-value" id="g-falta" style="color:var(--gold);">$0</span></div>
         </div>
 
         <div class="filter-row">
             <select id="f-suc" onchange="updateVend(); render();"><option value="TODAS">TODAS LAS SUCURSALES</option></select>
-            <select id="f-vend" onchange="render()"><option value="TODOS">TODOS LOS ASESORES</option></select>
-            <input type="text" id="f-cli" placeholder="🔍 Buscar cliente..." oninput="render()">
+            <select id="f-vend" onchange="render()"><option value="TODOS">VENDEDOR: TODOS</option></select>
+            <input type="text" id="f-cli-cartera" placeholder="🔍 Buscar cliente en cartera..." oninput="render()">
             <button class="btn" style="background:var(--green); color:#000;" onclick="exportCSV()">EXPORTAR CARTERA</button>
         </div>
 
@@ -96,21 +93,21 @@
         </div>
 
         <div class="medal-counts">
-            <div class="medal-item" style="color:var(--bronze)">BRONCE (85%)<div id="c-bronce">0</div></div>
-            <div class="medal-item" style="color:var(--silver)">PLATA (100%)<div id="c-plata">0</div></div>
-            <div class="medal-item" style="color:var(--gold)">ORO (115%)<div id="c-oro">0</div></div>
+            <div class="medal-item" style="color:var(--bronze)">BRONCE: <span id="c-bronce">0</span></div>
+            <div class="medal-item" style="color:var(--silver)">PLATA: <span id="c-plata">0</span></div>
+            <div class="medal-item" style="color:var(--gold)">ORO: <span id="c-oro">0</span></div>
         </div>
 
-        <div class="race-track"><div class="line-100"></div><div class="line-115"></div><div id="pista"></div></div>
+        <div class="race-track"><div id="pista"></div></div>
 
         <div class="grid">
-            <div class="card"><h2>📈 Gráfica</h2><canvas id="salesChart" style="max-height: 250px;"></canvas></div>
+            <div class="card"><h2>📈 Avance</h2><canvas id="salesChart" style="max-height: 250px;"></canvas></div>
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2>📅 Bitácora</h2>
-                    <button class="btn btn-resp" onclick="window.open('https://docs.google.com/spreadsheets/d/1lCHVlqTobNSlLxKr7b9y_kkxH9XFPPMhkAKa_eW5IaPueQ/edit','_blank')">📊 EXCEL COMPLETO</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2 style="margin:0;">📅 Bitácora</h2>
+                    <a href="https://docs.google.com/spreadsheets/d/1vUYJz5r1kgMNDel9-6LqaiKAeb3g_n0JwS5_Hs59yeM/edit#gid=480185164" target="_blank" class="btn-resp">📊 EXCEL COMPLETO</a>
                 </div>
-                <div id="seg-list" style="max-height: 400px; overflow-y: auto; margin-top:10px;"></div>
+                <div id="seg-list" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
             <div class="card"><h2>👥 Cartera Semáforo</h2><div id="cli-list" style="max-height: 400px; overflow-y: auto;"></div></div>
         </div>
@@ -133,7 +130,6 @@
             document.getElementById('main-app').style.display='block';
             document.getElementById('role-display').innerText = role;
             if(role==='DIRECCIÓN') document.getElementById('uti-card').style.display='block';
-            
             loadData();
         }
 
@@ -143,37 +139,37 @@
             Papa.parse(LS, { download:true, header:true, complete: r => { dbS=r.data; render(); } });
         }
 
-        function fillSuc() { const s = document.getElementById('f-suc'); s.innerHTML = '<option value="TODAS">TODAS LAS SUCURSALES</option>'; [...new Set(dbV.map(v => v.Sucursal))].filter(x=>x).forEach(x => s.innerHTML += `<option value="${x}">${x}</option>`); }
+        function fillSuc() { 
+            const s = document.getElementById('f-suc');
+            s.innerHTML = '<option value="TODAS">TODAS LAS SUCURSALES</option>';
+            [...new Set(dbV.map(v => v.Sucursal))].filter(x=>x).forEach(x => s.innerHTML += `<option value="${x}">${x}</option>`);
+        }
+
         function updateVend() {
             const fs = document.getElementById('f-suc').value, s = document.getElementById('f-vend');
-            s.innerHTML = '<option value="TODOS">TODOS LOS ASESORES</option>';
+            s.innerHTML = '<option value="TODOS">VENDEDOR: TODOS</option>';
             dbV.filter(v => fs === 'TODAS' || v.Sucursal === fs).forEach(v => { if(v.Nombre) s.innerHTML += `<option value="${v.Nombre}">${v.Nombre}</option>`; });
         }
 
         function render() {
             if(!dbV.length) return;
-            const fs = document.getElementById('f-suc').value, fv = document.getElementById('f-vend').value, fc = document.getElementById('f-cli').value.toLowerCase();
+            const fs = document.getElementById('f-suc').value, fv = document.getElementById('f-vend').value, fc = document.getElementById('f-cli-cartera').value.toLowerCase();
             const p = document.getElementById('pista'); p.innerHTML = '';
             let tv=0, tu=0, tm=0, labs=[], vdat=[], mdat=[], br=0, sl=0, g=0;
 
             const hoy = new Date();
-            const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
-            const diasRestantes = (ultimoDia - hoy.getDate()) + 1;
+            const ult = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+            const rest = (ult - hoy.getDate()) + 1;
             document.getElementById('g-hoy').innerText = hoy.toLocaleDateString('es-MX', {day:'numeric', month:'short'}).toUpperCase();
-            document.getElementById('g-dias').innerText = diasRestantes + " Días";
+            document.getElementById('g-dias').innerText = rest + " Días";
 
             dbV.filter(v => (fs==='TODAS'||v.Sucursal===fs) && (fv==='TODOS'||v.Nombre===fv) && v.Nombre).forEach(v => {
                 const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g,''))||0, met = parseFloat(v.Meta.replace(/[^0-9.]/g,''))||1;
-                const uti = parseFloat(v.Utilidad.replace(/[^0-9.]/g,''))||(ven*0.22);
-                tv += ven; tm += met; tu += uti;
-                const pct = (ven/met)*100, pctPista = Math.min(100, (pct/115)*100);
-                
-                let rc = ''; 
-                if(pct>=115) { rc='oro'; g++; } 
-                else if(pct>=100) { rc='plata'; sl++; } 
-                else if(pct>=85) { rc='bronce'; br++; }
-                
-                p.innerHTML += `<div class="lane" style="border-bottom:1px dashed #222; height:45px; position:relative; display:flex; align-items:center;"><small class="v-name">${v.Nombre}</small><div class="truck ${rc}" style="left:calc(${pctPista}% - 55px); position:absolute; width:55px; height:30px; background-image:url('camion-intl.png'); background-size:contain; background-repeat:no-repeat; transition:2s;"></div></div>`;
+                tv += ven; tm += met; tu += parseFloat(v.Utilidad.replace(/[^0-9.]/g,''))||(ven*0.22);
+                const pct = (ven/met)*100, pctP = Math.min(100, (pct/115)*100);
+                let rc = pct>=115 ? 'oro' : (pct>=100 ? 'plata' : (pct>=85 ? 'bronce' : ''));
+                if(pct>=115) g++; else if(pct>=100) sl++; else if(pct>=85) br++;
+                p.innerHTML += `<div class="lane" style="border-bottom:1px dashed #222; height:45px; position:relative; display:flex; align-items:center;"><small style="width:100px;font-size:0.5rem;color:#888;">${v.Nombre}</small><div class="truck ${rc}" style="left:calc(${pctP}% - 55px); position:absolute; width:55px; height:30px; background-image:url('camion-intl.png'); background-size:contain; background-repeat:no-repeat; transition:2s;"></div></div>`;
                 labs.push(v.Nombre); vdat.push(ven); mdat.push(met);
             });
 
@@ -182,23 +178,14 @@
             document.getElementById('g-p').innerText=((tv/(tm*1.15))*100 || 0).toFixed(1)+"%";
             document.getElementById('g-falta').innerText = "$" + Math.max(0, Math.floor((tm * 1.15) - tv)).toLocaleString();
             if(role==='DIRECCIÓN') document.getElementById('g-u').innerText="$"+Math.floor(tu).toLocaleString();
-            
             document.getElementById('c-bronce').innerText = br; document.getElementById('c-plata').innerText = sl; document.getElementById('c-oro').innerText = g;
 
             if(myChart) myChart.destroy();
             myChart = new Chart(document.getElementById('salesChart').getContext('2d'), { type:'bar', data: { labels:labs, datasets:[{label:'Venta', data:vdat, backgroundColor:'#00d4ff'},{label:'Meta', data:mdat, backgroundColor:'#333'}] }, options: { responsive:true, maintainAspectRatio:false } });
 
-            // BITÁCORA DETALLADA CON TODOS LOS CAMPOS DE TU IMAGEN
             const bl = document.getElementById('seg-list'); bl.innerHTML = '';
             dbS.filter(s => fv === 'TODOS' || s.Vendedor === fv).reverse().slice(0,25).forEach(s => {
-                bl.innerHTML += `
-                    <div class="seg-item">
-                        <span class="seg-meta">${s["Fecha Efectuada"]} | ${s.Vendedor}</span>
-                        <b>${s.Cliente}</b><br>
-                        <small>🎯 <b>Res:</b> ${s.Resultado} | 👤 <b>At:</b> ${s.Atendio || 'S/D'}</small><br>
-                        <small>💡 <b>Motivo:</b> ${s.Motivo || 'N/A'}</small>
-                        <span class="seg-notes">" ${s.Notas || ''} "</span>
-                    </div>`;
+                bl.innerHTML += `<div class="seg-item"><span class="seg-meta">${s["Fecha Efectuada"]} | ${s.Vendedor}</span><b>${s.Cliente}</b><br><small>🎯 <b>Res:</b> ${s.Resultado} | 👤 <b>At:</b> ${s.Atendio || 'S/D'}</small><br><small>💡 <b>Mot:</b> ${s.Motivo || 'N/A'}</small><span class="seg-notes">" ${s.Notas || ''} "</span></div>`;
             });
 
             const cl = document.getElementById('cli-list'); cl.innerHTML = '';
