@@ -194,7 +194,7 @@
 
             const bl = document.getElementById('seg-list'); bl.innerHTML = '';
             dbS.filter(s => fv === 'TODOS' || s.Vendedor === fv).reverse().slice(0,25).forEach(s => {
-                bl.innerHTML += `<div class="seg-item"><span class="seg-meta">${s["Fecha Efectuada"]} | ${s.Vendedor}</span><b>${s.Cliente}</b><br><small>🎯 <b>Res:</b> ${s.Resultado} | 👤 <b>At:</b> ${s.Atendio || 'S/D'}</small><br><small>💡 <b>Mot:</b> ${s.Motivo || 'N/A'}</small></div>`;
+                bl.innerHTML += `<div class="seg-item"><span class="seg-meta">${s["Fecha Efectuada"]} | <b>Vendedor:</b> ${s.Vendedor}</span><b> <b>Cliente:</b> ${s.Cliente}</b><br><small>🎯 <b>Res:</b> ${s.Resultado} | 👤 <b>At:</b> ${s.Atendio || 'S/D'}</small><br><small>💡 <b>Mot:</b> ${s.Motivo || 'N/A'}</small></div>`;
             });
 
             const cl = document.getElementById('cli-list'); cl.innerHTML = '';
