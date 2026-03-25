@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Catosa GP - Ventas Elite</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -10,21 +10,17 @@
         :root { --red: #d21034; --bg: #0c0e10; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
         
-        /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 30px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 280px; }
         #main-app { display: none; }
         
-        /* HEADER */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 2px solid #333; margin-bottom: 15px; }
 
-        /* PANEL DE TIEMPO */
         .time-panel { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
         .time-item { text-align: center; flex: 1; }
         .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 2px; }
         .time-value { font-size: 0.9rem; font-weight: bold; display: block; }
 
-        /* KPIs */
         .top-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
         .top-card { background: var(--card); padding: 10px 2px; border-radius: 8px; text-align: center; border-bottom: 2px solid var(--blue); }
         .top-card span { font-size: 0.5rem; color: #888; display: block; text-transform: uppercase; }
@@ -32,7 +28,6 @@
         @keyframes blink { 0% { background: var(--card); } 50% { background: #4a0000; } 100% { background: var(--card); } }
         .alert-blink { animation: blink 1s infinite; border-top: 3px solid var(--red) !important; }
 
-        /* PISTA */
         .race-track { background: #050505; border-radius: 15px; padding: 25px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 15px; height: 80px; }
         .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.4; z-index: 1; }
         .l-85 { left: 73.9%; border-left: 1px dashed var(--bronze); }
@@ -44,11 +39,9 @@
         .truck.plata { filter: drop-shadow(0 0 15px var(--silver)); }
         .truck.oro { filter: drop-shadow(0 0 25px var(--gold)); animation: turbo 1s infinite alternate; }
 
-        /* GRID CARDS */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; margin-bottom: 15px; }
 
-        /* CALCULADORA (4 COLUMNAS) */
         .progress-bg { width: 100%; height: 18px; background: #000; border-radius: 10px; border: 1px solid #444; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; background: var(--red); transition: 1.5s; box-shadow: 0 0 10px var(--red); }
         .cal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; max-height: 350px; overflow-y: auto; padding-right: 5px; }
@@ -56,16 +49,13 @@
         .day-in { width: 100%; background: transparent; border: none; color: var(--green); font-size: 1rem; text-align: center; outline: none; font-weight: bold; padding: 5px 0; }
         .day-label { font-size: 0.6rem; color: #888; display: block; margin-bottom: 4px; border-bottom: 1px solid #222; }
 
-        /* COTIZADORA TABLA */
         .cot-list { width: 100%; border-collapse: collapse; font-size: 0.75rem; color: #ccc; margin: 10px 0; }
         .cot-list th { text-align: left; color: var(--blue); border-bottom: 1px solid #333; padding: 8px 4px; }
         .cot-list td { padding: 8px 4px; border-bottom: 1px solid #222; }
 
-        /* INPUTS Y BOTONES */
-        input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-sizing: border-box; }
+        input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-sizing: border-box; font-size: 16px !important; }
         .btn { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; width: 100%; }
 
-        /* CARTERA SEMAFORO */
         .client-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; justify-content: space-between; font-size: 0.8rem; }
         .semaforo { display: flex; flex-direction: column; gap: 3px; margin-right: 15px; width: 10px; }
         .light { width: 10px; height: 10px; border-radius: 50%; background: #222; }
@@ -98,7 +88,7 @@
         </div>
 
         <div class="top-stats">
-            <div class="top-card"><span>Mi Venta</span><b id="k-v">$0</b></div>
+            <div class="top-card"><span>Ventas</span><b id="k-v">$0</b></div>
             <div class="top-card" id="card-falta"><span>Falta Plata</span><b id="k-f" style="color:var(--text)">$0</b></div>
             <div class="top-card"><span>Alcance P.</span><b id="k-pp">0%</b></div>
             <div class="top-card"><span>Alcance O.</span><b id="k-po">0%</b></div>
@@ -129,7 +119,6 @@
                 <h2>📑 Cotizadora Express</h2>
                 <input list="cli-cot" id="cot-cli-name" placeholder="Nombre del Cliente">
                 <datalist id="cli-cot"></datalist>
-                
                 <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
                     <input type="text" id="p-sku" placeholder="Parte" oninput="quickSearch(this)">
                     <input type="number" id="p-qty" placeholder="Cant" value="1">
@@ -203,6 +192,7 @@
         }
 
         function renderApp() {
+            if(!user) return;
             const vr = parseFloat(user.Ventas.replace(/[^0-9.]/g,''))||0, vm = parseFloat(user.Meta.replace(/[^0-9.]/g,''))||1;
             const pct = (vr/vm)*100;
             const hoy = new Date(), uDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(), dR = (uDia - hoy.getDate()) + 1;
@@ -223,7 +213,7 @@
 
             const lc = document.getElementById('lista-cli'), fCol = document.getElementById('f-color').value;
             lc.innerHTML='';
-            dbC.filter(c => (c.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(c => {
+            dbC.filter(c => (c.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0].toUpperCase())).forEach(c => {
                 const d = parseInt(c.Dias)||0;
                 const match = (fCol==='TODOS'||(fCol==='VERDE'&&d<=14)||(fCol==='AMBAR'&&d>14&&d<=60)||(fCol==='ROJO'&&d>60));
                 if(match) {
@@ -249,24 +239,11 @@
             const cli = document.getElementById('cot-cli-name').value || "Cliente";
             if(cotList.length === 0) return alert("Añade productos");
             let total = 0; cotList.forEach(i => total += i.t);
-
-            let t = `*COTIZACIÓN CATOSA GP*\n`;
-            t += `------------------------------------------\n`;
-            t += `*Buen día, ${cli}*\n`;
-            t += `Le atiende: *${user.Nombre}*\n\n`;
-            t += `Le envío la relación de productos solicitada:\n\n`;
+            let t = `*COTIZACIÓN CATOSA GP*\n------------------------------------------\n*Buen día, ${cli}*\nLe atiende: *${user.Nombre}*\n\nLe envío la relación de productos solicitada:\n\n`;
             cotList.forEach(i => t += `• ${i.s} | Cant: ${i.q} | Subtotal: $${i.t.toLocaleString()}\n`);
-            t += `\n------------------------------------------\n`;
-            t += `*TOTAL A PAGAR: $${total.toLocaleString()}*\n\n`;
-            t += `*Quedo al pendiente de su compra.*\n\n`;
-            t += `_* Precios sujetos a cambio sin previo aviso_`;
-            
-            if(m === 'wa') {
-                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`;
-                window.open(url, '_blank');
-            } else {
-                window.location.href = `mailto:?subject=Cotización Catosa - ${cli}&body=${encodeURIComponent(t)}`;
-            }
+            t += `\n------------------------------------------\n*TOTAL A PAGAR: $${total.toLocaleString()}*\n\n*Quedo al pendiente de su compra.*\n\n_* Precios sujetos a cambio sin previo aviso_`;
+            if(m === 'wa') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`, '_blank');
+            else window.location.href = `mailto:?subject=Cotización Catosa - ${cli}&body=${encodeURIComponent(t)}`;
         }
 
         function checkInventory(q) {
@@ -281,9 +258,9 @@
         }
 
         function calcMyTop() {
-            const list = document.getElementById('v-top-list'); if(!dbD.length) return;
+            const list = document.getElementById('v-top-list'); if(!dbD.length || !user) return;
             let counts = {};
-            dbD.filter(d => (d.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(v => {
+            dbD.filter(d => (d.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0].toUpperCase())).forEach(v => {
                 const p = (v.Parte||v.SKU||"").toString().trim().toUpperCase();
                 if(p && p !== "PARTE") counts[p] = (counts[p] || 0) + parseInt(v.Cantidad || 1);
             });
@@ -291,9 +268,7 @@
             list.innerHTML = '';
             sorted.forEach(([sku, qty]) => {
                 const sInfo = dbP.find(p => (p.Parte||"").toString().trim().toUpperCase() === sku);
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px; margin-bottom:5px; border-left:3px solid var(--gold); font-size:0.75rem;">
-                    <div><b>${sku}</b><br><small>${sInfo?sInfo.Marca:'GENÉRICA'}</small></div>
-                    <div style="text-align:right"><b>${qty} vend.</b><br><small style="color:var(--green)">Stock: ${sInfo?sInfo.Existencia:0}</small></div></div>`;
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px; margin-bottom:5px; border-left:3px solid var(--gold); font-size:0.75rem;"><div><b>${sku}</b><br><small>${sInfo?sInfo.Marca:'GENÉRICA'}</small></div><div style="text-align:right"><b>${qty} vend.</b><br><small style="color:var(--green)">Stock: ${sInfo?sInfo.Existencia:0}</small></div></div>`;
             });
         }
         function quickSearch(i) { const m = dbP.find(p => (p.Parte||'').toString().trim().toUpperCase() === i.value.trim().toUpperCase()); if(m) document.getElementById('p-prc').value = parseFloat(m.Precio.replace(/[^0-9.]/g, ''))||0; }
