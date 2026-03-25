@@ -42,7 +42,6 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; margin-bottom: 15px; }
 
-        /* CALCULADORA */
         .progress-bg { width: 100%; height: 18px; background: #000; border-radius: 10px; border: 1px solid #444; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; background: var(--red); transition: 1.5s; box-shadow: 0 0 10px var(--red); }
         .cal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; max-height: 350px; overflow-y: auto; padding-right: 5px; }
@@ -50,13 +49,13 @@
         .day-in { width: 100%; background: transparent; border: none; color: var(--green); font-size: 1rem; text-align: center; outline: none; font-weight: bold; padding: 5px 0; }
         .day-label { font-size: 0.6rem; color: #888; display: block; margin-bottom: 4px; border-bottom: 1px solid #222; }
 
-        /* COTIZADORA TABLA MEJORADA */
-        .cot-list { width: 100%; border-collapse: collapse; font-size: 0.75rem; color: #ccc; margin: 15px 0; }
+        /* COTIZADORA TABLA (PIEZAS ANTES QUE PRECIO) */
+        .cot-list { width: 100%; border-collapse: collapse; font-size: 0.75rem; color: #ccc; margin: 10px 0; }
         .cot-list th { text-align: left; color: var(--blue); border-bottom: 1px solid #333; padding: 8px 4px; }
         .cot-list td { padding: 10px 4px; border-bottom: 1px solid #222; }
         .cot-footer { background: rgba(0,212,255,0.08); font-weight: 900; color: #fff; border-top: 2px solid var(--blue); }
 
-        /* TOP PRODUCTOS ESTILO IMAGEN */
+        /* TOP PRODUCTOS */
         .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 8px; padding: 12px; border-radius: 10px; position: relative; }
         .prod-rank-icon { color: var(--gold); font-size: 1.2rem; font-weight: bold; margin-right: 15px; width: 25px; border-left: 3px solid var(--gold); border-radius: 0 5px 5px 0; padding-left: 10px; }
         .prod-info-main { flex: 1; }
@@ -75,6 +74,9 @@
         .light.on.verde { background: #0f0; box-shadow: 0 0 8px #0f0; }
         .light.on.ambar { background: #ff0; box-shadow: 0 0 8px #ff0; }
         .light.on.rojo { background: #f00; box-shadow: 0 0 8px #f00; }
+        
+        .stock-highlight { border: 1px solid var(--blue); background: rgba(0, 212, 255, 0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { border-color: var(--blue); } 50% { border-color: transparent; } 100% { border-color: var(--blue); } }
     </style>
 </head>
 <body>
@@ -127,13 +129,13 @@
                     <button class="btn" style="background:#222;" onclick="clearCot()">LIMPIAR</button>
                 </div>
                 <table class="cot-list">
-                    <thead><tr><th>SKU</th><th>P. Unit</th><th>Cant</th></tr></thead>
+                    <thead><tr><th>SKU</th><th>Cant</th><th>P. Unit</th></tr></thead>
                     <tbody id="cot-body"></tbody>
                     <tfoot>
                         <tr class="cot-footer">
                             <td>TOTAL</td>
-                            <td id="total-monto" colspan="1">$0</td>
                             <td id="total-pzs">0 pzs</td>
+                            <td id="total-monto">$0</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -277,7 +279,7 @@
             const b = document.getElementById('cot-body'); b.innerHTML = ''; 
             let tPzs = 0, tMonto = 0;
             cotList.forEach(i => {
-                b.innerHTML += `<tr><td>${i.s}</td><td>$${i.p.toLocaleString()}</td><td>${i.q}</td></tr>`;
+                b.innerHTML += `<tr><td>${i.s}</td><td>${i.q}</td><td>$${i.p.toLocaleString()}</td></tr>`;
                 tPzs += i.q; tMonto += i.t;
             });
             document.getElementById('total-pzs').innerText = tPzs + " pzs";
@@ -290,7 +292,8 @@
             let total = 0, pzs = 0; 
             cotList.forEach(i => { total += i.t; pzs += i.q; });
             let t = `*COTIZACIÓN CATOSA GP*\n------------------------------------------\n*Buen día, ${cli}*\nLe atiende: *${user.Nombre}*\n\nLe envío la relación de productos solicitada:\n\n`;
-            cotList.forEach(i => t += `• ${i.s} | Unit: $${i.p.toLocaleString()} | Cant: ${i.q} | Subtotal: $${i.t.toLocaleString()}\n`);
+            // Orden corregido en mensaje de WhatsApp: Piezas -> Unitario
+            cotList.forEach(i => t += `• ${i.s} | Cant: ${i.q} | Unit: $${i.p.toLocaleString()} | Subtotal: $${i.t.toLocaleString()}\n`);
             t += `\n------------------------------------------\n*TOTAL PIEZAS: ${pzs}*\n*TOTAL A PAGAR: $${total.toLocaleString()}*\n\n*Quedo al pendiente de su compra.*\n\n_* Precios sujetos a cambio sin previo aviso_`;
             if(m === 'wa') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`, '_blank');
             else window.location.href = `mailto:?subject=Cotización Catosa - ${cli}&body=${encodeURIComponent(t)}`;
