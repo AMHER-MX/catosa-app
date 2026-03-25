@@ -42,6 +42,7 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; margin-bottom: 15px; }
 
+        /* CALCULADORA */
         .progress-bg { width: 100%; height: 18px; background: #000; border-radius: 10px; border: 1px solid #444; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; background: var(--red); transition: 1.5s; box-shadow: 0 0 10px var(--red); }
         .cal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; max-height: 350px; overflow-y: auto; padding-right: 5px; }
@@ -49,10 +50,21 @@
         .day-in { width: 100%; background: transparent; border: none; color: var(--green); font-size: 1rem; text-align: center; outline: none; font-weight: bold; padding: 5px 0; }
         .day-label { font-size: 0.6rem; color: #888; display: block; margin-bottom: 4px; border-bottom: 1px solid #222; }
 
-        .cot-list { width: 100%; border-collapse: collapse; font-size: 0.75rem; color: #ccc; margin: 10px 0; }
+        /* COTIZADORA TABLA MEJORADA */
+        .cot-list { width: 100%; border-collapse: collapse; font-size: 0.75rem; color: #ccc; margin: 15px 0; }
         .cot-list th { text-align: left; color: var(--blue); border-bottom: 1px solid #333; padding: 8px 4px; }
-        .cot-list td { padding: 8px 4px; border-bottom: 1px solid #222; }
-        .cot-footer { background: rgba(0,212,255,0.05); font-weight: bold; color: var(--text); border-top: 2px solid var(--blue); }
+        .cot-list td { padding: 10px 4px; border-bottom: 1px solid #222; }
+        .cot-footer { background: rgba(0,212,255,0.08); font-weight: 900; color: #fff; border-top: 2px solid var(--blue); }
+
+        /* TOP PRODUCTOS ESTILO IMAGEN */
+        .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 8px; padding: 12px; border-radius: 10px; position: relative; }
+        .prod-rank-icon { color: var(--gold); font-size: 1.2rem; font-weight: bold; margin-right: 15px; width: 25px; border-left: 3px solid var(--gold); border-radius: 0 5px 5px 0; padding-left: 10px; }
+        .prod-info-main { flex: 1; }
+        .prod-info-main b { font-size: 0.9rem; letter-spacing: 0.5px; }
+        .prod-info-main small { color: #666; margin-left: 5px; }
+        .prod-stat-data { text-align: right; }
+        .prod-stat-data b { font-size: 0.9rem; color: #fff; }
+        .prod-stat-data small { color: #555; display: block; font-size: 0.65rem; }
 
         input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-sizing: border-box; font-size: 16px !important; }
         .btn { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; width: 100%; }
@@ -63,9 +75,6 @@
         .light.on.verde { background: #0f0; box-shadow: 0 0 8px #0f0; }
         .light.on.ambar { background: #ff0; box-shadow: 0 0 8px #ff0; }
         .light.on.rojo { background: #f00; box-shadow: 0 0 8px #f00; }
-        
-        .stock-highlight { border: 1px solid var(--blue); background: rgba(0, 212, 255, 0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { border-color: var(--blue); } 50% { border-color: transparent; } 100% { border-color: var(--blue); } }
     </style>
 </head>
 <body>
@@ -105,21 +114,6 @@
 
         <div class="grid">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2>💰 Proyección Comisión</h2>
-                    <button onclick="clearProyeccion()" style="background:none; border:1px solid #444; color:#666; font-size:0.5rem; border-radius:3px; padding:2px 5px; cursor:pointer;">LIMPIAR MES</button>
-                </div>
-                <div style="margin: 10px 0;"><label style="font-size:0.6rem; color:#888;">% COMISIÓN:</label><input type="number" id="c-pct" value="1.5" step="0.1" oninput="sumCal()"></div>
-                <div class="progress-bg"><div id="obj-fill" class="progress-fill"></div></div>
-                <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:bold; margin-bottom:15px;">
-                    <span id="r-v" style="color:var(--green)">$0</span>
-                    <span id="r-c" style="color:var(--blue)">$0</span>
-                    <b id="metal" style="font-size:0.7rem; padding:4px 12px; border-radius:4px; background:#333;">S/N</b>
-                </div>
-                <div class="cal-grid" id="cal-grid"></div>
-            </div>
-
-            <div class="card">
                 <h2>📑 Cotizadora Express</h2>
                 <input list="cli-cot" id="cot-cli-name" placeholder="Nombre del Cliente">
                 <datalist id="cli-cot"></datalist>
@@ -133,13 +127,13 @@
                     <button class="btn" style="background:#222;" onclick="clearCot()">LIMPIAR</button>
                 </div>
                 <table class="cot-list">
-                    <thead><tr><th>SKU</th><th>Cant</th><th>Total</th></tr></thead>
+                    <thead><tr><th>SKU</th><th>P. Unit</th><th>Cant</th></tr></thead>
                     <tbody id="cot-body"></tbody>
                     <tfoot>
                         <tr class="cot-footer">
                             <td>TOTAL</td>
-                            <td id="total-pzs">0</td>
-                            <td id="total-monto">$0</td>
+                            <td id="total-monto" colspan="1">$0</td>
+                            <td id="total-pzs">0 pzs</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -152,12 +146,23 @@
             <div class="card" id="stock-card">
                 <h2>📦 Consulta de Stock</h2>
                 <input type="text" id="stock-search-input" placeholder="Consultar SKU o Marca..." oninput="checkInventory(this.value)">
-                <div id="inv-res" style="max-height: 250px; overflow-y: auto;"></div>
+                <div id="inv-res" style="max-height: 200px; overflow-y: auto;"></div>
             </div>
 
             <div class="card">
-                <h2>🔥 Mis Productos Top</h2>
+                <h2>🔥 Mis Productos Top 5</h2>
                 <div id="v-top-list"></div>
+            </div>
+
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2>💰 Proyección Comisión</h2>
+                    <button onclick="clearProyeccion()" style="background:none; border:1px solid #444; color:#666; font-size:0.5rem; border-radius:3px; padding:2px 5px; cursor:pointer;">LIMPIAR</button>
+                </div>
+                <div style="margin: 10px 0;"><label style="font-size:0.6rem; color:#888;">% COMISIÓN:</label><input type="number" id="c-pct" value="1.5" step="0.1" oninput="sumCal()"></div>
+                <div class="progress-bg"><div id="obj-fill" class="progress-fill"></div></div>
+                <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:bold; margin-bottom:15px;"><span id="r-v" style="color:var(--green)">$0</span><span id="r-c" style="color:var(--blue)">$0</span><b id="metal" style="font-size:0.7rem; padding:4px 12px; border-radius:4px; background:#333;">S/N</b></div>
+                <div class="cal-grid" id="cal-grid"></div>
             </div>
 
             <div class="card">
@@ -190,13 +195,13 @@
         };
 
         function handleSkuInput(input) {
-            const val = input.value.trim().toUpperCase();
             quickSearch(input);
+            const val = input.value.trim().toUpperCase();
             if(val.length > 2) {
                 document.getElementById('stock-search-input').value = val;
                 checkInventory(val);
                 document.getElementById('stock-card').classList.add('stock-highlight');
-                setTimeout(() => document.getElementById('stock-card').classList.remove('stock-highlight'), 2000);
+                setTimeout(() => document.getElementById('stock-card').classList.remove('stock-highlight'), 1500);
             }
         }
 
@@ -272,11 +277,10 @@
             const b = document.getElementById('cot-body'); b.innerHTML = ''; 
             let tPzs = 0, tMonto = 0;
             cotList.forEach(i => {
-                b.innerHTML += `<tr><td>${i.s}</td><td>${i.q}</td><td>$${i.t.toLocaleString()}</td></tr>`;
-                tPzs += i.q;
-                tMonto += i.t;
+                b.innerHTML += `<tr><td>${i.s}</td><td>$${i.p.toLocaleString()}</td><td>${i.q}</td></tr>`;
+                tPzs += i.q; tMonto += i.t;
             });
-            document.getElementById('total-pzs').innerText = tPzs;
+            document.getElementById('total-pzs').innerText = tPzs + " pzs";
             document.getElementById('total-monto').innerText = "$" + tMonto.toLocaleString();
         }
 
@@ -285,11 +289,9 @@
             if(cotList.length === 0) return alert("Añade productos");
             let total = 0, pzs = 0; 
             cotList.forEach(i => { total += i.t; pzs += i.q; });
-
             let t = `*COTIZACIÓN CATOSA GP*\n------------------------------------------\n*Buen día, ${cli}*\nLe atiende: *${user.Nombre}*\n\nLe envío la relación de productos solicitada:\n\n`;
-            cotList.forEach(i => t += `• ${i.s} | Cant: ${i.q} | Subtotal: $${i.t.toLocaleString()}\n`);
+            cotList.forEach(i => t += `• ${i.s} | Unit: $${i.p.toLocaleString()} | Cant: ${i.q} | Subtotal: $${i.t.toLocaleString()}\n`);
             t += `\n------------------------------------------\n*TOTAL PIEZAS: ${pzs}*\n*TOTAL A PAGAR: $${total.toLocaleString()}*\n\n*Quedo al pendiente de su compra.*\n\n_* Precios sujetos a cambio sin previo aviso_`;
-            
             if(m === 'wa') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`, '_blank');
             else window.location.href = `mailto:?subject=Cotización Catosa - ${cli}&body=${encodeURIComponent(t)}`;
         }
@@ -314,9 +316,11 @@
             });
             const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);
             list.innerHTML = '';
-            sorted.forEach(([sku, qty]) => {
+            sorted.forEach(([sku, qty], i) => {
                 const sInfo = dbP.find(p => (p.Parte||"").toString().trim().toUpperCase() === sku);
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px; margin-bottom:5px; border-left:3px solid var(--gold); font-size:0.75rem;"><div><b>${sku}</b><br><small>${sInfo?sInfo.Marca:'GENÉRICA'}</small></div><div style="text-align:right"><b>${qty} vend.</b><br><small style="color:var(--green)">Stock: ${sInfo?sInfo.Existencia:0}</small></div></div>`;
+                const sQty = sInfo ? parseInt(sInfo.Existencia) : 0;
+                const sMarca = sInfo ? sInfo.Marca : "FLEETRITE";
+                list.innerHTML += `<div class="prod-row"><div class="prod-rank-icon">${i+1}</div><div class="prod-info-main"><b>${sku}</b><small>${sMarca}</small></div><div class="prod-stat-data"><b>${qty} vendidos</b><small>${sQty} stock</small></div></div>`;
             });
         }
         function quickSearch(i) { const m = dbP.find(p => (p.Parte||'').toString().trim().toUpperCase() === i.value.trim().toUpperCase()); if(m) document.getElementById('p-prc').value = parseFloat(m.Precio.replace(/[^0-9.]/g, ''))||0; }
