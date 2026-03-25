@@ -22,6 +22,12 @@
         @keyframes blink { 0% { background: var(--card); } 50% { background: #4a0000; } 100% { background: var(--card); } }
         .alert-blink { animation: blink 1s infinite; border-top: 3px solid var(--red) !important; }
 
+        /* BARRA DE MEDALLAS */
+        .medal-counts { display: flex; justify-content: space-around; background: #000; padding: 10px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #222; gap: 10px; }
+        .medal-item { text-align: center; font-size: 0.65rem; font-weight: bold; cursor: pointer; transition: 0.3s; padding: 8px; border-radius: 8px; flex: 1; border: 1px solid transparent; }
+        .medal-item div { font-size: 1.2rem; margin-top: 3px; }
+        .medal-item.active { background: rgba(255,255,255,0.1); border-color: white; }
+
         .race-track { background: #050505; border-radius: 15px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 20px; }
         .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.4; z-index: 1; }
         .l-85 { left: 73.9%; border-left: 1px dashed var(--bronze); }
@@ -36,11 +42,8 @@
 
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; }
-        
-        /* BITACORA */
         .seg-item { border-left: 4px solid var(--blue); background: #000; padding: 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; font-size: 0.75rem; line-height: 1.5; }
         
-        /* TOP PRODUCTOS */
         .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 6px; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); }
         .prod-rank { font-size: 1.1rem; font-weight: 900; color: var(--gold); margin-right: 15px; min-width: 25px; }
         .prod-info { flex: 1; }
@@ -49,7 +52,6 @@
         .prod-stat { text-align: right; }
         .prod-stat b { color: var(--green); font-size: 0.9rem; display: block; }
 
-        /* CARTERA MEJORADA - SEMAFORO A LA IZQUIERDA */
         .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
         .semaforo-mini { display: flex; flex-direction: column; gap: 2px; margin-right: 15px; width: 12px; flex-shrink: 0; }
         .dot-light { width: 10px; height: 10px; border-radius: 50%; background: #222; }
@@ -89,6 +91,12 @@
             <button class="btn" style="background:var(--green); color:#000;" onclick="exportCSV()">EXPORTAR CARTERA</button>
         </div>
 
+        <div class="medal-counts">
+            <div id="btn-bronce" class="medal-item" style="color:var(--bronze)" onclick="filterMedal('bronce')">BRONCE (85%)<div id="c-bronce">0</div></div>
+            <div id="btn-plata" class="medal-item" style="color:var(--silver)" onclick="filterMedal('plata')">PLATA (100%)<div id="c-plata">0</div></div>
+            <div id="btn-oro" class="medal-item" style="color:var(--gold)" onclick="filterMedal('oro')">ORO (115%)<div id="c-oro">0</div></div>
+        </div>
+
         <div class="race-track">
             <div class="line-meta l-85"></div><div class="line-meta l-100"></div><div class="line-meta l-115"></div>
             <div id="pista"></div>
@@ -100,10 +108,7 @@
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <h2 style="margin:0;">📅 Bitácora</h2>
-                    <div style="display:flex;">
-                        <a href="https://docs.google.com/spreadsheets/d/1vUYJz5r1kgMNDel9-6LqaiKAeb3g_n0JwS5_Hs59yeM/edit" target="_blank" class="btn-resp">Sheets</a>
-                        <button onclick="exportBitacora()" class="btn-resp" style="background:var(--green); border:none; cursor:pointer;">CSV</button>
-                    </div>
+                    <div style="display:flex;"><a href="https://docs.google.com/spreadsheets/d/1vUYJz5r1kgMNDel9-6LqaiKAeb3g_n0JwS5_Hs59yeM/edit" target="_blank" class="btn-resp">Sheets</a><button onclick="exportBitacora()" class="btn-resp" style="background:var(--green); border:none; cursor:pointer;">CSV</button></div>
                 </div>
                 <div id="seg-list" style="max-height: 300px; overflow-y: auto;"></div>
             </div>
@@ -114,17 +119,13 @@
                 <div id="inv-res" style="max-height: 250px; overflow-y: auto;"></div>
             </div>
 
-            <div class="card">
-                <h2>🔥 Top 10 Productos</h2>
-                <div id="top-prod-list" style="max-height: 300px; overflow-y: auto;"></div>
-            </div>
-
+            <div class="card"><h2>🔥 Top 10 Productos</h2><div id="top-prod-list" style="max-height: 300px; overflow-y: auto;"></div></div>
             <div class="card"><h2 id="rank-title">🏆 Ranking Efectividad</h2><div id="ranking-list" style="max-height: 250px; overflow-y: auto;"></div></div>
 
             <div class="card">
                 <h2>👥 Cartera Semáforo</h2>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-bottom:10px;">
-                    <select id="f-color-cart" onchange="render()" style="padding:5px; font-size:0.7rem;"><option value="TODOS">TODOS LOS COLORES</option><option value="VERDE">VERDE</option><option value="AMBAR">AMBAR</option><option value="ROJO">ROJO</option></select>
+                    <select id="f-color-cart" onchange="render()"><option value="TODOS">TODOS LOS COLORES</option><option value="VERDE">VERDE</option><option value="AMBAR">AMBAR</option><option value="ROJO">ROJO</option></select>
                     <input type="text" id="f-cli-cart" placeholder="Filtrar cliente..." oninput="render()">
                 </div>
                 <div id="cli-list" style="max-height: 250px; overflow-y: auto;"></div>
@@ -140,17 +141,15 @@
             p: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1610979668&single=true&output=csv",
             det: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1262272182&single=true&output=csv"
         };
-        let dbV=[], dbC=[], dbS=[], dbP=[], dbD=[], role='', myChart=null;
+        let dbV=[], dbC=[], dbS=[], dbP=[], dbD=[], role='', myChart=null, activeMedal=null;
 
         function login() {
             const u = document.getElementById('u-role').value.toUpperCase(), p = document.getElementById('u-pass').value;
             if(u==='GERENTE' && p==='CATOSA2026') role='GERENCIA';
             else if(u==='DIRECTOR' && p==='MASTER2026') role='DIRECCIÓN';
             else return alert("Acceso denegado");
-            document.getElementById('login-screen').style.display='none';
-            document.getElementById('main-app').style.display='block';
-            document.getElementById('role-display').innerText = role;
-            loadData();
+            document.getElementById('login-screen').style.display='none'; document.getElementById('main-app').style.display='block';
+            document.getElementById('role-display').innerText = role; loadData();
         }
 
         function loadData() {
@@ -167,12 +166,13 @@
             dbV.filter(x=>x.Nombre).forEach(x => v.innerHTML += `<option value="${x.Nombre}">${x.Nombre}</option>`);
         }
 
+        function filterMedal(m) { activeMedal = (activeMedal === m) ? null : m; document.querySelectorAll('.medal-item').forEach(i => i.classList.remove('active')); if (activeMedal) document.getElementById('btn-' + m).classList.add('active'); render(); }
+
         function render() {
             if(!dbV.length) return;
             const fs = document.getElementById('f-suc').value, fv = document.getElementById('f-vend-global').value;
             const p = document.getElementById('pista'); p.innerHTML = '';
-            let tv=0, tm=0, labs=[], vdat=[], mdat=[], ranking={};
-
+            let tv=0, tm=0, labs=[], vdat=[], mdat=[], ranking={}, cB=0, cP=0, cO=0;
             const hoy = new Date(), uD = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(), dR = (uD - hoy.getDate()) + 1;
             if(dR <= 5) document.getElementById('card-falta').classList.add('alert-blink');
 
@@ -181,10 +181,11 @@
                 tv += ven; tm += met;
                 const pct = (ven/met)*100, pctP = Math.min(100, (pct/115)*100);
                 let rc = pct>=115 ? 'oro' : (pct>=100 ? 'plata' : (pct>=85 ? 'bronce' : ''));
-                p.innerHTML += `<div class="lane"><small class="v-name">${v.Nombre}</small><div class="truck ${rc}" style="left:calc(${pctP}% - 50px); position:absolute;"></div></div>`;
+                if(rc==='oro') cO++; else if(rc==='plata') cP++; else if(rc==='bronce') cB++;
+                if (!activeMedal || rc === activeMedal) p.innerHTML += `<div class="lane"><small class="v-name">${v.Nombre}</small><div class="truck ${rc}" style="left:calc(${pctP}% - 50px); position:absolute;"></div></div>`;
                 labs.push(v.Nombre); vdat.push(ven); mdat.push(met);
             });
-
+            document.getElementById('c-bronce').innerText = cB; document.getElementById('c-plata').innerText = cP; document.getElementById('c-oro').innerText = cO;
             document.getElementById('g-v').innerText="$"+Math.floor(tv).toLocaleString();
             document.getElementById('g-falta-meta').innerText="$"+Math.max(0, Math.floor(tm - tv)).toLocaleString();
             document.getElementById('g-p-plata').innerText=((tv/tm)*100 || 0).toFixed(1)+"%";
@@ -206,25 +207,10 @@
                 if (matchesColor) { if(!ranking[c.Vendedor]) ranking[c.Vendedor] = 0; ranking[c.Vendedor]++; }
                 if((fs==='TODAS'||c.Sucursal===fs) && (fv==='TODOS'||c.Vendedor===fv)){
                     if((c.Cliente||'').toLowerCase().includes(fc) && matchesColor){
-                        cl.innerHTML += `
-                        <div class="client-item">
-                            <div class="semaforo-mini">
-                                <div class="dot-light verde ${d<=14?'active':''}"></div>
-                                <div class="dot-light ambar ${d>14&&d<=60?'active':''}"></div>
-                                <div class="dot-light rojo ${d>60?'active':''}"></div>
-                            </div>
-                            <div class="client-data">
-                                <b>${c.Cliente}</b><br>
-                                <small>${c.Vendedor} (${d}d)</small>
-                            </div>
-                            <div class="client-val">
-                                $${Math.floor(parseFloat(c.Venta_Mes)||0).toLocaleString()}
-                            </div>
-                        </div>`;
+                        cl.innerHTML += `<div class="client-item"><div class="semaforo-mini"><div class="dot-light verde ${d<=14?'active':''}"></div><div class="dot-light ambar ${d>14&&d<=60?'active':''}"></div><div class="dot-light rojo ${d>60?'active':''}"></div></div><div class="client-data"><b>${c.Cliente}</b><br><small>${c.Vendedor} (${d}d)</small></div><div class="client-val">$${Math.floor(parseFloat(c.Venta_Mes)||0).toLocaleString()}</div></div>`;
                     }
                 }
             });
-
             document.getElementById('rank-title').innerText = `🏆 Ranking ${fCol==='TODOS LOS COLORES'?'General':fCol}`;
             const rl = document.getElementById('ranking-list'); rl.innerHTML = '';
             Object.entries(ranking).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(([n,c], i) => {
@@ -246,23 +232,14 @@
         function calcTopProducts() {
             const list = document.getElementById('top-prod-list'); if(!dbD.length) return;
             let counts = {};
-            dbD.forEach(v => { 
-                const p = (v.Parte||v.SKU||"").toString().trim().toUpperCase(); 
-                if(p && p !== "PARTE") counts[p] = (counts[p]||0) + parseInt(v.Cantidad||1); 
-            });
+            dbD.forEach(v => { const p = (v.Parte||v.SKU||"").toString().trim().toUpperCase(); if(p && p !== "PARTE") counts[p] = (counts[p]||0) + parseInt(v.Cantidad||1); });
             const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
             list.innerHTML = '';
             sorted.forEach(([sku, qty], i) => {
                 const sInfo = dbP.find(p => (p.Parte||"").toString().trim().toUpperCase() === sku);
                 const sQty = sInfo ? parseInt(sInfo.Existencia) : 0;
-                const sMarca = sInfo ? (sInfo.Marca || "GENÉRICA") : "NO ENCONTRADO EN PRODUCTOS";
-                const col = sQty <= 5 ? 'var(--red)' : 'var(--green)';
-                list.innerHTML += `
-                <div class="prod-row">
-                    <div class="prod-rank">${i+1}</div>
-                    <div class="prod-info"><b>${sku}</b><small>${sMarca}</small></div>
-                    <div class="prod-stat"><b>${qty} vend.</b><small style="color:${col}">${sQty} stock</small></div>
-                </div>`;
+                const sMarca = sInfo ? (sInfo.Marca || "GENÉRICA") : "NO ENCONTRADO";
+                list.innerHTML += `<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-info"><b>${sku}</b><small>${sMarca}</small></div><div class="prod-stat"><b>${qty} vend.</b><small style="color:${sQty<=5?'var(--red)':'var(--green)'}">${sQty} stock</small></div></div>`;
             });
         }
 
