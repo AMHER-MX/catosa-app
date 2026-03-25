@@ -17,7 +17,6 @@
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--card); border-radius: 10px; border-bottom: 2px solid #333; margin-bottom: 15px; }
         .role-badge { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; border: 2px solid var(--gold); padding: 5px 15px; border-radius: 5px; }
         
-        /* PANEL DE TIEMPO */
         .time-panel { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
         .time-item { text-align: center; flex: 1; }
         .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; }
@@ -26,11 +25,11 @@
         .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .kpi-card { background: var(--card); padding: 12px; border-radius: 10px; border-top: 3px solid var(--blue); text-align: center; }
         .kpi-val { font-size: 1rem; font-weight: bold; color: var(--green); }
-        .kpi-card span { font-size: 0.5rem; color: #888; text-transform: uppercase; display: block; }
+        .kpi-card span { font-size: 0.5rem; color: #888; display: block; }
         @keyframes blink { 0% { background: var(--card); } 50% { background: #4a0000; } 100% { background: var(--card); } }
         .alert-blink { animation: blink 1s infinite; border-top: 3px solid var(--red) !important; }
 
-        /* PISTA Y METAS */
+        /* PISTA */
         .race-track { background: #050505; border-radius: 15px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 20px; }
         .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.4; z-index: 1; }
         .l-85 { left: 73.9%; border-left: 1px dashed var(--bronze); }
@@ -46,15 +45,10 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; }
 
-        /* TOP PRODUCTOS */
-        .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 8px; padding: 10px; border-radius: 8px; }
-        .prod-rank { color: var(--gold); font-size: 1.1rem; font-weight: 900; margin-right: 15px; width: 20px; border-left: 3px solid var(--gold); padding-left: 8px; }
-        .prod-info { flex: 1; }
-        .prod-stat { text-align: right; }
-
-        /* BITACORA */
+        /* BITACORA ESTILO */
         .seg-item { border-left: 4px solid var(--blue); background: #000; padding: 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; font-size: 0.75rem; line-height: 1.5; }
-        
+        .btn-mini { padding: 4px 10px; border-radius: 4px; border: none; font-size: 0.6rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
+
         /* CARTERA SEMAFORO */
         .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
         .semaforo-mini { display: flex; flex-direction: column; gap: 2px; margin-right: 15px; width: 12px; }
@@ -63,8 +57,8 @@
         .dot-light.active.ambar { background: #ff0; box-shadow: 0 0 5px #ff0; }
         .dot-light.active.rojo { background: #f00; box-shadow: 0 0 5px #f00; }
 
-        input, select { background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; font-size: 0.8rem; }
-        .btn { padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; font-size: 0.7rem; }
+        input, select { background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; width: 100%; height: 42px; box-sizing: border-box; font-size: 0.8rem; }
+        .btn { padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; font-size: 0.7rem; height: 42px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -76,23 +70,23 @@
         <div class="header">
             <img src="logo-catosa.png" style="max-height: 25px;">
             <div id="role-display" class="role-badge">--</div>
-            <button class="btn" style="background:none; border:1px solid var(--red); color:var(--red);" onclick="location.reload()">SALIR</button>
+            <button class="btn" style="background:none; border:1px solid var(--red); color:var(--red); height: 30px;" onclick="location.reload()">SALIR</button>
         </div>
 
         <div class="time-panel">
             <div class="time-item"><span class="time-label">Hoy</span><span class="time-value" id="val-hoy">--</span></div>
             <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Cierre en</span><span class="time-value" id="val-dias" style="color: var(--red);">--</span></div>
-            <div class="time-item"><span class="time-label">Falta para Oro</span><span class="time-value" id="val-falta-oro" style="color: var(--gold);">$0</span></div>
+            <div class="time-item"><span class="time-label">Meta Oro</span><span class="time-value" id="val-falta-oro" style="color: var(--gold);">$0</span></div>
         </div>
 
         <div class="kpi-row">
-            <div class="kpi-card"><span>Venta Global</span><div class="kpi-val" id="g-v">$0</div></div>
+            <div class="kpi-card"><span>Venta</span><div class="kpi-val" id="g-v">$0</div></div>
             <div class="kpi-card" id="card-falta"><span>Falta Plata</span><div class="kpi-val" id="g-falta" style="color:var(--text)">$0</div></div>
-            <div class="kpi-card"><span>Alcance Plata</span><div class="kpi-val" id="g-p-plata" style="color:var(--blue)">0%</div></div>
-            <div class="kpi-card"><span>Alcance Oro</span><div class="kpi-val" id="g-p-oro" style="color:var(--gold)">0%</div></div>
+            <div class="kpi-card"><span>Avance Plata</span><div class="kpi-val" id="g-p-plata" style="color:var(--blue)">0%</div></div>
+            <div class="kpi-card"><span>Avance Oro</span><div class="kpi-val" id="g-p-oro" style="color:var(--gold)">0%</div></div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-bottom:15px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-bottom:15px; align-items: center;">
             <select id="f-suc" onchange="render()"><option value="TODAS">SUCURSAL: TODAS</option></select>
             <select id="f-vend" onchange="render()"><option value="TODOS">VENDEDOR: TODOS</option></select>
             <button class="btn" style="background:var(--green); color:#000;" onclick="exportCartera()">EXPORTAR CARTERA</button>
@@ -104,12 +98,15 @@
         </div>
 
         <div class="grid">
-            <div class="card"><h2>📈 Avance de Ventas</h2><canvas id="salesChart" style="max-height: 250px;"></canvas></div>
+            <div class="card"><h2>📈 Gráfica de Avance</h2><canvas id="salesChart" style="max-height: 250px;"></canvas></div>
 
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <h2 style="margin:0;">📅 Bitácora</h2>
-                    <button class="btn" style="background:var(--blue); padding:5px 10px;" onclick="exportBitacora()">Exportar CSV</button>
+                    <div>
+                        <a href="https://docs.google.com/spreadsheets/d/1vUYJz5r1kgMNDel9-6LqaiKAeb3g_n0JwS5_Hs59yeM/edit" target="_blank" class="btn-mini" style="background:var(--green); color:#000; margin-right:5px;">SHEETS</a>
+                        <button class="btn-mini" style="background:var(--blue); color:#fff;" onclick="exportBitacora()">CSV</button>
+                    </div>
                 </div>
                 <div id="seg-list" style="max-height: 300px; overflow-y: auto;"></div>
             </div>
@@ -131,7 +128,7 @@
                 <div id="cli-list" style="max-height: 300px; overflow-y: auto;"></div>
             </div>
 
-            <div class="card"><h2>🏆 Ranking Semáforo</h2><div id="rank-list" style="max-height: 250px; overflow-y: auto;"></div></div>
+            <div class="card"><h2>🏆 Ranking Clientes</h2><div id="rank-list" style="max-height: 250px; overflow-y: auto;"></div></div>
         </div>
     </div>
 
@@ -148,18 +145,14 @@
         function login() {
             const u = document.getElementById('u-role').value.toUpperCase(), p = document.getElementById('u-pass').value;
             if((u==='GERENTE'||u==='DIRECTOR') && (p==='CATOSA2026'||p==='MASTER2026')) {
-                document.getElementById('login-screen').style.display='none'; 
-                document.getElementById('main-app').style.display='block';
-                document.getElementById('role-display').innerText = u;
-                loadData();
+                document.getElementById('login-screen').style.display='none'; document.getElementById('main-app').style.display='block';
+                document.getElementById('role-display').innerText = u; loadData();
             } else alert("Acceso denegado");
         }
 
         function loadData() {
-            // Carga Secuencial para asegurar el stock
             Papa.parse(L.p, { download:true, header:true, complete: r => {
-                dbP = r.data;
-                checkInventory("");
+                dbP = r.data; checkInventory("");
                 Papa.parse(L.v, { download:true, header:true, complete: r => { dbV=r.data; fillFilters(); render(); } });
                 Papa.parse(L.c, { download:true, header:true, complete: r => { dbC=r.data; render(); } });
                 Papa.parse(L.s, { download:true, header:true, complete: r => { dbS=r.data; render(); } });
@@ -178,13 +171,11 @@
             const pista = document.getElementById('pista'); pista.innerHTML = '';
             let tv=0, tm=0, labs=[], vdat=[], mdat=[], ranking={};
 
-            // PANEL DE TIEMPO
             const hoy = new Date(), uDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(), dR = (uDia - hoy.getDate()) + 1;
             document.getElementById('val-hoy').innerText = hoy.toLocaleDateString('es-MX', {day:'numeric', month:'short'}).toUpperCase();
             document.getElementById('val-dias').innerText = dR + (dR === 1 ? " Día" : " Días");
             if(dR <= 5) document.getElementById('card-falta').classList.add('alert-blink');
 
-            // PISTA Y VEND
             dbV.filter(v => v.Nombre && (fs==='TODAS'||v.Sucursal===fs) && (fv==='TODOS'||v.Nombre===fv)).forEach(v => {
                 const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g,''))||0, met = parseFloat(v.Meta.replace(/[^0-9.]/g,''))||1;
                 tv += ven; tm += met;
@@ -200,17 +191,14 @@
             document.getElementById('g-p-oro').innerText=((tv/(tm*1.15))*100 || 0).toFixed(1)+"%";
             document.getElementById('val-falta-oro').innerText = "$" + Math.max(0, Math.floor(tm*1.15 - tv)).toLocaleString();
 
-            // GRAFICA
             if(myChart) myChart.destroy();
-            myChart = new Chart(document.getElementById('salesChart'), { type:'bar', data:{ labels:labs, datasets:[{label:'Venta', data:vdat, backgroundColor:'#00d4ff'},{label:'Meta', data:mdat, backgroundColor:'#333'}] } });
+            myChart = new Chart(document.getElementById('salesChart'), { type:'bar', data:{ labels:labs, datasets:[{label:'Venta', data:vdat, backgroundColor:'#00d4ff'},{label:'Meta', data:mdat, backgroundColor:'#333'}] }, options:{ responsive:true, plugins:{legend:{display:false}}} });
 
-            // BITACORA
             const bl = document.getElementById('seg-list'); bl.innerHTML = '';
-            dbS.filter(s => fv==='TODOS'||s.Vendedor===fv).slice().reverse().slice(0,20).forEach(s => {
+            dbS.filter(s => fv==='TODOS'||s.Vendedor===fv).slice().reverse().slice(0,15).forEach(s => {
                 bl.innerHTML += `<div class="seg-item"><b>VENDEDOR:</b> ${s.Vendedor}<br><b>CLIENTE:</b> ${s.Cliente}<br><small><b>ATENDIÓ:</b> ${s.Atendio} | <b>MOTIVO:</b> ${s.Motivo}</small><br><small><b>RESULTADO:</b> ${s.Resultado}</small><br><small><b>NOTAS:</b> ${s.Notas}</small></div>`;
             });
 
-            // CARTERA SEMAFORO
             const cl = document.getElementById('cli-list'), fCol = document.getElementById('f-col-car').value, fCli = document.getElementById('f-cli-car').value.toLowerCase();
             cl.innerHTML = '';
             dbC.filter(c => (fs==='TODAS'||c.Sucursal===fs) && (fv==='TODOS'||c.Vendedor===fv)).forEach(c => {
@@ -224,7 +212,6 @@
                 }
             });
 
-            // RANKING
             const rl = document.getElementById('rank-list'); rl.innerHTML = '';
             Object.entries(ranking).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(([n,c],i) => {
                 rl.innerHTML += `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;"><span>${i+1}. ${n}</span><b style="color:var(--green)">${c} Clientes</b></div>`;
@@ -250,8 +237,7 @@
             sorted.forEach(([sku, qty], i) => {
                 const sInfo = dbP.find(p => (p.Parte||"").toString().trim().toUpperCase() === sku);
                 const sQty = sInfo ? parseInt(sInfo.Existencia) : 0;
-                const sMarca = sInfo ? sInfo.Marca : "FLEETRITE";
-                list.innerHTML += `<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-info"><b>${sku}</b><small>${sMarca}</small></div><div class="prod-stat"><b>${qty} vend.</b><small style="color:${sQty<=5?'var(--red)':'var(--green)'}">${sQty} stock</small></div></div>`;
+                list.innerHTML += `<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-info"><b>${sku}</b><small>${sInfo?sInfo.Marca:'FLEETRITE'}</small></div><div class="prod-stat"><b>${qty} vend.</b><small style="color:${sQty<=5?'var(--red)':'var(--green)'}">${sQty} stock</small></div></div>`;
             });
         }
 
