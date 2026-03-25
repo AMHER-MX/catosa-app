@@ -62,6 +62,9 @@
         .light.on.verde { background: #0f0; box-shadow: 0 0 8px #0f0; }
         .light.on.ambar { background: #ff0; box-shadow: 0 0 8px #ff0; }
         .light.on.rojo { background: #f00; box-shadow: 0 0 8px #f00; }
+        
+        .stock-highlight { border: 1px solid var(--blue); background: rgba(0, 212, 255, 0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { border-color: var(--blue); } 50% { border-color: transparent; } 100% { border-color: var(--blue); } }
     </style>
 </head>
 <body>
@@ -88,7 +91,7 @@
         </div>
 
         <div class="top-stats">
-            <div class="top-card"><span>Ventas</span><b id="k-v">$0</b></div>
+            <div class="top-card"><span>Mi Venta</span><b id="k-v">$0</b></div>
             <div class="top-card" id="card-falta"><span>Falta Plata</span><b id="k-f" style="color:var(--text)">$0</b></div>
             <div class="top-card"><span>Alcance P.</span><b id="k-pp">0%</b></div>
             <div class="top-card"><span>Alcance O.</span><b id="k-po">0%</b></div>
@@ -119,8 +122,9 @@
                 <h2>📑 Cotizadora Express</h2>
                 <input list="cli-cot" id="cot-cli-name" placeholder="Nombre del Cliente">
                 <datalist id="cli-cot"></datalist>
+                
                 <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
-                    <input type="text" id="p-sku" placeholder="Parte" oninput="quickSearch(this)">
+                    <input type="text" id="p-sku" placeholder="Parte" oninput="handleSkuInput(this)">
                     <input type="number" id="p-qty" placeholder="Cant" value="1">
                     <input type="number" id="p-prc" placeholder="Precio" readonly>
                 </div>
@@ -135,9 +139,9 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" id="stock-card">
                 <h2>📦 Consulta de Stock</h2>
-                <input type="text" placeholder="Consultar SKU o Marca..." oninput="checkInventory(this.value)">
+                <input type="text" id="stock-search-input" placeholder="Consultar SKU o Marca..." oninput="checkInventory(this.value)">
                 <div id="inv-res" style="max-height: 250px; overflow-y: auto;"></div>
             </div>
 
@@ -174,6 +178,20 @@
             Papa.parse(L.p, { download:true, header:true, complete: r => { dbP=r.data; checkInventory(""); } });
             Papa.parse(L.det, { download:true, header:true, complete: r => dbD=r.data });
         };
+
+        // FUNCIÓN NUEVA: Maneja la entrada de SKU y actualiza stock simultáneamente
+        function handleSkuInput(input) {
+            const val = input.value.trim().toUpperCase();
+            // 1. Ejecutar búsqueda de precio
+            quickSearch(input);
+            // 2. Ejecutar búsqueda de stock en el otro recuadro
+            if(val.length > 2) {
+                document.getElementById('stock-search-input').value = val;
+                checkInventory(val);
+                document.getElementById('stock-card').classList.add('stock-highlight');
+                setTimeout(() => document.getElementById('stock-card').classList.remove('stock-highlight'), 2000);
+            }
+        }
 
         function saveAndSum(day) { localStorage.setItem('day_' + day, document.getElementById('in_day_' + day).value); sumCal(); }
         function clearProyeccion() { if(confirm("¿Limpiar calculadora?")) { for(let i=1; i<=31; i++) { document.getElementById('in_day_'+i).value=''; localStorage.removeItem('day_'+i); } sumCal(); } }
