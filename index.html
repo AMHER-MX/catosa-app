@@ -53,16 +53,23 @@
 
         .cot-list { width: 100%; border-collapse: collapse; font-size: 0.75rem; color: #ccc; margin: 10px 0; }
         .cot-list th { text-align: left; color: var(--blue); border-bottom: 1px solid #333; padding: 8px 4px; }
+        .cot-list td { padding: 10px 4px; border-bottom: 1px solid #222; }
         .cot-footer { background: rgba(0,212,255,0.08); font-weight: 900; color: #fff; border-top: 2px solid var(--blue); }
 
+        /* TOP PRODUCTOS FORMATO PREMIUM */
         .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 8px; padding: 12px; border-radius: 10px; position: relative; }
         .prod-rank-icon { color: var(--gold); font-size: 1.2rem; font-weight: bold; margin-right: 15px; width: 25px; border-left: 3px solid var(--gold); border-radius: 0 5px 5px 0; padding-left: 10px; }
         .prod-info-main { flex: 1; }
+        .prod-info-main b { font-size: 0.9rem; letter-spacing: 0.5px; }
+        .prod-info-main small { color: #666; margin-left: 5px; font-size: 0.7rem; }
         .prod-stat-data { text-align: right; }
+        .prod-stat-data b { font-size: 0.9rem; color: #fff; }
+        .prod-stat-data small { color: #555; display: block; font-size: 0.65rem; }
 
         input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-sizing: border-box; font-size: 16px !important; }
         .btn { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; width: 100%; }
 
+        /* CARTERA SEMAFORO PUNTO NEON */
         .client-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; justify-content: space-between; font-size: 0.8rem; }
         .semaforo { display: flex; flex-direction: column; gap: 3px; margin-right: 15px; width: 10px; }
         .light { width: 10px; height: 10px; border-radius: 50%; background: #222; }
@@ -318,7 +325,8 @@
             sorted.forEach(([sku, qty], i) => {
                 const sInfo = dbP.find(p => (p.Parte||"").toString().trim().toUpperCase() === sku);
                 const sQty = sInfo ? parseInt(sInfo.Existencia) : 0;
-                list.innerHTML += `<div class="prod-row"><div class="prod-rank-icon">${i+1}</div><div class="prod-info-main"><b>${sku}</b><small>${sInfo?sInfo.Marca:'FLEETRITE'}</small></div><div class="prod-stat-data"><b>${qty} vend.</b><small>${sQty} stock</small></div></div>`;
+                const sMarca = sInfo ? sInfo.Marca : "FLEETRITE";
+                list.innerHTML += `<div class="prod-row"><div class="prod-rank-icon">${i+1}</div><div class="prod-info-main"><b>${sku}</b><small>${sMarca}</small></div><div class="prod-stat-data"><b>${qty} vend.</b><small>${sQty} stock</small></div></div>`;
             });
         }
         function quickSearch(i) { const m = dbP.find(p => (p.Parte||'').toString().trim().toUpperCase() === i.value.trim().toUpperCase()); if(m) document.getElementById('p-prc').value = parseFloat(m.Precio.replace(/[^0-9.]/g, ''))||0; }
