@@ -10,45 +10,55 @@
         :root { --red: #d21034; --bg: #0c0e10; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
         
+        /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 30px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 280px; }
         #main-app { display: none; }
         
+        /* HEADER */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 2px solid #333; margin-bottom: 15px; }
+        .u-name-top { font-weight: 800; font-size: 0.9rem; }
 
-        /* PISTAS CON NUEVAS METAS EXCEL */
-        .race-label { font-size: 0.65rem; color: var(--gold); font-weight: bold; text-transform: uppercase; margin-top: 10px; display: block; letter-spacing: 1px; }
+        /* PISTAS */
+        .race-label { font-size: 0.65rem; color: var(--gold); font-weight: bold; text-transform: uppercase; margin-top: 10px; display: block; }
         .race-track { background: #050505; border-radius: 10px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 8px; height: 45px; }
         .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.4; z-index: 1; }
-        .l-75 { left: 62.5%; border-left: 1px dashed var(--bronze); } /* 75% sobre escala de 120% */
-        .l-110 { left: 91.6%; border-left: 1px dashed var(--silver); } /* 110% sobre escala de 120% */
+        .l-75 { left: 62.5%; border-left: 1px dashed var(--bronze); }
+        .l-110 { left: 91.6%; border-left: 1px dashed var(--silver); }
         .l-120 { right: 0; width: 12px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); opacity: 0.2; border-left: 2px solid var(--gold); }
-        
-        .truck { position: absolute; bottom: 8px; width: 55px; height: 30px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s cubic-bezier(0.2, 0, 0.2, 1); z-index: 10; }
+        .truck { position: absolute; bottom: 8px; width: 50px; height: 28px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s cubic-bezier(0.2, 0, 0.2, 1); z-index: 10; }
         .truck.oro { filter: drop-shadow(0 0 15px var(--gold)); animation: turbo 1s infinite alternate; }
-        @keyframes turbo { from { filter: drop-shadow(0 0 5px var(--gold)); } to { filter: drop-shadow(0 0 20px var(--gold)); } }
+        @keyframes turbo { from { filter: drop-shadow(0 0 5px var(--gold)); } to { filter: drop-shadow(0 0 15px var(--gold)); } }
 
-        .btn-reporte { background: var(--blue); margin: 10px 0; border-radius: 8px; border:none; padding: 14px; font-weight: bold; cursor: pointer; color: #fff; text-transform: uppercase; width: 100%; font-size: 0.8rem; }
+        /* BOTON GESTION */
+        .btn-reporte { background: var(--blue); margin-bottom: 15px; border-radius: 8px; border:none; padding: 12px; font-weight: bold; color: #fff; text-transform: uppercase; width: 100%; cursor: pointer; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
-        .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; margin-bottom: 15px; }
+        /* GRID */
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; }
 
         /* CALCULADORA */
+        .cal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; }
         .day-box { background: #000; border: 1px solid #333; border-radius: 8px; padding: 5px; text-align: center; }
         .day-in { width: 100%; background: transparent; border: none; color: var(--green); font-size: 0.9rem; text-align: center; outline: none; font-weight: bold; }
         .progress-bg { width: 100%; height: 12px; background: #000; border-radius: 6px; border: 1px solid #444; margin: 10px 0; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; transition: 1.5s; }
 
-        /* TOP 10 / CARTERA */
-        .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 8px; padding: 12px; border-radius: 10px; border-left: 4px solid var(--gold); }
-        .prod-rank { color: var(--gold); font-size: 1.1rem; font-weight: bold; margin-right: 15px; width: 20px; text-align: center; }
+        /* COTIZADORA */
+        .cot-list { width: 100%; border-collapse: collapse; font-size: 0.75rem; color: #ccc; margin: 10px 0; }
+        .cot-list th { text-align: left; color: var(--blue); border-bottom: 1px solid #333; padding: 8px 4px; }
+        .cot-footer { background: rgba(0,212,255,0.1); font-weight: 900; color: #fff; }
+
+        /* TOP / CARTERA */
+        .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 8px; padding: 10px; border-radius: 10px; border-left: 3px solid var(--gold); }
+        .prod-rank { color: var(--gold); font-size: 1rem; font-weight: bold; margin-right: 12px; width: 20px; }
         .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; justify-content: space-between; }
         .dot { width: 10px; height: 10px; border-radius: 50%; background: #222; margin-right: 10px; display: inline-block; }
         .dot.verde { background: #0f0; box-shadow: 0 0 10px #0f0; }
         .dot.ambar { background: #ff0; box-shadow: 0 0 10px #ff0; }
         .dot.rojo { background: #f00; box-shadow: 0 0 10px #f00; }
 
-        input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; font-size: 16px !important; }
+        input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-sizing: border-box; font-size: 16px !important; }
         .btn { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; width: 100%; }
     </style>
 </head>
@@ -56,8 +66,8 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="logo-catosa.png" style="max-height: 40px; margin-bottom: 20px;">
-            <input type="text" id="u-name" placeholder="NOMBRE (Ej: VICTOR)">
-            <input type="password" id="u-pass" placeholder="PASSWORD">
+            <input type="text" id="u-name" placeholder="NOMBRE">
+            <input type="password" id="u-pass" placeholder="CONTRASEÑA">
             <button class="btn" onclick="login()">ENTRAR AL GP</button>
         </div>
     </div>
@@ -65,8 +75,8 @@
     <div id="main-app">
         <div class="header">
             <img src="logo-catosa.png" style="max-height: 20px;">
-            <div style="text-align: center;"><b id="u-disp">--</b><small id="s-disp" style="color: var(--blue); display: block; font-size: 0.6rem;">--</small></div>
-            <button style="background:none; border:1px solid var(--red); color:var(--red); padding:5px 8px; border-radius:5px; font-size: 0.6rem;" onclick="location.reload()">SALIR</button>
+            <div style="text-align: center;"><div class="u-name-top" id="u-disp">--</div><small id="s-disp" style="color: var(--blue);">--</small></div>
+            <button style="background:none; border:1px solid var(--red); color:var(--red); padding:5px 10px; border-radius:5px; font-size: 0.6rem;" onclick="location.reload()">SALIR</button>
         </div>
 
         <span class="race-label">🏁 MI DESEMPEÑO INDIVIDUAL (META 120%)</span>
@@ -75,10 +85,10 @@
             <div id="truck-ind" class="truck"></div>
         </div>
 
-        <span class="race-label" id="suc-label">🏁 AVANCE DE SUCURSAL</span>
+        <span class="race-label" id="suc-label">🏁 AVANCE SUCURSAL</span>
         <div class="race-track" style="background: #080808;">
             <div class="line-meta l-75"></div><div class="line-meta l-110"></div><div class="line-meta l-120"></div>
-            <div id="truck-grp" class="truck" style="filter: hue-rotate(180deg) drop-shadow(0 0 5px #000);"></div>
+            <div id="truck-grp" class="truck" style="filter: hue-rotate(180deg);"></div>
         </div>
 
         <button class="btn-reporte" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSd8lCHVlqTobNSlLxKr7b9y_kkxH9XFPPMhkAKa_eW5IaPueQ/viewform','_blank')">📝 REGISTRAR GESTIÓN / VISITA</button>
@@ -86,26 +96,32 @@
         <div class="grid">
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2>💰 COMISIÓN ESTIMADA</h2>
-                    <b id="metal" style="font-size:0.7rem; padding:4px 12px; border-radius:4px; background:#333;">S/N</b>
+                    <h2 style="color: var(--gold);">💰 PROYECCIÓN COMISIÓN</h2>
+                    <b id="metal" style="font-size:0.7rem; padding:4px 10px; border-radius:4px;">ROJO</b>
                 </div>
-                <p style="font-size: 0.6rem; color: #888; margin: 5px 0;">FACTOR SEGÚN NIVEL Y CANAL (<span id="canal-display">--</span>):</p>
-                <input type="text" id="c-pct" readonly style="color:var(--green); font-weight:900; background:#000; border: none; font-size: 1.3rem !important;">
+                <div style="margin: 10px 0;"><small style="color:#888;">FACTOR (<span id="canal-disp">--</span>):</small>
+                <input type="text" id="c-pct" readonly style="color:var(--green); font-weight:900; background:#000; border:none; font-size:1.4rem !important;"></div>
                 <div class="progress-bg"><div id="obj-fill" class="progress-fill"></div></div>
-                <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:bold; margin-bottom: 10px;"><span id="r-v" style="color:var(--green)">$0</span><span id="r-c" style="color:var(--blue)">$0</span></div>
-                <div class="cal-grid" id="cal-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;"></div>
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.1rem;"><span id="r-v" style="color:var(--green)">$0</span><span id="r-c" style="color:var(--blue)">$0</span></div>
+                <div class="cal-grid" id="cal-grid"></div>
             </div>
 
             <div class="card">
                 <h2>📑 COTIZADORA EXPRESS</h2>
-                <input list="cli-cot" id="cot-cli-name" placeholder="Cliente">
+                <input list="cli-cot" id="cot-cli-name" placeholder="CLIENTE">
                 <datalist id="cli-cot"></datalist>
                 <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5px;">
-                    <input type="text" id="p-sku" placeholder="Parte" oninput="quickSearch(this)">
-                    <input type="number" id="p-qty" value="1" placeholder="Cant">
+                    <input type="text" id="p-sku" placeholder="PARTE" oninput="handleSkuInput(this)">
+                    <input type="number" id="p-qty" value="1" placeholder="CANT">
                     <input type="number" id="p-prc" placeholder="$" readonly>
                 </div>
-                <button class="btn" style="background:#25d366; margin-top:10px;" onclick="sendQuote('wa')">ENVIAR WHATSAPP</button>
+                <button class="btn" style="background:#444;" onclick="addCot()">AÑADIR A LISTA</button>
+                <table class="cot-list">
+                    <thead><tr><th>SKU</th><th>CANT</th><th>UNIT</th></tr></thead>
+                    <tbody id="cot-body"></tbody>
+                    <tfoot><tr class="cot-footer"><td>TOTAL</td><td id="total-pzs">0</td><td id="total-monto">$0</td></tr></tfoot>
+                </table>
+                <button class="btn" style="background:#25d366;" onclick="sendQuote('wa')">ENVIAR WHATSAPP</button>
             </div>
 
             <div class="card">
@@ -114,7 +130,7 @@
             </div>
 
             <div class="card">
-                <h2>👥 MI CARTERA</h2>
+                <h2>👥 MI CARTERA (CLIENTES)</h2>
                 <div id="lista-cli" style="max-height: 300px; overflow-y: auto;"></div>
             </div>
         </div>
@@ -127,7 +143,7 @@
             p: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1610979668&single=true&output=csv",
             det: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1262272182&single=true&output=csv"
         };
-        let dbV=[], dbC=[], dbP=[], dbD=[], user=null;
+        let dbV=[], dbC=[], dbP=[], dbD=[], user=null, cotList=[], cnf=false;
 
         window.onload = () => {
             const cg = document.getElementById('cal-grid');
@@ -145,78 +161,87 @@
             const n = document.getElementById('u-name').value.toUpperCase().trim();
             const p = document.getElementById('u-pass').value.toUpperCase().trim();
             const f = dbV.find(v => (v.Nombre||"").toUpperCase().includes(n) && n!=="");
-            
-            if(f) {
+            if(f){
                 const partes = f.Nombre.split(" ");
-                const apellido = partes[partes.length - 1].toUpperCase();
-                if(p === apellido + "123" || p === 'CATOSA2026' || p === 'GP2026') {
+                const ape = partes[partes.length - 1].toUpperCase();
+                if(p === ape + "123" || p === 'CATOSA2026' || p === 'GP2026'){
                     user=f; document.getElementById('login-screen').style.display='none';
                     document.getElementById('main-app').style.display='block';
-                    document.getElementById('u-disp').innerText=user.Nombre;
-                    document.getElementById('s-disp').innerText=user.Sucursal;
-                    document.getElementById('canal-display').innerText=user.Canal || "CALLE";
+                    document.getElementById('u-disp').innerText = user.Nombre;
+                    document.getElementById('s-disp').innerText = user.Sucursal;
+                    document.getElementById('canal-disp').innerText = user.Canal || "CALLE";
                     document.getElementById('suc-label').innerText = "🏁 AVANCE SUCURSAL " + user.Sucursal;
                     renderApp(); calcMyTop(); sumCal();
-                } else alert("Contraseña incorrecta");
-            } else alert("Vendedor no encontrado");
+                } else alert("CONTRASEÑA INCORRECTA");
+            } else alert("VENDEDOR NO ENCONTRADO");
         }
 
         function renderApp() {
             const vr = parseFloat(user.Ventas.replace(/[^0-9.]/g,''))||0, vm = parseFloat(user.Meta.replace(/[^0-9.]/g,''))||1;
             const pctInd = (vr/vm)*100;
-
             const sucData = dbV.filter(v => v.Sucursal === user.Sucursal);
             let sV=0, sM=0;
             sucData.forEach(v => { sV += parseFloat(v.Ventas.replace(/[^0-9.]/g,''))||0; sM += parseFloat(v.Meta.replace(/[^0-9.]/g,''))||1; });
             const pctGrp = (sV/sM)*100;
 
-            // ANIMAR CAMIONES (Escala 120%)
-            const moveTruck = (id, pct) => {
+            const updateTruck = (id, pct) => {
                 const t = document.getElementById(id);
-                t.style.left = `calc(${Math.min(100, (pct/120)*100)}% - 55px)`;
+                t.style.left = `calc(${Math.min(100, (pct/120)*100)}% - 50px)`;
                 t.className = 'truck ' + (pct>=120?'oro':(pct>=110?'plata':(pct>=75?'bronce':'')));
+                if(pct>=120 && !cnf && id==='truck-ind') { confetti({particleCount:150}); cnf=true; }
             };
-            moveTruck('truck-ind', pctInd);
-            moveTruck('truck-grp', pctGrp);
+            updateTruck('truck-ind', pctInd); updateTruck('truck-grp', pctGrp);
 
-            // CARTERA
             const lc = document.getElementById('lista-cli'); lc.innerHTML='';
             dbC.filter(c => (c.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(c => {
                 const d = parseInt(c.Dias)||0;
-                lc.innerHTML += `<div class="client-item"><div><span class="dot ${d<=14?'verde':(d<=60?'ambar':'rojo')}"></span><b>${c.Cliente}</b><br><small>${d}d inactivo</small></div><b>$${Math.floor(parseFloat(c.Venta_Mes)||0).toLocaleString()}</b></div>`;
+                lc.innerHTML += `<div class="client-item"><div><span class="dot ${d<=14?'verde':(d<=60?'ambar':'rojo')}"></span><b>${c.Cliente}</b><br><small>${d}d sin compra</small></div><b>$${Math.floor(parseFloat(c.Venta_Mes)||0).toLocaleString()}</b></div>`;
             });
         }
-
-        function saveAndSum(day) { localStorage.setItem('day_' + day, document.getElementById('in_day_' + day).value); sumCal(); }
 
         function sumCal() {
             let s=0; document.querySelectorAll('.day-in').forEach(i=>s+=parseFloat(i.value)||0);
             const vm=parseFloat(user.Meta.replace(/[^0-9.]/g,''))||1, pct=(s/vm)*100;
             const canal = (user.Canal || "CALLE").toUpperCase();
+            let f = pct<75?1.10:(canal==="MOSTRADOR"?(pct<110?1.31:(pct<120?1.46:1.56)):(pct<110?1.50:(pct<120?1.65:1.75)));
             
-            // LOGICA EXCEL: CALLE vs MOSTRADOR
-            let factor = 0;
-            if(canal === "MOSTRADOR") {
-                factor = pct < 75 ? 1.10 : (pct < 110 ? 1.31 : (pct < 120 ? 1.46 : 1.56));
-            } else { // CALLE y otros
-                factor = pct < 75 ? 1.10 : (pct < 110 ? 1.50 : (pct < 120 ? 1.65 : 1.75));
-            }
-
-            document.getElementById('c-pct').value = factor.toFixed(2) + "%";
+            document.getElementById('c-pct').value = f.toFixed(2) + "%";
             document.getElementById('r-v').innerText="$"+Math.floor(s).toLocaleString();
-            document.getElementById('r-c').innerText="$"+Math.floor(s*(factor/100)).toLocaleString();
+            document.getElementById('r-c').innerText="$"+Math.floor(s*(f/100)).toLocaleString();
             
             const b = document.getElementById('metal'), fill = document.getElementById('obj-fill');
             const nivel = pct>=120?'ORO':(pct>=110?'PLATA':(pct>=75?'BRONCE':'ROJO'));
-            const color = pct>=120?'var(--gold)':(pct>=110?'var(--silver)':(pct>=75?'var(--bronze)':'var(--red)'));
-            b.innerText = nivel; b.style.background = color;
-            fill.style.width = Math.min(100, (pct/120)*100) + "%";
-            fill.style.background = color;
+            const col = pct>=120?'var(--gold)':(pct>=110?'var(--silver)':(pct>=75?'var(--bronze)':'var(--red)'));
+            b.innerText = nivel; b.style.background = col;
+            fill.style.width = Math.min(100, (pct/120)*100) + "%"; fill.style.background = col;
         }
 
+        function saveAndSum(day) { localStorage.setItem('day_'+day, document.getElementById('in_day_'+day).value); sumCal(); }
+        function handleSkuInput(i) {
+            const m = dbP.find(p => (p.Parte||'').toUpperCase() === i.value.toUpperCase());
+            if(m) document.getElementById('p-prc').value = parseFloat(m.Precio.replace(/[^0-9.]/g,''))||0;
+        }
+        function addCot() {
+            const s=document.getElementById('p-sku').value.toUpperCase(), q=parseInt(document.getElementById('p-qty').value), p=parseFloat(document.getElementById('p-prc').value);
+            if(!s || !p) return; cotList.push({s, q, p, t:q*p}); renderCot();
+        }
+        function renderCot() {
+            const b = document.getElementById('cot-body'); b.innerHTML = '';
+            let tp=0, tm=0;
+            cotList.forEach(i => { b.innerHTML+=`<tr><td>${i.s}</td><td>${i.q}</td><td>$${i.p.toLocaleString()}</td></tr>`; tp+=i.q; tm+=i.t; });
+            document.getElementById('total-pzs').innerText = tp;
+            document.getElementById('total-monto').innerText = "$"+tm.toLocaleString();
+        }
+        function sendQuote(m) {
+            const cli = document.getElementById('cot-cli-name').value || "Cliente";
+            if(!cotList.length) return alert("LISTA VACIA");
+            let total = 0, pzs = 0; let t = `*COTIZACIÓN CATOSA GP*\n*Cliente:* ${cli}\n------------------\n`;
+            cotList.forEach(i => { t += `• ${i.s} | Cant: ${i.q} | Unit: $${i.p}\n`; total += i.t; pzs += i.q; });
+            t += `------------------\n*TOTAL PIEZAS: ${pzs}*\n*TOTAL A PAGAR: $${total.toLocaleString()}*\n\n_* Precios sujetos a cambio_`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`, '_blank');
+        }
         function calcMyTop() {
-            const list = document.getElementById('v-top-list'); 
-            let counts = {};
+            const list = document.getElementById('v-top-list'); let counts = {};
             dbD.filter(d => (d.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(v => {
                 const p = (v.Parte||v.SKU||"").toString().trim().toUpperCase();
                 if(p && p !== "PARTE") counts[p] = (counts[p] || 0) + parseInt(v.Cantidad || 1);
@@ -225,16 +250,8 @@
             list.innerHTML = '';
             sorted.forEach(([sku, qty], i) => {
                 const sInfo = dbP.find(p => (p.Parte||"").toUpperCase() === sku);
-                list.innerHTML += `<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-info"><b>${sku}</b><br><small>${sInfo?sInfo.Marca:'GENÉRICA'}</small></div><div class="prod-stat"><b>${qty} vend.</b><small>${sInfo?sInfo.Existencia:0} stock</small></div></div>`;
+                list.innerHTML += `<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-info"><b>${sku}</b><br><small>${sInfo?sInfo.Marca:'GENÉRICA'}</small></div><div style="text-align:right"><b>${qty} vend.</b><br><small>${sInfo?sInfo.Existencia:0} stock</small></div></div>`;
             });
-        }
-        function quickSearch(i) { const m = dbP.find(p => (p.Parte||'').toUpperCase() === i.value.toUpperCase()); if(m) document.getElementById('p-prc').value = parseFloat(m.Precio.replace(/[^0-9.]/g,''))||0; }
-        function sendQuote(m) {
-            const cli = document.getElementById('cot-cli-name').value || "Cliente";
-            const sku = document.getElementById('p-sku').value, prc = document.getElementById('p-prc').value, qty = document.getElementById('p-qty').value;
-            if(!sku) return alert("Busca una pieza");
-            let t = `*COTIZACIÓN CATOSA GP*\n*Cliente:* ${cli}\n*Parte:* ${sku}\n*Cant:* ${qty}\n*Total:* $${(prc*qty).toLocaleString()}\n\n_*Precios sujetos a cambio_`;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`, '_blank');
         }
         function fillClie() { const dl = document.getElementById('cli-cot'); [...new Set(dbC.map(c=>c.Cliente))].forEach(c => dl.innerHTML += `<option value="${c}">`); }
     </script>
