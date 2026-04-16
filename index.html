@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Catosa GP - Ventas Elite v11.5</title>
+    <title>Catosa GP - Ventas Elite v12.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -13,33 +13,46 @@
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 30px; border-radius: 15px; border-top: 5px solid var(--red); text-align: center; width: 280px; }
         #main-app { display: none; }
+        
+        /* BOTON SALIR POSICIONADO ABAJO DEL NOMBRE */
+        .btn-salir { position: absolute; top: 10px; right: 10px; background: none; border: 1px solid var(--red); color: var(--red); padding: 4px 12px; border-radius: 5px; cursor: pointer; font-size: 0.6rem; font-weight: bold; z-index: 100; }
 
-        /* HEADER Y PANEL TIEMPO */
+        .header { text-align: center; margin-bottom: 10px; position: relative; }
+
+        /* PANEL DE TIEMPO */
         .time-panel { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
         .time-item { text-align: center; flex: 1; }
-        .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 3px; }
-        .time-value { font-size: 0.9rem; font-weight: bold; }
+        .time-label { font-size: 0.5rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 3px; }
+        .time-value { font-size: 0.85rem; font-weight: bold; }
 
-        .top-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
-        .top-card { background: var(--card); padding: 12px 5px; border-radius: 8px; text-align: center; border-bottom: 2px solid var(--blue); }
-        .top-card span { font-size: 0.45rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 5px; }
-        .top-card b { font-size: 0.8rem; color: var(--green); }
+        /* KPIS */
+        .top-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .top-card { background: var(--card); padding: 10px 2px; border-radius: 8px; text-align: center; border-bottom: 2px solid var(--blue); }
+        .top-card span { font-size: 0.45rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 4px; }
+        .top-card b { font-size: 0.75rem; color: var(--green); }
 
-        /* PISTAS */
-        .race-label { font-size: 0.6rem; color: var(--gold); font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .race-track { background: #050505; border-radius: 10px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 10px; height: 45px; }
-        .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.4; z-index: 1; }
+        /* PISTAS Y GLOW */
+        .race-label { font-size: 0.55rem; color: var(--gold); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .race-track { background: #050505; border-radius: 10px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 12px; height: 40px; }
+        .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.3; z-index: 1; }
         .l-75 { left: 62.5%; border-left: 1px dashed var(--bronze); }
         .l-110 { left: 91.6%; border-left: 1px dashed var(--silver); }
-        .l-120 { right: 0; width: 12px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); border-left: 2px solid var(--gold); }
-        .truck { position: absolute; bottom: 8px; width: 50px; height: 28px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s; z-index: 10; }
+        .l-120 { right: 0; width: 15px; background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px); border-left: 2px solid var(--gold); }
+        
+        .truck { position: absolute; bottom: 6px; width: 50px; height: 28px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s cubic-bezier(0.2, 0, 0.2, 1); z-index: 10; }
+        .truck.bronce { filter: drop-shadow(0 0 8px var(--bronze)); }
+        .truck.plata { filter: drop-shadow(0 0 12px var(--silver)); }
+        .truck.oro { filter: drop-shadow(0 0 20px var(--gold)); animation: turbo 1s infinite alternate; }
+        @keyframes turbo { from { filter: drop-shadow(0 0 10px var(--gold)); } to { filter: drop-shadow(0 0 25px var(--gold)); } }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 15px; }
+        .btn-reporte { background: var(--blue); margin-bottom: 15px; border-radius: 8px; border:none; padding: 12px; font-weight: bold; color: #fff; text-transform: uppercase; width: 100%; cursor: pointer; font-size: 0.8rem; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; }
 
         /* CALCULADORA */
         .steps-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .step-item { background: #000; padding: 8px 5px; border-radius: 8px; border: 1px solid #333; text-align: center; }
+        .step-item { background: #000; padding: 8px 2px; border-radius: 8px; border: 1px solid #333; text-align: center; }
         .step-item span { font-size: 0.45rem; color: #777; display: block; text-transform: uppercase; }
         .step-item b { font-size: 0.85rem; color: var(--green); }
         .step-item.total { border: 1px solid var(--gold); background: rgba(255,215,0,0.05); }
@@ -48,16 +61,21 @@
         .day-box { background: #000; border: 1px solid #333; border-radius: 8px; padding: 5px; text-align: center; }
         .day-in { width: 100%; background: transparent; border: none; color: var(--green); font-size: 0.9rem; text-align: center; outline: none; font-weight: bold; }
 
-        /* TOP 10 Y CARTERA */
+        /* TOP 10 */
         .prod-row { display: flex; align-items: center; background: rgba(255,255,255,0.02); margin-bottom: 8px; padding: 12px; border-radius: 10px; border-left: 4px solid var(--gold); }
-        .prod-rank { color: var(--gold); font-size: 1.1rem; font-weight: bold; margin-right: 15px; width: 20px; text-align: center; }
+        .prod-rank { color: var(--gold); font-size: 1rem; font-weight: bold; margin-right: 15px; width: 20px; text-align: center; }
+        .prod-info { flex: 1; }
+        .prod-stat { text-align: right; }
+
+        /* SEMAFOROS */
+        .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; justify-content: space-between; font-size: 0.8rem; }
         .dot { width: 10px; height: 10px; border-radius: 50%; background: #222; margin-right: 12px; display: inline-block; }
         .dot.verde { background: #0f0; box-shadow: 0 0 10px #0f0; }
         .dot.ambar { background: #ff0; box-shadow: 0 0 10px #ff0; }
         .dot.rojo { background: #f00; box-shadow: 0 0 10px #f00; }
 
         input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-sizing: border-box; }
-        .btn { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; width: 100%; }
+        .btn { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: var(--red); text-transform: uppercase; width: 100%; }
     </style>
 </head>
 <body>
@@ -71,21 +89,21 @@
     </div>
 
     <div id="main-app">
+        <button class="btn-salir" onclick="location.reload()">SALIR</button>
         <div class="header">
-            <img src="logo-catosa.png" style="max-height: 20px;">
-            <div style="text-align: center;"><b id="u-disp">--</b><br><small id="s-disp" style="color: var(--blue);">--</small></div>
-            <button style="background:none; border:1px solid var(--red); color:var(--red); padding:5px 10px; border-radius:5px; font-size: 0.6rem;" onclick="location.reload()">SALIR</button>
+            <b id="u-disp" style="font-size: 0.9rem;">--</b><br>
+            <small id="s-disp" style="color: var(--blue); font-size: 0.7rem;">--</small>
         </div>
 
         <div class="time-panel">
             <div class="time-item"><span class="time-label">Hoy</span><span class="time-value" id="val-hoy">--</span></div>
             <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Cierre en</span><span class="time-value" id="val-dias" style="color: var(--red);">--</span></div>
-            <div class="time-item"><span class="time-label">Falta Oro</span><span class="time-value" id="val-falta-oro" style="color: var(--gold);">$0</span></div>
+            <div class="time-item"><span class="time-label">Falta Oro (120%)</span><span class="time-value" id="val-falta-oro" style="color: var(--gold);">$0</span></div>
         </div>
 
         <div class="top-stats">
-            <div class="top-card"><span>Mi Venta</span><b id="k-v">$0</b></div>
-            <div class="top-card"><span>Falta Plata</span><b id="k-f">$0</b></div>
+            <div class="top-card"><span>Venta Mes</span><b id="k-v">$0</b></div>
+            <div class="top-card"><span>Falta Plata</span><b id="k-f" style="color:var(--text)">$0</b></div>
             <div class="top-card"><span>Alcance P.</span><b id="k-pp">0%</b></div>
             <div class="top-card"><span>Alcance O.</span><b id="k-po">0%</b></div>
         </div>
@@ -96,21 +114,21 @@
         <span class="race-label" id="suc-label">🏁 AVANCE SUCURSAL</span>
         <div class="race-track" style="background: #080808;"><div class="line-meta l-75"></div><div class="line-meta l-110"></div><div class="line-meta l-120"></div><div id="truck-grp" class="truck" style="filter: hue-rotate(180deg);"></div></div>
 
-        <button class="btn" style="background:var(--blue); margin-bottom:15px;" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSd8lCHVlqTobNSlLxKr7b9y_kkxH9XFPPMhkAKa_eW5IaPueQ/viewform','_blank')">📝 REGISTRAR GESTIÓN</button>
+        <button class="btn-reporte" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSd8lCHVlqTobNSlLxKr7b9y_kkxH9XFPPMhkAKa_eW5IaPueQ/viewform','_blank')">📝 REGISTRAR GESTIÓN</button>
 
         <div class="grid">
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h2 style="color: var(--gold); font-size: 0.9rem; margin:0;">💰 PROYECCIÓN COMISIÓN</h2>
+                    <h2 style="color: var(--gold); font-size: 0.85rem; margin:0;">💰 PROYECCIÓN COMISIÓN</h2>
                     <b id="metal" style="font-size:0.6rem; padding:3px 8px; border-radius:4px; background:#444;">ROJO</b>
                 </div>
                 <div class="steps-container">
                     <div class="step-item"><span>Individual</span><b id="f-ind">1.10%</b></div>
                     <div class="step-item"><span>Grupal</span><b id="f-grp">0.00%</b></div>
-                    <div class="step-item total"><span>Total</span><b id="f-total">1.10%</b></div>
+                    <div class="step-item total"><span>Factor Total</span><b id="f-total">1.10%</b></div>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1rem; margin-bottom:10px;">
-                    <span id="r-v" style="color:var(--green)">Venta: $0</span>
+                    <span id="r-v" style="color:var(--green)">Calc: $0</span>
                     <span id="r-c" style="color:var(--blue)">Comi: $0</span>
                 </div>
                 <div class="cal-grid" id="cal-grid"></div>
@@ -138,7 +156,7 @@
             </div>
 
             <div class="card"><h2>🔥 TOP 10 PRODUCTOS</h2><div id="v-top-list" style="max-height: 400px; overflow-y: auto;"></div></div>
-            <div class="card"><h2>👥 MI CARTERA (CLIENTES)</h2><div id="lista-cli" style="max-height: 400px; overflow-y: auto;"></div></div>
+            <div class="card"><h2>👥 MI CARTERA</h2><div id="lista-cli" style="max-height: 400px; overflow-y: auto;"></div></div>
         </div>
     </div>
 
@@ -149,7 +167,7 @@
             p: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1610979668&single=true&output=csv",
             det: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1262272182&single=true&output=csv"
         };
-        let dbV=[], dbC=[], dbP=[], dbD=[], user=null, cotList=[];
+        let dbV=[], dbC=[], dbP=[], dbD=[], user=null, cotList=[], cnf=false;
 
         window.onload = () => {
             const cg = document.getElementById('cal-grid');
@@ -158,7 +176,7 @@
                 cg.innerHTML += `<div class="day-box"><span style="font-size:0.5rem; color:#555;">${i}</span><input type="number" class="day-in" id="in_day_${i}" value="${s}" placeholder="0" oninput="saveAndSum(${i})"></div>`;
             }
             Papa.parse(L.v, { download:true, header:true, complete: r => dbV=r.data });
-            Papa.parse(L.c, { download:true, header:true, complete: r => { dbC=r.data; fillClie(); } });
+            Papa.parse(L.c, { download:true, header:true, complete: r => dbC=r.data });
             Papa.parse(L.p, { download:true, header:true, complete: r => dbP=r.data });
             Papa.parse(L.det, { download:true, header:true, complete: r => dbD=r.data });
         };
@@ -171,7 +189,7 @@
                 user=f; document.getElementById('login-screen').style.display='none';
                 document.getElementById('main-app').style.display='block';
                 document.getElementById('u-disp').innerText = user.Nombre;
-                document.getElementById('s-disp').innerText = user.Sucursal;
+                document.getElementById('s-disp').innerText = "Sucursal: " + user.Sucursal;
                 renderApp(); calcMyTop(); sumCal();
             } else alert("USUARIO NO ENCONTRADO");
         }
@@ -181,8 +199,13 @@
             const vm = parseFloat((user.Meta||'1').replace(/[^0-9.]/g,''))||1;
             const pctInd = (vr/vm)*100;
 
+            // GRUPAL: Suma real de metas y ventas de la sucursal
             const sucData = dbV.filter(v => v.Sucursal === user.Sucursal);
-            let sV=0, sM=0; sucData.forEach(v => { sV += parseFloat((v.Ventas||'0').replace(/[^0-9.]/g,''))||0; sM += parseFloat((v.Meta||'1').replace(/[^0-9.]/g,''))||1; });
+            let sV=0, sM=0; 
+            sucData.forEach(v => {
+                sV += parseFloat((v.Ventas||'0').replace(/[^0-9.]/g,''))||0;
+                sM += parseFloat((v.Meta||'1').replace(/[^0-9.]/g,''))||1;
+            });
             const pctGrp = (sV/sM)*100;
 
             const hoy = new Date(), uDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(), dR = (uDia - hoy.getDate()) + 1;
@@ -195,8 +218,14 @@
             document.getElementById('k-pp').innerText=pctInd.toFixed(1) + "%";
             document.getElementById('k-po').innerText=(pctInd/1.2).toFixed(1) + "%";
 
-            document.getElementById('truck-ind').style.left = `calc(${Math.min(100, (pctInd/120)*100)}% - 50px)`;
-            document.getElementById('truck-grp').style.left = `calc(${Math.min(100, (pctGrp/120)*100)}% - 50px)`;
+            // MOVER CAMIONES Y APLICAR BRILLO (GLOW)
+            const indT = document.getElementById('truck-ind');
+            indT.style.left = `calc(${Math.min(100, (pctInd/120)*100)}% - 50px)`;
+            indT.className = 'truck ' + (pctInd>=120?'oro':(pctInd>=110?'plata':(pctInd>=75?'bronce':'')));
+
+            const grpT = document.getElementById('truck-grp');
+            grpT.style.left = `calc(${Math.min(100, (pctGrp/120)*100)}% - 50px)`;
+            grpT.className = 'truck ' + (pctGrp>=120?'oro':(pctGrp>=110?'plata':(pctGrp>=75?'bronce':'')));
 
             const lc = document.getElementById('lista-cli'); lc.innerHTML='';
             dbC.filter(c => (c.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(c => {
@@ -222,49 +251,49 @@
             document.getElementById('f-ind').innerText = fInd.toFixed(2) + "%";
             document.getElementById('f-grp').innerText = fGrp.toFixed(2) + "%";
             document.getElementById('f-total').innerText = fTotal.toFixed(2) + "%";
-            document.getElementById('r-v').innerText="Venta: $"+Math.floor(s).toLocaleString();
+            document.getElementById('r-v').innerText="Calc: $"+Math.floor(s).toLocaleString();
             document.getElementById('r-c').innerText="Comi: $"+Math.floor(s*(fTotal/100)).toLocaleString();
             
             const b = document.getElementById('metal');
-            b.innerText = pctInd>=120?'ORO':(pctInd>=110?'PLATA':(pctInd>=75?'BRONCE':'ROJO'));
+            const nivel = pctInd>=120?'ORO':(pctInd>=110?'PLATA':(pctInd>=75?'BRONCE':'ROJO'));
+            b.innerText = nivel;
             b.style.background = pctInd>=120?'var(--gold)':(pctInd>=110?'var(--silver)':(pctInd>=75?'var(--bronze)':'var(--red)'));
         }
 
+        function saveAndSum(day) { localStorage.setItem('day_'+day, document.getElementById('in_day_'+day).value); sumCal(); }
+        
         function checkInventory(q) {
             const box = document.getElementById('inv-res'); if(!q) return;
-            const list = dbP.filter(p => (p.Parte||'').toUpperCase().includes(q.toUpperCase()) || (p.Marca||'').toUpperCase().includes(q.toUpperCase())).slice(0,10);
+            const list = dbP.filter(p => (p.Parte||'').toString().toUpperCase().includes(q.toUpperCase())).slice(0,10);
             box.innerHTML = '';
             list.forEach(p => {
                 const qty = parseInt(p.Existencia)||0;
-                box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222; font-size:0.8rem;"><div><b>${p.Parte}</b><br><small>${p.Marca}</small></div><b style="color:${qty<=0?'var(--red)':'var(--green)'}">${qty} pz</b></div>`;
+                box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222; font-size:0.75rem;"><div><b>${p.Parte}</b><br><small>${p.Marca}</small></div><b style="color:${qty<=0?'var(--red)':'var(--green)'}">${qty} pz</b></div>`;
             });
         }
 
         function quickSearch(i) {
-            const m = dbP.find(p => (p.Parte||'').toUpperCase() === i.value.toUpperCase());
+            const m = dbP.find(p => (p.Parte||'').toString().toUpperCase() === i.value.toUpperCase());
             if(m) document.getElementById('p-prc').value = parseFloat((m.Precio||'0').replace(/[^0-9.]/g,''))||0;
         }
 
-        function addCot() { /* Lógica cotización */ }
-        function sendQuote(m) { /* WhatsApp / Mail */ }
+        function addCot() { /* Logic simplified for space */ }
+        function sendQuote(m) { /* Logic simplified for space */ }
 
         function calcMyTop() {
             const list = document.getElementById('v-top-list'); let counts = {};
             dbD.filter(d => (d.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(v => {
-                const p = (v.Parte||"").toString().trim().toUpperCase();
+                const p = (v.Parte||v.SKU||"").toString().trim().toUpperCase();
                 if(p && p !== "PARTE") counts[p] = (counts[p] || 0) + parseInt(v.Cantidad || 1);
             });
             const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
             list.innerHTML = '';
             sorted.forEach(([sku, qty], i) => {
-                const sInfo = dbP.find(p => (p.Parte||"").toUpperCase() === sku);
+                const sInfo = dbP.find(p => (p.Parte||"").toString().toUpperCase() === sku);
                 const sQty = sInfo ? parseInt(sInfo.Existencia) : 0;
-                list.innerHTML += `<div class="prod-row"><div class="prod-rank">${i+1}</div><div style="flex:1"><b>${sku}</b><br><small>${sInfo?sInfo.Marca:'GENÉRICA'}</small></div><div><b>${qty} vend.</b><br><small style="color:${sQty<=5?'var(--red)':'var(--green)'}">${sQty} stock</small></div></div>`;
+                list.innerHTML += `<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-info"><b>${sku}</b><small>${sInfo?sInfo.Marca:'GENÉRICA'}</small></div><div class="prod-stat"><b>${qty} vend.</b><small style="color:${sQty<=5?'var(--red)':'var(--green)'}">${sQty} stock</small></div></div>`;
             });
         }
-
-        function saveAndSum(day) { localStorage.setItem('day_'+day, document.getElementById('in_day_'+day).value); sumCal(); }
-        function fillClie() { const dl = document.getElementById('cli-cot'); [...new Set(dbC.map(c=>c.Cliente))].forEach(c => dl.innerHTML += `<option value="${c}">`); }
     </script>
 </body>
 </html>
