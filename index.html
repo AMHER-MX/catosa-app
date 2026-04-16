@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Catosa GP - Ventas Elite v15.0</title>
+    <title>Catosa GP - Performance Elite v16.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -17,48 +17,45 @@
         /* TOP BAR */
         .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; position: relative; }
         .logo-catosa { height: 35px; }
-        .btn-salir { background: none; border: 1px solid var(--red); color: var(--red); padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; font-weight: bold; transition: 0.3s; }
-        .btn-salir:hover { background: var(--red); color: white; }
+        .btn-salir { background: none; border: 1px solid var(--red); color: var(--red); padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
 
         .header-info { text-align: center; flex: 1; }
-        .header-info b { font-size: 1.1rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .header-info b { font-size: 1.1rem; color: #fff; text-transform: uppercase; }
         .header-info small { color: var(--blue); display: block; font-size: 0.8rem; font-weight: bold; }
 
-        /* PANEL DE TIEMPO */
+        /* TIME PANEL */
         .time-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid #333; }
         .time-item { text-align: center; }
-        .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 4px; }
+        .time-label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; }
         .time-value { font-size: 0.95rem; font-weight: bold; }
 
-        /* KPIS */
+        /* KPI CARDS */
         .top-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .top-card { background: var(--card); padding: 15px 5px; border-radius: 10px; text-align: center; border-bottom: 3px solid var(--blue); }
         .top-card span { font-size: 0.5rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 6px; }
-        .top-card b { font-size: 0.9rem; color: var(--green); white-space: nowrap; }
+        .top-card b { font-size: 0.85rem; color: var(--green); white-space: nowrap; }
 
         /* PISTAS */
         .race-label { font-size: 0.6rem; color: var(--gold); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block; letter-spacing: 1px; }
-        .race-track { background: #050505; border-radius: 10px; padding: 15px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 12px; height: 40px; }
+        .race-track { background: #050505; border-radius: 10px; padding: 12px 0; border: 1px solid #333; position: relative; overflow: hidden; margin-bottom: 12px; height: 40px; }
         .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.3; z-index: 1; }
         .l-75 { left: 62.5%; border-left: 1px dashed var(--bronze); }
         .l-110 { left: 91.6%; border-left: 1px dashed var(--silver); }
         .l-120 { right: 0; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.08); width: 15px; }
         
         .truck { position: absolute; bottom: 6px; width: 50px; height: 28px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 3s cubic-bezier(0.2, 0, 0.2, 1); z-index: 10; }
-        .truck.bronce { filter: drop-shadow(0 0 5px var(--bronze)); }
-        .truck.plata { filter: drop-shadow(0 0 8px var(--silver)); }
         .truck.oro { filter: drop-shadow(0 0 15px var(--gold)); animation: turbo 1s infinite alternate; }
         @keyframes turbo { from { filter: drop-shadow(0 0 5px var(--gold)); } to { filter: drop-shadow(0 0 15px var(--gold)); } }
 
         .btn-reporte { background: var(--blue); margin-bottom: 15px; border-radius: 8px; border:none; padding: 14px; font-weight: bold; color: #fff; text-transform: uppercase; width: 100%; cursor: pointer; font-size: 0.85rem; letter-spacing: 1px; }
 
-        /* GRID CARDS */
+        /* GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px; align-items: stretch; }
         .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #333; min-height: 480px; display: flex; flex-direction: column; }
         h2 { font-size: 0.9rem; margin-top: 0; margin-bottom: 20px; text-transform: uppercase; color: var(--silver); letter-spacing: 1px; }
 
-        /* CALC */
-        .steps-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        /* CALCULADORA */
+        .steps-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
         .step-item { background: #000; padding: 10px 2px; border-radius: 8px; border: 1px solid #333; text-align: center; }
         .step-item span { font-size: 0.5rem; color: #777; display: block; text-transform: uppercase; margin-bottom: 4px; }
         .step-item b { font-size: 0.9rem; color: var(--green); }
@@ -89,7 +86,7 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="https://i.ibb.co/mR70f6m/logo-catosa.png" style="max-height: 45px; margin-bottom: 25px;">
-            <input type="text" id="u-name" placeholder="NOMBRE">
+            <input type="text" id="u-name" placeholder="NOMBRE ASESOR">
             <input type="password" id="u-pass" placeholder="CONTRASEÑA">
             <button class="btn" onclick="login()">ENTRAR AL GP</button>
         </div>
@@ -104,15 +101,15 @@
 
         <div class="time-panel">
             <div class="time-item"><span class="time-label">Fecha Hoy</span><span class="time-value" id="val-hoy">--</span></div>
-            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Cierre en</span><span class="time-value" id="val-dias" style="color: var(--red);">-- DÍAS</span></div>
+            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">Cierre en</span><span class="time-value" id="val-dias" style="color: var(--red);">--</span></div>
             <div class="time-item"><span class="time-label">Falta Oro (120%)</span><span class="time-value" id="val-falta-oro" style="color: var(--gold);">$0.00</span></div>
         </div>
 
         <div class="top-stats">
             <div class="top-card"><span>Mi Venta Real</span><b id="k-v">$0.00</b></div>
             <div class="top-card"><span>Falta Plata (110%)</span><b id="k-f" style="color:var(--text)">$0.00</b></div>
-            <div class="top-card"><span>Alcance Ind.</span><b id="k-pp">0%</b></div>
-            <div class="top-card"><span>Alcance Sucursal</span><b id="k-po">0%</b></div>
+            <div class="top-card"><span>Alcance Ind.</span><b id="k-pp">0.0%</b></div>
+            <div class="top-card"><span>Alcance Sucursal</span><b id="k-po">0.0%</b></div>
         </div>
 
         <span class="race-label">🏁 MI DESEMPEÑO INDIVIDUAL (120%)</span>
@@ -171,6 +168,12 @@
         };
         let dbV=[], dbC=[], dbP=[], dbD=[], user=null, cotList=[], cnf=false;
 
+        // Limpieza profunda de números del Excel
+        const parseEx = (v) => {
+            if(!v) return 0;
+            return parseFloat(v.toString().replace(/\$/g, '').replace(/\./g, '').replace(/,/g, '.')) || 0;
+        };
+
         const fM = (n) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 }).format(n);
 
         window.onload = () => {
@@ -190,8 +193,7 @@
             const p = document.getElementById('u-pass').value.toUpperCase().trim();
             const f = dbV.find(v => (v.Nombre||"").toUpperCase().includes(n) && n!=="");
             if(f){
-                const partes = f.Nombre.split(" ");
-                const ape = partes[partes.length - 1].toUpperCase();
+                const ape = f.Nombre.split(" ").pop().toUpperCase();
                 if(p === ape + "123" || p === 'CATOSA2026' || p === 'GP2026'){
                     user=f; document.getElementById('login-screen').style.display='none';
                     document.getElementById('main-app').style.display='block';
@@ -203,18 +205,18 @@
         }
 
         function renderApp() {
-            const vr = parseFloat((user.Ventas||'0').replace(/[^0-9.]/g,''))||0;
-            const vm = parseFloat((user.Meta||'1').replace(/[^0-9.]/g,''))||1;
+            const vr = parseEx(user.Ventas);
+            const vm = parseEx(user.Meta) || 1;
             const pctInd = (vr/vm)*100;
 
-            // GRUPAL: Lógica de salud financiera (Venta Total / Meta Total)
+            // GRUPAL: Lógica de salud real (Suma Ventas / Suma Metas)
             const sucData = dbV.filter(v => v.Sucursal === user.Sucursal);
             let sV=0, sM=0; 
             sucData.forEach(v => { 
-                sV += parseFloat((v.Ventas||'0').replace(/[^0-9.]/g,''))||0; 
-                sM += parseFloat((v.Meta||'1').replace(/[^0-9.]/g,''))||1; 
+                sV += parseEx(v.Ventas); 
+                sM += parseEx(v.Meta); 
             });
-            const pctGrp = (sV/sM)*100;
+            const pctGrp = sM > 0 ? (sV/sM)*100 : 0;
 
             const hoy = new Date(), uDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(), dR = (uDia - hoy.getDate()) + 1;
             document.getElementById('val-hoy').innerText = hoy.toLocaleDateString('es-MX', {day:'numeric', month:'short'}).toUpperCase();
@@ -226,7 +228,6 @@
             document.getElementById('k-pp').innerText = pctInd.toFixed(1) + "%";
             document.getElementById('k-po').innerText = pctGrp.toFixed(1) + "%";
 
-            // MOVER CAMIONES
             document.getElementById('truck-ind').style.left = `calc(${Math.min(100, (pctInd/120)*100)}% - 45px)`;
             document.getElementById('truck-ind').className = 'truck ' + (pctInd>=120?'oro':(pctInd>=110?'plata':(pctInd>=75?'bronce':'')));
 
@@ -237,18 +238,18 @@
             dbC.filter(c => (c.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(c => {
                 const d = parseInt(c.Dias)||0;
                 const sem = d<=14?'verde':(d<=60?'ambar':'rojo');
-                lc.innerHTML += `<div class="client-item"><div><span class="dot ${sem}"></span><b>${c.Cliente}</b><br><small>${d}d inactivo</small></div><b>${fM(parseFloat(c.Venta_Mes||0))}</b></div>`;
+                lc.innerHTML += `<div class="client-item"><div><span class="dot ${sem}"></span><b>${c.Cliente}</b><br><small>${d}d inactivo</small></div><b>${fM(parseEx(c.Venta_Mes))}</b></div>`;
             });
         }
 
         function sumCal() {
             let s=0; document.querySelectorAll('.day-in').forEach(i=>s+=parseFloat(i.value)||0);
-            const vm=parseFloat((user.Meta||'1').replace(/[^0-9.]/g,''))||1;
+            const vm = parseEx(user.Meta) || 1;
             const pctProy = (s/vm)*100;
 
             const sucData = dbV.filter(v => v.Sucursal === user.Sucursal);
-            let sV=0, sM=0; sucData.forEach(v => { sV += parseFloat((v.Ventas||'0').replace(/[^0-9.]/g,''))||0; sM += parseFloat((v.Meta||'1').replace(/[^0-9.]/g,''))||1; });
-            const pctGrp = (sV/sM)*100;
+            let sV=0, sM=0; sucData.forEach(v => { sV += parseEx(v.Ventas); sM += parseEx(v.Meta); });
+            const pctGrp = sM > 0 ? (sV/sM)*100 : 0;
 
             const canal = (user.Canal || "CALLE").toUpperCase();
             let fInd = pctProy < 75 ? 1.10 : (canal==="MOSTRADOR" ? (pctProy<110?1.31:(pctProy<120?1.46:1.56)) : (pctProy<110?1.50:(pctProy<120?1.65:1.75)));
@@ -265,14 +266,14 @@
             const nivel = pctProy>=120?'ORO':(pctProy>=110?'PLATA':(pctProy>=75?'BRONCE':'ROJO'));
             b.innerText = nivel;
             b.style.background = pctProy>=120?'var(--gold)':(pctProy>=110?'var(--silver)':(pctProy>=75?'var(--bronze)':'var(--red)'));
-            if(pctProy>=120 && !cnf){ confetti({particleCount:150, spread: 70, origin: { y: 0.6 }}); cnf=true; }
+            if(pctProy>=120 && !cnf){ confetti({particleCount:150}); cnf=true; }
         }
 
         function saveAndSum(day) { localStorage.setItem('day_'+day, document.getElementById('in_day_'+day).value); sumCal(); }
         
         function quickSearch(i) {
             const m = dbP.find(p => (p.Parte||'').toString().toUpperCase() === i.value.toUpperCase());
-            if(m) document.getElementById('p-prc').value = parseFloat((m.Precio||'0').replace(/[^0-9.]/g,''))||0;
+            if(m) document.getElementById('p-prc').value = parseEx(m.Precio);
         }
 
         function addCot() {
@@ -295,7 +296,7 @@
         function calcMyTop() {
             const list = document.getElementById('v-top-list'); let counts = {};
             dbD.filter(d => (d.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(v => {
-                const p = (v.Parte||"").toString().trim().toUpperCase();
+                const p = (v.Parte||v.SKU||"").toString().trim().toUpperCase();
                 if(p && p !== "PARTE") counts[p] = (counts[p] || 0) + parseInt(v.Cantidad || 1);
             });
             const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
