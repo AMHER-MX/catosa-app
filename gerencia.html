@@ -3,62 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catosa GP - Executive Dashboard v2.0</title>
+    <title>Catosa GP - Executive Dashboard v2.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --red: #d21034; --bg: #0c0e10; --card: #1a1d20; --green: #00ff88; --blue: #00d4ff; --text: #f5f5f5; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow-x: hidden; }
         
-        /* LOGIN EMPRESARIAL */
+        /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--card); padding: 25px; border-radius: 12px; border-top: 4px solid var(--red); text-align: center; width: 280px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         .login-box input { width: 100%; background: #000; border: 1px solid #333; padding: 10px; border-radius: 6px; color: #fff; margin-bottom: 12px; font-size: 0.85rem; box-sizing: border-box; }
         
-        #main-app { display: none; }
+        #main-app { display: none; max-width: 1600px; margin: 0 auto; }
 
         /* HEADER */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: var(--card); border-radius: 8px; border-bottom: 1px solid #333; margin-bottom: 12px; }
         .role-badge { font-size: 0.85rem; font-weight: 800; color: var(--gold); letter-spacing: 1px; border: 1px solid var(--gold); padding: 3px 12px; border-radius: 4px; }
         
-        /* PANEL DE TIEMPO */
+        /* PANEL TIEMPO */
         .time-panel { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 12px; border: 1px solid #222; }
         .time-item { text-align: center; }
-        .time-label { font-size: 0.5rem; color: #777; display: block; text-transform: uppercase; margin-bottom: 2px; }
-        .time-value { font-size: 0.8rem; font-weight: bold; }
+        .time-label { font-size: 0.55rem; color: #777; display: block; text-transform: uppercase; }
+        .time-value { font-size: 0.85rem; font-weight: bold; }
 
         /* KPIs */
         .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
-        .kpi-card { background: var(--card); padding: 10px 5px; border-radius: 8px; border-top: 2px solid var(--blue); text-align: center; }
-        .kpi-val { font-size: 0.95rem; font-weight: bold; color: var(--green); }
-        .kpi-card span { font-size: 0.45rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 3px; }
+        .kpi-card { background: var(--card); padding: 12px 5px; border-radius: 8px; border-bottom: 3px solid var(--blue); text-align: center; }
+        .kpi-val { font-size: 1rem; font-weight: bold; color: var(--green); }
+        .kpi-card span { font-size: 0.5rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 4px; }
 
         /* PISTA */
         .race-track { background: #050505; border-radius: 12px; padding: 15px 0; border: 1px solid #222; position: relative; overflow: hidden; margin-bottom: 15px; }
-        .lane { height: 40px; position: relative; border-bottom: 1px solid #111; display: flex; align-items: center; }
-        .v-name { width: 90px; font-size: 0.45rem; color: #666; padding-left: 8px; white-space: nowrap; overflow: hidden; font-weight: bold; }
-        .truck { position: absolute; width: 42px; height: 24px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 2.5s; z-index: 10; }
+        .lane { height: 35px; position: relative; border-bottom: 1px solid #111; display: flex; align-items: center; }
+        .v-name { width: 100px; font-size: 0.5rem; color: #777; padding-left: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }
+        .truck { position: absolute; width: 40px; height: 22px; background-image: url('camion-intl.png'); background-size: contain; background-repeat: no-repeat; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; }
 
-        /* GRID Y CARDS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
-        .card { background: var(--card); border-radius: 8px; padding: 12px; border: 1px solid #222; }
-        h2 { font-size: 0.85rem; margin: 0 0 10px 0; text-transform: uppercase; color: var(--blue); letter-spacing: 0.5px; }
+        /* GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px; }
+        .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #333; min-height: 400px; display: flex; flex-direction: column; }
+        h2 { font-size: 0.85rem; margin: 0 0 15px 0; text-transform: uppercase; color: var(--silver); letter-spacing: 1px; }
 
-        /* REPORTE BBD CLIENTES (ESTILO TABLA COMPACTA) */
-        .bbd-item { border-left: 3px solid var(--green); background: rgba(0,255,136,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px; font-size: 0.7rem; position: relative; }
-        .bbd-item b { color: var(--green); display: block; margin-bottom: 2px; }
-        .bbd-item small { color: #aaa; display: block; line-height: 1.3; }
-        .bbd-tag { position: absolute; top: 10px; right: 10px; background: #333; padding: 2px 6px; border-radius: 3px; font-size: 0.55rem; color: #fff; }
+        /* BBD ITEMS */
+        .bbd-item { background: rgba(0,0,0,0.3); border-left: 3px solid var(--blue); padding: 12px; margin-bottom: 10px; border-radius: 4px; font-size: 0.75rem; }
+        .bbd-item b { color: var(--blue); display: block; margin-bottom: 4px; font-size: 0.85rem; }
+        .bbd-item div { margin-bottom: 2px; color: #ccc; }
+        .bbd-item small { color: var(--gold); font-weight: bold; }
 
-        .input-compact { background: #000; border: 1px solid #333; color: #fff; padding: 6px 10px; border-radius: 4px; width: 100%; height: 32px; font-size: 0.75rem; margin-bottom: 8px; box-sizing: border-box; }
-        .btn-action { background: var(--red); color: #fff; border: none; border-radius: 4px; font-size: 0.7rem; font-weight: bold; cursor: pointer; height: 32px; padding: 0 15px; text-transform: uppercase; }
+        /* SEMAFORO NEON */
+        .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; justify-content: space-between; font-size: 0.8rem; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #222; margin-right: 12px; flex-shrink: 0; }
+        .dot.verde { background: #0f0; box-shadow: 0 0 10px #0f0; }
+        .dot.ambar { background: #ff0; box-shadow: 0 0 10px #ff0; }
+        .dot.rojo { background: #f00; box-shadow: 0 0 10px #f00; }
 
-        /* SEMAFORO CARTERA */
-        .client-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.7rem; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #222; margin-right: 10px; }
-        .dot.active.verde { background: #0f0; box-shadow: 0 0 4px #0f0; }
-        .dot.active.ambar { background: #ff0; box-shadow: 0 0 4px #ff0; }
-        .dot.active.rojo { background: #f00; box-shadow: 0 0 4px #f00; }
+        /* ESTILOS FORMULARIO */
+        .btn-link { background: var(--blue); color: white; text-decoration: none; padding: 5px 10px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; }
+        
+        input, select { background: #000; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 6px; font-size: 0.75rem; }
+        .btn-action { background: var(--red); color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; padding: 10px; text-transform: uppercase; font-size: 0.7rem; }
     </style>
 </head>
 <body>
@@ -67,34 +70,34 @@
             <img src="logo-catosa.png" style="max-height: 30px; margin-bottom: 20px;">
             <input type="text" id="u-role" placeholder="USUARIO GERENCIA">
             <input type="password" id="u-pass" placeholder="CONTRASEÑA">
-            <button class="btn-action" style="width:100%" onclick="login()">ACCEDER AL PANEL</button>
+            <button class="btn-action" style="width:100%" onclick="login()">ENTRAR AL PANEL</button>
         </div>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <img src="logo-catosa.png" style="max-height: 20px;">
+            <img src="logo-catosa.png" style="max-height: 22px;">
             <div id="role-display" class="role-badge">DIRECCIÓN</div>
-            <button class="btn-action" style="background:none; border:1px solid var(--red); color:var(--red); height: 26px; padding: 0 10px;" onclick="location.reload()">SALIR</button>
+            <button class="btn-action" style="background:none; border:1px solid var(--red); color:var(--red); padding: 5px 15px;" onclick="location.reload()">SALIR</button>
         </div>
 
         <div class="time-panel">
-            <div class="time-item"><span class="time-label">Corte</span><span class="time-value" id="val-hoy">--</span></div>
-            <div class="time-item"><span class="time-label">Días restantes</span><span class="time-value" id="val-dias" style="color: var(--red);">--</span></div>
-            <div class="time-item"><span class="time-label">Venta Total Global</span><span class="time-value" id="val-total-v" style="color: var(--green);">$0</span></div>
+            <div class="time-item"><span class="time-label">CORTE</span><span class="time-value" id="val-hoy">--</span></div>
+            <div class="time-item"><span class="time-label">CIERRE EN</span><span class="time-value" id="val-dias" style="color: var(--red);">--</span></div>
+            <div class="time-item"><span class="time-label">TOTAL VENTA GLOBAL</span><span class="time-value" id="val-total-v" style="color: var(--green);">$0.00</span></div>
         </div>
 
         <div class="kpi-row">
-            <div class="kpi-card"><span>Venta</span><div class="kpi-val" id="g-v">$0</div></div>
-            <div class="kpi-card"><span>Falta Plata</span><div class="kpi-val" id="g-falta" style="color:var(--text)">$0</div></div>
-            <div class="kpi-card"><span>Alcance P.</span><div class="kpi-val" id="g-p-plata" style="color:var(--blue)">0%</div></div>
-            <div class="kpi-card"><span>Alcance O.</span><div class="kpi-val" id="g-p-oro" style="color:var(--gold)">0%</div></div>
+            <div class="kpi-card"><span>Venta Filtro</span><div class="kpi-val" id="g-v">$0.00</div></div>
+            <div class="kpi-card"><span>Faltante Oro</span><div class="kpi-val" id="g-falta" style="color:var(--gold)">$0.00</div></div>
+            <div class="kpi-card"><span>% Alcance Oro</span><div class="kpi-val" id="g-p-oro" style="color:var(--text)">0%</div></div>
+            <div class="kpi-card"><span>Cartera Activa</span><div class="kpi-val" id="g-cartera" style="color:var(--blue)">0</div></div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
-            <select id="f-suc" class="input-compact" onchange="render()"><option value="TODAS">SUCURSAL: TODAS</option></select>
-            <select id="f-vend" class="input-compact" onchange="render()"><option value="TODOS">VENDEDOR: TODOS</option></select>
-            <button class="btn-action" style="background:var(--green); color:#000;" onclick="exportBBD()">EXPORTAR BBD CLIENTES</button>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-bottom:15px;">
+            <select id="f-suc" onchange="render()"><option value="TODAS">SUCURSAL: TODAS</option></select>
+            <select id="f-vend" onchange="render()"><option value="TODOS">VENDEDOR: TODOS</option></select>
+            <button class="btn-action" style="background:var(--green); color:#000;" onclick="exportBBD()">DESCARGAR EXCEL BBD</button>
         </div>
 
         <div class="race-track">
@@ -103,45 +106,41 @@
 
         <div class="grid">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <h2 style="margin:0;">📋 Info. Clientes Reciente (BBD)</h2>
-                    <a href="https://docs.google.com/spreadsheets/d/1vUYJz5r1kgMNDel9-6LqaiKAeb3g_n0JwS5_Hs59yeM/edit" target="_blank" style="color:var(--green); font-size:0.6rem; text-decoration:none;">EDITAR SHEETS</a>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2 style="margin:0;">📋 Base de Datos Clientes (BBD)</h2>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfWF2AutcLCDhfBL6hoABmWVv4OKDvorCNB2CJTgY5QlrPrwA/viewform?usp=dialog" target="_blank" class="btn-link">ABRIR FORM</a>
                 </div>
-                <div id="bbd-list" style="max-height: 400px; overflow-y: auto;">
-                    <p style="font-size:0.7rem; color:#666; text-align:center;">Cargando base de datos...</p>
-                </div>
+                <div id="bbd-list" style="flex:1; overflow-y: auto;"></div>
             </div>
 
             <div class="card">
-                <h2>📦 Monitor de Almacén</h2>
-                <input type="text" class="input-compact" placeholder="Buscar SKU..." oninput="checkInventory(this.value)">
-                <div id="inv-res" style="max-height: 350px; overflow-y: auto;"></div>
+                <h2>📈 Desempeño por Vendedor</h2>
+                <canvas id="salesChart" style="max-height: 350px;"></canvas>
             </div>
 
             <div class="card">
-                <h2>🔥 Top 10 Productos</h2>
-                <div id="top-prod-list" style="max-height: 400px; overflow-y: auto;"></div>
+                <h2>👥 Cartera Semáforo (Días Inactivo)</h2>
+                <input type="text" id="f-cli-car" placeholder="Buscar cliente..." style="width:100%; margin-bottom:10px;" oninput="render()">
+                <div id="cli-list" style="flex:1; overflow-y: auto;"></div>
             </div>
 
             <div class="card">
-                <h2>👥 Cartera Semáforo</h2>
-                <input type="text" id="f-cli-car" class="input-compact" placeholder="Buscar cliente..." oninput="render()">
-                <div id="cli-list" style="max-height: 400px; overflow-y: auto;"></div>
+                <h2>🔥 Top 10 Productos Más Vendidos</h2>
+                <div id="top-prod-list" style="flex:1; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ENLACES CONECTADOS
         const L = {
             v: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=0&single=true&output=csv",
             c: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1068966462&single=true&output=csv",
-            s: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=480185164&single=true&output=csv", // ESTA ES LA HOJA DE RESPUESTAS DEL FORM
+            s: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=480185164&single=true&output=csv", // Hoja de respuestas BBD
             p: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1610979668&single=true&output=csv",
             det: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXRBcfvzRWWgd4GI6OZ2CI4fPXdDzkQIucSNCb_1lZhKW9kmBVcXCFx19L5kdTCMEy0d9Yy5GOttRH/pub?gid=1262272182&single=true&output=csv"
         };
 
-        let dbV=[], dbC=[], dbS=[], dbP=[], dbD=[];
+        let dbV=[], dbC=[], dbS=[], dbP=[], dbD=[], myChart=null;
 
         function login() {
             const u = document.getElementById('u-role').value.toUpperCase(), p = document.getElementById('u-pass').value;
@@ -149,7 +148,7 @@
                 document.getElementById('login-screen').style.display='none'; 
                 document.getElementById('main-app').style.display='block';
                 loadData();
-            } else alert("Contraseña incorrecta");
+            } else alert("Acceso No Autorizado");
         }
 
         function loadData() {
@@ -166,20 +165,16 @@
             dbV.filter(x=>x.Nombre).forEach(x=>v.innerHTML+=`<option value="${x.Nombre}">${x.Nombre}</option>`);
         }
 
-        // RENDER DE LA NUEVA SECCIÓN BBD
         function renderBBD() {
-            const list = document.getElementById('bbd-list');
-            list.innerHTML = '';
-            // Mostramos los últimos 20 registros del formulario
-            dbS.slice().reverse().slice(0,20).forEach(entry => {
+            const list = document.getElementById('bbd-list'); list.innerHTML = '';
+            const fv = document.getElementById('f-vend').value;
+            dbS.filter(entry => fv==='TODOS' || entry.Vendedor === fv).slice().reverse().slice(0,15).forEach(e => {
                 list.innerHTML += `
                     <div class="bbd-item">
-                        <span class="bbd-tag">${entry.Marca || 'S/M'}</span>
-                        <b>${entry.Cliente || 'Sin Nombre'}</b>
-                        <small>👤 Contacto: ${entry.Contacto || 'N/A'}</small>
-                        <small>📞 Tel: ${entry.Telefono || 'N/A'}</small>
-                        <small>✉️ Correo: ${entry.Correo || 'N/A'}</small>
-                        <small style="margin-top:5px; color:var(--blue);">Levantado por: ${entry.Vendedor || 'Sistema'}</small>
+                        <b>${e.Cliente || 'S/N'}</b>
+                        <div>📞 ${e.Telefono || '-'} | 👤 ${e.Contacto || '-'}</div>
+                        <div>✉️ ${e.Correo || '-'}</div>
+                        <small>Levantado por: ${e.Vendedor}</small>
                     </div>`;
             });
         }
@@ -187,43 +182,46 @@
         function render() {
             const fs = document.getElementById('f-suc').value, fv = document.getElementById('f-vend').value;
             const pista = document.getElementById('pista'); pista.innerHTML = '';
-            let tv=0, tm=0;
+            let tv=0, tm=0, labels=[], dataV=[];
 
             const hoy = new Date(), uDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(), dR = (uDia - hoy.getDate()) + 1;
             document.getElementById('val-hoy').innerText = hoy.toLocaleDateString('es-MX', {day:'numeric', month:'short'}).toUpperCase();
             document.getElementById('val-dias').innerText = dR + " DÍAS";
 
             dbV.filter(v => v.Nombre && (fs==='TODAS'||v.Sucursal===fs) && (fv==='TODOS'||v.Nombre===fv)).forEach(v => {
-                const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g,''))||0, met = parseFloat(v.Meta.replace(/[^0-9.]/g,''))||1;
+                const ven = parseFloat(v.Ventas.replace(/[^0-9.]/g,''))||0, met = (parseFloat(v.Meta.replace(/[^0-9.]/g,''))||1) * 1.2;
                 tv += ven; tm += met;
-                const pct = (ven/met)*100, pos = Math.min(100, (pct/120)*100);
+                labels.push(v.Nombre.split(" ")[0]); dataV.push(ven);
+                const pct = (ven/met)*100, pos = Math.min(100, pct);
                 pista.innerHTML += `<div class="lane"><small class="v-name">${v.Nombre}</small><div class="truck" style="left:calc(${pos}% - 42px)"></div></div>`;
             });
 
-            document.getElementById('g-v').innerText="$"+Math.floor(tv).toLocaleString();
-            document.getElementById('val-total-v').innerText="$"+Math.floor(tv).toLocaleString();
-            document.getElementById('g-falta').innerText="$"+Math.max(0, Math.floor(tm - tv)).toLocaleString();
-            document.getElementById('g-p-plata').innerText=((tv/tm)*100 || 0).toFixed(1)+"%";
-            document.getElementById('g-p-oro').innerText=((tv/(tm*1.2))*100 || 0).toFixed(1)+"%";
+            document.getElementById('g-v').innerText="$"+tv.toLocaleString();
+            document.getElementById('val-total-v').innerText="$"+tv.toLocaleString();
+            document.getElementById('g-falta').innerText="$"+Math.max(0, tm - tv).toLocaleString();
+            document.getElementById('g-p-oro').innerText=((tv/tm)*100 || 0).toFixed(1)+"%";
 
+            // Cartera Semáforo Neón Restaurado
             const cl = document.getElementById('cli-list'), fCli = document.getElementById('f-cli-car').value.toLowerCase();
-            cl.innerHTML = '';
+            cl.innerHTML = ''; let count = 0;
             dbC.filter(c => (fs==='TODAS'||c.Sucursal===fs) && (fv==='TODOS'||c.Vendedor===fv)).forEach(c => {
                 const d = parseInt(c.Dias)||0;
                 if(c.Cliente.toLowerCase().includes(fCli)) {
-                    cl.innerHTML += `<div class="client-item"><div class="dot active ${d<=14?'verde':(d<=60?'ambar':'rojo')}"></div><div style="flex:1"><b>${c.Cliente}</b><br><small>${c.Vendedor} (${d}d)</small></div><b>$${Math.floor(parseFloat(c.Venta_Mes)||0).toLocaleString()}</b></div>`;
+                    count++;
+                    const col = d > 60 ? 'rojo' : (d > 14 ? 'ambar' : 'verde');
+                    cl.innerHTML += `<div class="client-item"><div><span class="dot ${col}"></span><b>${c.Cliente}</b><br><small>${c.Vendedor} (${d}d)</small></div><b>$${(parseFloat(c.Venta_Mes)||0).toLocaleString()}</b></div>`;
                 }
             });
-        }
+            document.getElementById('g-cartera').innerText = count;
 
-        function checkInventory(q) {
-            const box = document.getElementById('inv-res');
-            const list = dbP.filter(p => (p.Parte||'').toUpperCase().includes(q.toUpperCase())).slice(0,15);
-            box.innerHTML = '';
-            list.forEach(p => {
-                const qty = parseInt(p.Existencia)||0;
-                box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222; font-size:0.75rem;"><div><b>${p.Parte}</b><br><small>${p.Marca}</small></div><b style="color:${qty<=0?'var(--red)':'var(--green)'}">${qty} pz</b></div>`;
+            // Chart
+            if(myChart) myChart.destroy();
+            myChart = new Chart(document.getElementById('salesChart'), {
+                type:'bar',
+                data:{ labels, datasets:[{ label:'Ventas', data:dataV, backgroundColor:'#00d4ff' }] },
+                options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'#222'}}} }
             });
+            renderBBD();
         }
 
         function calcTopProducts() {
@@ -232,15 +230,14 @@
             const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
             list.innerHTML = '';
             sorted.forEach(([sku, qty], i) => {
-                const sInfo = dbP.find(p => (p.Parte||"").toString().toUpperCase() === sku);
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; background:rgba(255,255,255,0.02); margin-bottom:5px; border-radius:5px; font-size:0.75rem;"><span>${i+1}. <b>${sku}</b></span><b style="color:var(--green)">${qty} Vendidos</b></div>`;
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.02); margin-bottom:8px; border-radius:8px; border-left:3px solid var(--gold);"><span>${i+1}. <b>${sku}</b></span><b style="color:var(--green)">${qty} Vendidos</b></div>`;
             });
         }
 
         function exportBBD() {
-            let csv = "Vendedor,Cliente,Contacto,Telefono,Correo,Marca\n";
-            dbS.forEach(s => csv += `"${s.Vendedor}","${s.Cliente}","${s.Contacto}","${s.Telefono}","${s.Correo}","${s.Marca}"\n`);
-            const blob = new Blob([csv], {type:'text/csv'});
+            let csv = "\uFEFFVendedor,Cliente,Contacto,Telefono,Correo\n";
+            dbS.forEach(s => csv += `"${s.Vendedor}","${s.Cliente}","${s.Contacto}","${s.Telefono}","${s.Correo}"\n`);
+            const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
             const link = document.createElement("a"); link.href=URL.createObjectURL(blob); link.download="BBD_Clientes_Catosa.csv"; link.click();
         }
     </script>
