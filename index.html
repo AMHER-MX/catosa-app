@@ -18,6 +18,7 @@
             --blue: #00d4ff;
             --silver: #c0c0c0;
             --bronze: #cd7f32;
+            --purple: #a855f7;
         }
 
         body { 
@@ -30,7 +31,7 @@
             overflow-x: hidden; 
         }
 
-        /* LOGIN ESTILO PASE DE ENTRADA */
+        /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .login-box { 
             background: var(--card); padding: 35px; border-radius: 20px; 
@@ -42,7 +43,7 @@
         .logo-login { height: 60px; margin-bottom: 25px; filter: drop-shadow(0 0 10px white); }
         .logo-top { height: 35px; }
 
-        /* TOP BAR - MARCADOR DE ESTADIO */
+        /* TOP BAR */
         .top-bar { 
             display: flex; justify-content: space-between; align-items: center; 
             padding: 15px; background: rgba(0,0,0,0.4); border-radius: 15px; margin-bottom: 15px; border: 1px solid #333;
@@ -51,7 +52,7 @@
         .header-info b { font-size: 1.1rem; color: var(--gold); text-transform: uppercase; display: block; }
         .header-info small { color: var(--blue); font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; }
 
-        /* PANEL TIEMPO (TABLERO ELECTRÓNICO) */
+        /* PANEL TIEMPO */
         .time-panel { 
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; 
             background: #000; border-radius: 12px; padding: 15px; margin-bottom: 15px; 
@@ -61,40 +62,40 @@
         .time-label { font-size: 0.55rem; color: var(--grass); display: block; text-transform: uppercase; font-weight: bold; }
         .time-value { font-family: 'Courier New', monospace; font-size: 1rem; font-weight: bold; }
 
-        /* KPIS - ESTADÍSTICAS DEL PARTIDO */
+        /* KPIS */
         .top-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
         .top-card { 
-            background: var(--card); padding: 15px; border-radius: 15px; text-align: left; 
+            background: var(--card); padding: 12px; border-radius: 15px; text-align: left; 
             border-left: 4px solid var(--blue); position: relative;
         }
-        .top-card span { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 5px; }
-        .top-card b { font-size: 0.9rem; color: #fff; }
+        .top-card span { font-size: 0.5rem; color: #888; display: block; text-transform: uppercase; margin-bottom: 5px; }
+        .top-card b { font-size: 0.85rem; color: #fff; }
 
-        /* CANCHA DE DESEMPEÑO */
-        .race-label { font-size: 0.7rem; color: var(--gold); font-weight: bold; text-transform: uppercase; margin: 15px 0 5px 5px; display: block; }
+        /* CANCHAS */
+        .race-label { font-size: 0.65rem; color: var(--gold); font-weight: bold; text-transform: uppercase; margin: 12px 0 4px 5px; display: block; }
         .race-track { 
             background: linear-gradient(90deg, var(--pitch) 50%, var(--pitch-light) 50%);
             background-size: 40px 100%;
-            border: 2px solid #fff; border-radius: 8px; height: 50px; position: relative; overflow: hidden; margin-bottom: 12px;
+            border: 2px solid #fff; border-radius: 8px; height: 42px; position: relative; overflow: hidden; margin-bottom: 8px;
         }
         .race-track::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.3); }
-        .porteria { position: absolute; right: 0; top: 0; bottom: 0; width: 30px; background: rgba(255,255,255,0.1); border-left: 2px dashed #fff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .porteria { position: absolute; right: 0; top: 0; bottom: 0; width: 30px; background: rgba(255,255,255,0.1); border-left: 2px dashed #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
 
         .line-meta { position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0.5; z-index: 1; }
         .l-75 { left: 62.5%; border-left: 1px dashed var(--bronze); }
         .l-110 { left: 91.6%; border-left: 1px dashed var(--silver); }
         
         .truck { 
-            position: absolute; bottom: 5px; width: 40px; height: 40px; 
+            position: absolute; bottom: 4px; width: 32px; height: 32px; 
             background-image: url('https://cdn-icons-png.flaticon.com/512/53/53283.png'); 
             background-size: contain; background-repeat: no-repeat; filter: invert(1);
             transition: 3s cubic-bezier(0.2, 0, 0.2, 1); z-index: 10; 
         }
-        .truck.oro { filter: drop-shadow(0 0 15px var(--gold)) sepia(1) saturate(10); animation: spin 2s infinite linear; }
+        .truck.oro { filter: drop-shadow(0 0 12px var(--gold)) sepia(1) saturate(10); animation: spin 2s infinite linear; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         /* BOTON FORMS */
-        .btn-forms { background: #fff; color: #000; border-radius: 50px; border:none; padding: 14px; font-weight: 900; width: 100%; cursor: pointer; font-size: 0.8rem; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
+        .btn-forms { background: #fff; color: #000; border-radius: 50px; border:none; padding: 14px; font-weight: 900; width: 100%; cursor: pointer; font-size: 0.8rem; margin-bottom: 20px; }
 
         /* GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
@@ -111,7 +112,7 @@
         .day-box { background: #000; border: 1px solid #222; border-radius: 6px; padding: 5px; text-align: center; }
         .day-in { width: 100%; background: transparent; border: none; color: var(--grass); font-size: 0.9rem; text-align: center; outline: none; }
 
-        /* BOTONES ACCION */
+        /* BOTONES */
         .btn { padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: linear-gradient(to bottom, #2ecc71, #27ae60); text-transform: uppercase; width: 100%; box-shadow: 0 4px 0 #1e8449; }
         .btn:active { transform: translateY(2px); box-shadow: none; }
 
@@ -131,10 +132,10 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="logo-international.png" class="logo-login" alt="International">
-            <h3 style="color:var(--gold); margin-top:0;">MUNDIAL PERFORMANCE</h3>
+            <h3 style="color:var(--gold); margin-top:0;">WORLD CUP CATOSA</h3>
             <input type="text" id="u-name" placeholder="NOMBRE ASESOR">
             <input type="password" id="u-pass" placeholder="CONTRASEÑA">
-            <button class="btn" onclick="login()">PATEAR INICIO</button>
+            <button class="btn" onclick="login()">ENTRAR A LA CANCHA</button>
         </div>
     </div>
 
@@ -142,60 +143,67 @@
         <div class="top-bar">
             <img src="logo-catosa.png" class="logo-top" alt="Catosa">
             <div class="header-info"><b id="u-disp">--</b><small id="s-disp">--</small></div>
-            <button class="btn-salir" onclick="location.reload()">ABANDONAR</button>
+            <button class="btn-salir" onclick="location.reload()">SALIR</button>
         </div>
 
         <div class="time-panel">
-            <div class="time-item"><span class="time-label">TIEMPO</span><span class="time-value" id="val-hoy">--</span></div>
-            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">MINUTO CIERRE</span><span class="time-value" id="val-dias" style="color: var(--red);">--</span></div>
-            <div class="time-item"><span class="time-label">PARA EL TROFEO</span><span class="time-value" id="val-falta-oro" style="color: var(--gold);">$0</span></div>
+            <div class="time-item"><span class="time-label">HOY</span><span class="time-value" id="val-hoy">--</span></div>
+            <div class="time-item" style="border-left: 1px solid #333; border-right: 1px solid #333;"><span class="time-label">MIN. RESTANTES</span><span class="time-value" id="val-dias" style="color: var(--red);">--</span></div>
+            <div class="time-item"><span class="time-label">FALTA P/ ORO</span><span class="time-value" id="val-falta-oro" style="color: var(--gold);">$0</span></div>
         </div>
 
         <div class="top-stats">
-            <div class="top-card"><span>Goles Realizados</span><b id="k-v">$0.00</b></div>
-            <div class="top-card"><span>Falta p/ Clasificar</span><b id="k-f">$0.00</b></div>
-            <div class="top-card"><span>Posición Ind.</span><b id="k-pp">0%</b></div>
-            <div class="top-card"><span>Posición Equipo</span><b id="k-po">0%</b></div>
+            <div class="top-card"><span>Goles Reales</span><b id="k-v">$0.00</b></div>
+            <div class="top-card"><span>Challenge Prov.</span><b id="k-f-prov">$0.00</b></div>
+            <div class="top-card"><span>Avance Ind.</span><b id="k-pp">0%</b></div>
+            <div class="top-card"><span>Avance Sedal</span><b id="k-po">0%</b></div>
         </div>
 
-        <span class="race-label">🏆 CAMINO A LA COPA (META 120%)</span>
+        <span class="race-label">🏆 MI DESEMPEÑO INDIVIDUAL (120%)</span>
         <div class="race-track">
             <div class="porteria">🥅</div>
             <div class="line-meta l-75"></div><div class="line-meta l-110"></div>
             <div id="truck-ind" class="truck"></div>
         </div>
         
-        <span class="race-label" id="suc-label">🏟️ AVANCE DEL ESTADIO</span>
+        <span class="race-label" id="suc-label">🏟️ DESEMPEÑO SUCURSAL</span>
         <div class="race-track">
             <div class="porteria">🥅</div>
             <div class="line-meta l-75"></div><div class="line-meta l-110"></div>
             <div id="truck-grp" class="truck" style="filter: invert(1) hue-rotate(150deg);"></div>
         </div>
 
+        <span class="race-label" style="color:var(--purple)">🌟 CHALLENGE PROVEEDOR (PROMO SIG. MES)</span>
+        <div class="race-track" style="background: linear-gradient(90deg, #2e1065 50%, #4c1d95 50%); background-size: 40px 100%; border-color: var(--purple);">
+            <div class="porteria" style="border-left-color: var(--purple);">🏆</div>
+            <div class="line-meta" style="left: 50%; border-left: 1px dashed var(--purple);"></div>
+            <div id="truck-prov" class="truck" style="filter: invert(1) hue-rotate(280deg);"></div>
+        </div>
+
         <button class="btn-forms" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfWF2AutcLCDhfBL6hoABmWVv4OKDvorCNB2CJTgY5QlrPrwA/viewform?usp=dialog','_blank')">
-            ⚽ REGISTRAR JUGADA (CLIENTE NUEVO)
+            📝 REGISTRAR NUEVO PROSPECTO
         </button>
 
         <div class="grid">
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2 style="margin:0;">💰 TABLA DE PREMIOS</h2>
+                    <h2 style="margin:0;">💰 PROYECCIÓN DE PREMIOS</h2>
                     <b id="metal" style="font-size:0.6rem; padding:4px 10px; border-radius:4px; background:#444;">--</b>
                 </div>
                 <div class="steps-container">
-                    <div class="step-item"><span>Factor Ind.</span><b id="f-ind">0%</b></div>
-                    <div class="step-item"><span>Factor Grp.</span><b id="f-grp">0%</b></div>
+                    <div class="step-item"><span>Ind.</span><b id="f-ind">0%</b></div>
+                    <div class="step-item"><span>Grp.</span><b id="f-grp">0%</b></div>
                     <div class="step-item total"><span>Bonus</span><b id="f-total">0%</b></div>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1rem; margin-bottom:15px;">
-                    <span id="r-v" style="color:var(--grass)">PROY: $0</span>
+                    <span id="r-v" style="color:var(--grass)">VTA: $0</span>
                     <span id="r-c" style="color:var(--blue)">PREMIO: $0</span>
                 </div>
                 <div class="cal-grid" id="cal-grid"></div>
             </div>
 
             <div class="card">
-                <h2>📝 ESTRATEGIA DE VENTA (COT)</h2>
+                <h2>📑 COTIZADOR RÁPIDO</h2>
                 <input list="mis-clientes" id="cot-cli-name" placeholder="CLIENTE">
                 <datalist id="mis-clientes"></datalist>
                 <div style="display: grid; grid-template-columns: 2fr 1fr 1.2fr; gap: 8px;">
@@ -203,19 +211,13 @@
                     <input type="number" id="p-qty" value="1">
                     <input type="number" id="p-prc" placeholder="$">
                 </div>
-                <button class="btn" style="background:#333; margin: 10px 0; box-shadow: 0 4px 0 #000;" onclick="addCot()">AÑADIR AL PAQUETE</button>
+                <button class="btn" style="background:#333; margin: 10px 0; box-shadow: 0 4px 0 #000;" onclick="addCot()">AÑADIR A LISTA</button>
                 <div id="cot-resumen" style="flex:1; overflow-y: auto; font-size:0.75rem; color:#aaa; border: 1px dashed #444; padding: 10px; margin-bottom: 10px;"></div>
-                <button class="btn" style="background:#25d366; box-shadow: 0 4px 0 #128c7e;" onclick="sendQuote()">ENVIAR POR WHATSAPP</button>
+                <button class="btn" style="background:#25d366; box-shadow: 0 4px 0 #128c7e;" onclick="sendQuote()">ENVIAR WHATSAPP</button>
             </div>
-
-            <div class="card">
-                <h2>📦 DISPONIBILIDAD DE BALONES</h2>
-                <input type="text" id="stock-search" placeholder="Buscar SKU..." oninput="checkInventory(this.value)">
-                <div id="inv-res" style="flex:1; overflow-y: auto;"></div>
-            </div>
-
-            <div class="card"><h2>🔥 TOP 10 JUGADORES (PRODUCTOS)</h2><div id="v-top-list" style="flex:1; overflow-y: auto;"></div></div>
-            <div class="card"><h2>👥 ALINEACIÓN (CLIENTES)</h2><div id="lista-cli" style="flex:1; overflow-y: auto;"></div></div>
+            
+            <div class="card"><h2>🔥 TOP 10 PRODUCTOS</h2><div id="v-top-list" style="flex:1; overflow-y: auto;"></div></div>
+            <div class="card"><h2>📦 STOCK ALMACÉN</h2><input type="text" id="stock-search" placeholder="SKU..." oninput="checkInventory(this.value)"><div id="inv-res" style="flex:1; overflow-y: auto;"></div></div>
         </div>
     </div>
 
@@ -255,16 +257,22 @@
                     document.getElementById('u-disp').innerText = user.Nombre;
                     document.getElementById('s-disp').innerText = "SEDE: " + user.Sucursal;
                     renderApp(); calcMyTop(); sumCal(); fillClientList();
-                } else alert("CONTRASEÑA INCORRECTA");
-            } else alert("JUGADOR NO REGISTRADO");
+                } else alert("PASSWORD INCORRECTO");
+            } else alert("ASESOR NO ENCONTRADO");
         }
 
         function renderApp() {
             const vr = parseEx(user.Ventas), vm = parseEx(user.Meta) || 1;
             const pctInd = (vr/vm)*100;
+            
+            // Lógica Tercer Pista (Proveedor): Usamos una columna "Meta_Prov" y "Venta_Prov" si existen en tu CSV, 
+            // sino, aquí puedes definir una meta estática para la demo:
+            const vProv = parseEx(user.Venta_Prov || 0); 
+            const mProv = parseEx(user.Meta_Prov || 50000); // Meta ejemplo
+            const pctProv = (vProv/mProv)*100;
+
             const sucData = dbV.filter(v => v.Sucursal === user.Sucursal);
-            let sV=0, sM=0; 
-            sucData.forEach(v => { sV += parseEx(v.Ventas); sM += parseEx(v.Meta); });
+            let sV=0, sM=0; sucData.forEach(v => { sV += parseEx(v.Ventas); sM += parseEx(v.Meta); });
             const pctGrp = sM > 0 ? (sV/sM)*100 : 0;
 
             const hoy = new Date(), uDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
@@ -273,21 +281,15 @@
             document.getElementById('val-falta-oro').innerText = fM(Math.max(0, (vm*1.20) - vr));
 
             document.getElementById('k-v').innerText = fM(vr);
-            document.getElementById('k-f').innerText = fM(Math.max(0, (vm*1.1) - vr));
+            document.getElementById('k-f-prov').innerText = fM(vProv);
             document.getElementById('k-pp').innerText = pctInd.toFixed(1) + "%";
             document.getElementById('k-po').innerText = pctGrp.toFixed(1) + "%";
 
-            document.getElementById('truck-ind').style.left = `calc(${Math.min(100, (pctInd/120)*100)}% - 40px)`;
+            document.getElementById('truck-ind').style.left = `calc(${Math.min(100, (pctInd/120)*100)}% - 32px)`;
             document.getElementById('truck-ind').className = 'truck ' + (pctInd>=120?'oro':'');
-            document.getElementById('truck-grp').style.left = `calc(${Math.min(100, (pctGrp/120)*100)}% - 40px)`;
+            document.getElementById('truck-grp').style.left = `calc(${Math.min(100, (pctGrp/120)*100)}% - 32px)`;
             document.getElementById('truck-grp').className = 'truck ' + (pctGrp>=120?'oro':'');
-
-            const lc = document.getElementById('lista-cli'); lc.innerHTML='';
-            dbC.filter(c => (c.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(c => {
-                const d = parseInt(c.Dias)||0;
-                let col = d > 60 ? 'rojo' : (d > 14 ? 'ambar' : 'verde');
-                lc.innerHTML += `<div class="client-item"><div><span class="dot ${col}"></span><b>${c.Cliente}</b><br><small>${d}d fuera</small></div><b>${fM(parseEx(c.Venta_Mes))}</b></div>`;
-            });
+            document.getElementById('truck-prov').style.left = `calc(${Math.min(100, pctProv)}% - 32px)`;
         }
 
         function sumCal() {
@@ -306,13 +308,13 @@
             document.getElementById('f-ind').innerText = fInd.toFixed(2) + "%";
             document.getElementById('f-grp').innerText = fGrp.toFixed(2) + "%";
             document.getElementById('f-total').innerText = tF.toFixed(2) + "%";
-            document.getElementById('r-v').innerText = "PROY: " + fM(s);
-            document.getElementById('r-c').innerText = "COMI: " + fM(s*(tF/100));
+            document.getElementById('r-v').innerText = "VTA: " + fM(s);
+            document.getElementById('r-c').innerText = "PREMIO: " + fM(s*(tF/100));
             
             const b = document.getElementById('metal');
             b.innerText = pctProy>=120?'ORO':(pctProy>=110?'PLATA':(pctProy>=75?'BRONCE':'FUERA'));
             b.style.background = pctProy>=120?'var(--gold)':(pctProy>=110?'var(--silver)':(pctProy>=75?'var(--bronze)':'var(--red)'));
-            if(pctProy>=120 && !cnf){ confetti({particleCount:200, spread:70, origin:{y:0.6}}); cnf=true; }
+            if(pctProy>=120 && !cnf){ confetti({particleCount:150, spread:60, origin:{y:0.7}}); cnf=true; }
         }
 
         function saveAndSum(day) { localStorage.setItem('day_'+day, document.getElementById('in_day_'+day).value); sumCal(); }
@@ -328,7 +330,7 @@
             box.innerHTML = '';
             list.forEach(p => {
                 const qty = parseInt(p.Existencia)||0;
-                box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222; font-size:0.8rem;"><div><b>${p.Parte}</b><br><small>${p.Marca}</small></div><b style="color:${qty<=0?'var(--red)':'var(--grass)'}">${qty} pz</b></div>`;
+                box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222; font-size:0.8rem;"><div><b>${p.Parte}</b><br><small>${p.Marca}</small></div><b style="color:${qty<=0?'var(--red)':'var(--grass)'}">${qty} pz</b></div>`;
             });
         }
 
@@ -341,9 +343,9 @@
 
         function sendQuote() {
             const cli = document.getElementById('cot-cli-name').value || "Cliente";
-            let total = 0; let t = `*ESTRATEGIA CATOSA WC*\n*Jugador:* ${cli}\n------------------\n`;
+            let total = 0; let t = `*COTIZACIÓN WORLD CUP CATOSA*\n*Cliente:* ${cli}\n------------------\n`;
             cotList.forEach(i => { t += `⚽ ${i.s} | Cant: ${i.q} | Unit: ${fM(i.p)}\n`; total += i.t; });
-            t += `------------------\n*TOTAL JUGADA: ${fM(total)}*`;
+            t += `------------------\n*TOTAL: ${fM(total)}*`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`, '_blank');
         }
 
@@ -358,7 +360,7 @@
             sorted.forEach(([sku, qty], i) => {
                 const sInfo = dbP.find(p => (p.Parte||"").toString().toUpperCase() === sku);
                 const sQty = sInfo ? parseInt(sInfo.Existencia) : 0;
-                list.innerHTML += `<div class="client-item" style="padding:12px; background:rgba(255,255,255,0.03); margin-bottom:5px; border-radius:10px;"><div style="display:flex; align-items:center;"><b style="color:var(--gold); margin-right:10px;">#${i+1}</b><div><b>${sku}</b><br><small>${qty} goles</small></div></div><b style="color:${sQty<=5?'var(--red)':'var(--grass)'}">${sQty} pz</b></div>`;
+                list.innerHTML += `<div class="client-item" style="padding:10px; background:rgba(255,255,255,0.03); margin-bottom:4px; border-radius:10px;"><div style="display:flex; align-items:center;"><b style="color:var(--gold); margin-right:8px;">#${i+1}</b><div><b>${sku}</b><br><small>${qty} unidades</small></div></div><b style="color:${sQty<=5?'var(--red)':'var(--grass)'}">${sQty} pz</b></div>`;
             });
         }
 
