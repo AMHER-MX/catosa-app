@@ -94,7 +94,7 @@
         .truck.oro { filter: drop-shadow(0 0 12px var(--gold)) sepia(1) saturate(10); animation: spin 2s infinite linear; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* SEMAFORO NEON */
+        /* SEMAFORO NEON RESTAURADO */
         .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; vertical-align: middle; }
         .dot.verde { background: #0f0; box-shadow: 0 0 10px #0f0; }
         .dot.ambar { background: #ff0; box-shadow: 0 0 10px #ff0; }
@@ -111,7 +111,7 @@
         /* CALCULADORA */
         .cal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; overflow-y: auto; flex: 1; }
         .day-box { background: #000; border: 1px solid #222; border-radius: 6px; padding: 5px; text-align: center; }
-        .day-in { width: 100%; background: transparent; border: none; color: var(--grass); font-size: 0.9rem; text-align: center; outline: none; }
+        .day-in { width: 100%; background: transparent; border: none; color: var(--grass); font-size: 0.9rem; text-align: center; outline: none; font-weight: bold; }
 
         /* BOTONES */
         .btn { padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: #fff; background: linear-gradient(to bottom, #2ecc71, #27ae60); text-transform: uppercase; width: 100%; box-shadow: 0 4px 0 #1e8449; }
@@ -131,7 +131,7 @@
             <h3 style="color:var(--gold); margin-top:0;">WORLD CUP CATOSA</h3>
             <input type="text" id="u-name" placeholder="NOMBRE ASESOR">
             <input type="password" id="u-pass" placeholder="CONTRASEÑA">
-            <button class="btn" onclick="login()">ENTRAR A LA CANCHA</button>
+            <button class="btn" onclick="login()">PATEAR INICIO</button>
         </div>
     </div>
 
@@ -149,7 +149,7 @@
         </div>
 
         <div class="top-stats">
-            <div class="top-card"><span>Venta Real</span><b id="k-v">$0.00</b></div>
+            <div class="top-card"><span>Goles Reales</span><b id="k-v">$0.00</b></div>
             <div class="top-card"><span>Challenge Prov.</span><b id="k-f-prov">$0.00</b></div>
             <div class="top-card"><span>Avance Ind.</span><b id="k-pp">0%</b></div>
             <div class="top-card"><span>Avance Sede</span><b id="k-po">0%</b></div>
@@ -249,8 +249,8 @@
                     document.getElementById('u-disp').innerText = user.Nombre;
                     document.getElementById('s-disp').innerText = "SEDE: " + user.Sucursal;
                     renderApp(); calcMyTop(); sumCal(); fillClientList();
-                } else alert("PASSWORD INCORRECTO");
-            } else alert("ASESOR NO ENCONTRADO");
+                } else alert("CONTRASEÑA INCORRECTA");
+            } else alert("JUGADOR NO ENCONTRADO");
         }
 
         function renderApp() {
@@ -280,7 +280,6 @@
             document.getElementById('truck-grp').className = 'truck ' + (pctGrp>=120?'oro':'');
             document.getElementById('truck-prov').style.left = `calc(${Math.min(100, pctProv)}% - 32px)`;
 
-            // RENDER LISTA CLIENTES CON SEMAFORO
             const lc = document.getElementById('lista-cli'); lc.innerHTML='';
             dbC.filter(c => (c.Vendedor||"").toUpperCase().includes(user.Nombre.split(" ")[0])).forEach(c => {
                 const d = parseInt(c.Dias)||0;
